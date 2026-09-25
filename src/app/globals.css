@@ -1,26 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Brand Primitives */
+  --primary: #12304A;
+  --teal-accent: #147D82;
+  --gold-accent: #C79A4B;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Surface Tokens */
+  --ice-blue: #EAF2F4;
+  --soft-grey: #F4F6F7;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Text & Surface Tokens */
+  --text-heading: #FFFFFF;
+  --text-body: #CBD5E1;
+  --text-muted: #94A3B8;
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-glow: rgba(199, 154, 75, 0.15);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--primary);
+  color: var(--text-body);
+  font-family: var(--font-plus-jakarta), var(--font-inter), sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
 }
+
+.font-serif-logo {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+/* =====================================================
+   GLOBAL TYPOGRAPHY TOKENS (Figma Spec)
+   Heading H2: Plus Jakarta Sans, Bold, 36px, 162% LH, #EAF2F4
+   Button:     Plus Jakarta Sans, SemiBold
+   ===================================================== */
+
+/* Section headings — apply to all <h2> section titles */
+.heading-section {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-weight: 700; /* Bold */
+  font-size: 36px;
+  line-height: 1.62; /* 162% */
+  letter-spacing: 0;
+  color: #EAF2F4;
+}
+
+/* Responsive scaling for smaller screens */
+@media (max-width: 640px) {
+  .heading-section {
+    font-size: 28px;
+  }
+}
+
+/* Button label text — all CTAs */
+.btn-text {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-weight: 600; /* SemiBold */
+}
+
+/* =====================================================
+   SECTION PILL BADGE (Figma Spec — matches "About Us" pill)
+   px-5 py-2, rounded-full, dark navy bg, white/15 border
+   Use .section-pill on ALL section label badges
+   ===================================================== */
+.section-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px; /* py-2 px-5 */
+  border-radius: 9999px;
+  background: rgba(14, 32, 50, 0.85); /* #0E2032 at 85% */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 600; /* SemiBold */
+  color: #F4F6F7;
+  letter-spacing: 0.01em;
+}
+
+
+/* Custom Utilities matching Brand Palette */
+.glass-panel {
+  background: rgba(18, 48, 74, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(199, 154, 75, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px rgba(199, 154, 75, 0.15);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FFFFFF 0%, #E5C378 50%, #C79A4B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-btn {
+  background-color: #C79A4B;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(199, 154, 75, 0.3);
+}
+
+.gold-btn:hover {
+  background-color: #B58A3E;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 20px rgba(199, 154, 75, 0.5);
+  transform: translateY(-1px);
+}
+
+.teal-btn {
+  background-color: #147D82;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 15px rgba(20, 125, 130, 0.3);
+}
+
+.teal-btn:hover {
+  background-color: #10686C;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 20px rgba(20, 125, 130, 0.5);
+  transform: translateY(-1px);
+}
+
+.teal-gradient-text {
+  background: linear-gradient(135deg, #229EA4 0%, #147D82 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.teal-pill {
+  background-color: #147D82;
+  color: #FFFFFF;
+}
+
+.gold-pill {
+  border: 1px solid rgba(199, 154, 75, 0.4);
+  background: rgba(199, 154, 75, 0.12);
+  color: #C79A4B;
+}
+
+/* Hide scrollbar for carousel container */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Main window scrollbar (Thinner & Navy colored) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B1E2E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1C4468;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #275986;
+}
+
+/* Firefox main scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1C4468 #0B1E2E;
+}
+
+/* =====================================================
+   PERFORMANCE & GPU SCROLLING OPTIMIZATIONS
+   ===================================================== */
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  contain: paint;
+}
+
+/* Enable hardware acceleration for smooth GPU scrolling and transforms */
+.transform-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Fast image rendering optimizations */
+img {
+  content-visibility: auto;
+}
+
+/* Fast render offscreen sections when scrolling */
+.contain-layout {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 600px;
+}
+
+
