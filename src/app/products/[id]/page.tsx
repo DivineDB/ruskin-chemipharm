@@ -101,7 +101,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         </div>
 
         {/* Product Details Main Card */}
-        <div className="bg-white border border-[#12304A]/8 rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-12 shadow-xl space-y-8 text-left relative overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="bg-white border border-[#12304A]/8 rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-12 shadow-xl space-y-8 text-left relative overflow-hidden"
+        >
           
           {/* Header Info Block */}
           <div className="space-y-4">
@@ -148,23 +153,25 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 <div className="sm:col-span-4 font-bold text-[#12304A]">CAS number</div>
                 <div className="sm:col-span-8 flex items-center gap-3 mt-1 sm:mt-0">
                   <span className="font-mono text-[#5A7A8E]">{currentProduct.casNumber}</span>
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.94 }}
                     onClick={() => handleCopyCas(currentProduct.casNumber)}
                     title="Copy CAS Number"
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold text-[#12304A] bg-[#12304A]/5 hover:bg-[#C79A4B]/15 hover:text-[#C79A4B] rounded-md transition-all border border-[#12304A]/10 hover:border-[#C79A4B]/30"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold text-[#12304A] bg-[#12304A]/5 hover:bg-[#C79A4B]/15 hover:text-[#C79A4B] rounded-md transition-[border-color,background-color,color] duration-150 border border-[#12304A]/10 hover:border-[#C79A4B]/30 cursor-pointer"
                   >
                     {copiedCas ? (
-                      <>
+                      <motion.span initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="inline-flex items-center gap-1.5">
                         <Check className="w-3 h-3 text-emerald-600 stroke-[2.5]" />
                         <span className="text-emerald-700 font-bold">Copied!</span>
-                      </>
+                      </motion.span>
                     ) : (
                       <>
                         <Copy className="w-3 h-3 stroke-[2]" />
                         <span>Copy CAS</span>
                       </>
                     )}
-                  </button>
+                  </motion.button>
                 </div>
               </div>
 
@@ -196,19 +203,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             {/* CTA Action Buttons */}
             <div className="pt-4 flex flex-wrap items-center gap-4">
               <motion.button
-                whileHover={{ scale: 1.03 }}
+                whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleOpenModal(`Request Sample for ${currentProduct.name}`)}
-                className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-7 py-3.5 rounded-full text-sm font-extrabold transition-all shadow-md"
+                className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-7 py-3.5 rounded-full text-sm font-extrabold transition-colors shadow-md cursor-pointer gpu-smooth"
               >
                 Request Sample
               </motion.button>
 
               <motion.button
-                whileHover={{ scale: 1.03 }}
+                whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleOpenModal(`Request COA & Technical Specs for ${currentProduct.name}`)}
-                className="inline-flex items-center gap-2 bg-[#12304A] hover:bg-[#0E263B] text-white px-7 py-3.5 rounded-full text-sm font-bold transition-all shadow-md"
+                className="inline-flex items-center gap-2 bg-[#12304A] hover:bg-[#0E263B] text-white px-7 py-3.5 rounded-full text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
               >
                 Request COA
               </motion.button>
@@ -216,10 +223,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
           </div>
 
-        </div>
+        </motion.div>
 
         {/* ================= 3. RELATED PRODUCTS SECTION ================= */}
-        <div className="space-y-6 text-left">
+        <motion.div
+          initial={{ opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="space-y-6 text-left"
+        >
           <div className="space-y-2">
             <span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
               <div className="w-8 h-[2px] bg-[#C79A4B]" />
@@ -237,10 +250,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               <motion.div
                 key={rel.id}
                 whileHover={{ y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="relative bg-[#12304A] border border-white/10 rounded-[22px] overflow-hidden shadow-lg hover:border-[#C79A4B]/50 transition-all group flex flex-col justify-between p-5"
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="relative bg-[#12304A] border border-white/10 rounded-[22px] overflow-hidden shadow-lg hover:border-[#C79A4B]/50 transition-[border-color,box-shadow] duration-200 group flex flex-col justify-between p-5 gpu-smooth cursor-pointer"
               >
-                <div className="absolute -top-12 -right-12 w-28 h-28 rounded-full bg-[#C79A4B]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute -top-12 -right-12 w-28 h-28 rounded-full bg-[#C79A4B]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 <Link href={`/products/${rel.slug}`} className="relative flex flex-col flex-1 justify-between">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-[10px] font-bold text-[#E5C378] bg-[#C79A4B]/15 border border-[#C79A4B]/25 px-2.5 py-0.5 rounded-full uppercase tracking-wide">
@@ -250,7 +263,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                       <ArrowUpRight className="w-3.5 h-3.5 text-[#C79A4B] group-hover:text-white stroke-[2.5]" />
                     </div>
                   </div>
-                  <h3 className="text-sm font-bold text-white group-hover:text-[#E5C378] transition-colors leading-snug">
+                  <h3 className="text-sm font-bold text-white group-hover:text-[#E5C378] transition-colors duration-200 leading-snug">
                     {rel.name}
                   </h3>
                   <div className="mt-3 pt-2.5 border-t border-white/10 flex justify-between items-center text-[11px] text-slate-400 font-mono">
@@ -266,16 +279,20 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <div className="pt-1">
             <Link
               href={`/products?category=${encodeURIComponent(currentProduct.category)}`}
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#5A7A8E] hover:text-[#C79A4B] transition-colors group"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#5A7A8E] hover:text-[#C79A4B] transition-colors group cursor-pointer"
             >
               <span>Explore all {currentProduct.category} APIs</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
             </Link>
           </div>
-        </div>
+        </motion.div>
 
         {/* ================= 4. "CAN'T FIND WHAT YOU NEED?" CUSTOM SOURCING FORM (LIGHT THEME) ================= */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="relative rounded-[28px] sm:rounded-[36px] overflow-hidden shadow-xl"
           style={{
             background: "linear-gradient(135deg, #F5F0E8 0%, #FAF7F2 100%)",
@@ -411,7 +428,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     whileTap={{ scale: 0.98 }}
                     disabled={isSubmittingInquiry}
                     type="submit"
-                    className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] disabled:opacity-75 text-white font-extrabold text-sm px-9 py-4 rounded-full transition-all shadow-lg shadow-[#C79A4B]/20 active:scale-95"
+                    className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] disabled:opacity-75 text-white font-extrabold text-sm px-9 py-4 rounded-full transition-colors shadow-lg shadow-[#C79A4B]/20 cursor-pointer gpu-smooth"
                   >
                     {isSubmittingInquiry ? (
                       <>
@@ -460,16 +477,18 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <span className="text-emerald-600 font-semibold">Under 2 Hours</span>
                   </div>
                 </div>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => setInquirySubmitted(false)}
-                  className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-3 rounded-full text-sm font-bold transition-all shadow-md"
+                  className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-3 rounded-full text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
                 >
                   Submit Another Request
-                </button>
+                </motion.button>
               </motion.div>
             )}
           </div>
-        </div>
+        </motion.div>
 
       </main>
 

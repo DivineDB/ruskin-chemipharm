@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown, Check } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export interface Option {
   value: string;
@@ -93,40 +94,46 @@ export default function CustomSelect({
         />
       </button>
 
-      {/* Dropdown Menu */}
-      {isOpen && (
-        <div
-          className={`absolute top-full left-0 right-0 mt-1.5 rounded-xl shadow-2xl py-1.5 z-50 max-h-60 overflow-y-auto custom-scrollbar border ${
-            isDark
-              ? "bg-[#0F2234] border-slate-700/80"
-              : "bg-white border-[#12304A]/10"
-          }`}
-        >
-          {options.map((option) => {
-            const isSelected = option.value === value;
-            return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => {
-                  onChange(option.value);
-                  setIsOpen(false);
-                }}
-                className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between transition-colors ${
-                  isSelected
-                    ? "bg-[#C79A4B]/15 text-[#C79A4B] font-bold"
-                    : isDark
-                    ? "text-slate-200 hover:bg-[#18344E] hover:text-white"
-                    : "text-[#3E5C72] hover:bg-[#FAF7F2] hover:text-[#12304A]"
-                }`}
-              >
-                <span>{option.label}</span>
-                {isSelected && <Check className="w-3.5 h-3.5 text-[#C79A4B]" />}
-              </button>
-            );
-          })}
-        </div>
-      )}
+      {/* Dropdown Menu with silky smooth spring physics */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -4, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -4, scale: 0.98 }}
+            transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            className={`absolute top-full left-0 right-0 mt-1.5 rounded-xl shadow-2xl py-1.5 z-50 max-h-60 overflow-y-auto custom-scrollbar border ${
+              isDark
+                ? "bg-[#0F2234] border-slate-700/80"
+                : "bg-white border-[#12304A]/10"
+            }`}
+          >
+            {options.map((option) => {
+              const isSelected = option.value === value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => {
+                    onChange(option.value);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between transition-colors ${
+                    isSelected
+                      ? "bg-[#C79A4B]/15 text-[#C79A4B] font-bold"
+                      : isDark
+                      ? "text-slate-200 hover:bg-[#18344E] hover:text-white"
+                      : "text-[#3E5C72] hover:bg-[#FAF7F2] hover:text-[#12304A]"
+                  }`}
+                >
+                  <span>{option.label}</span>
+                  {isSelected && <Check className="w-3.5 h-3.5 text-[#C79A4B]" />}
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -230,7 +230,7 @@ function ProductsContent() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ type: "spring", damping: 22, stiffness: 280, delay: 0.15 + idx * 0.08 }}
                   whileHover={{ y: -4, borderColor: "rgba(199,154,75,0.4)" }}
-                  className="bg-white/5 border border-white/10 backdrop-blur rounded-2xl p-5 text-center transition-all cursor-default"
+                  className="bg-white/5 border border-white/10 backdrop-blur rounded-2xl p-5 text-center transition-[border-color,background-color] duration-200 cursor-default gpu-smooth"
                 >
                   <div className="stat-num text-xl sm:text-2xl text-[#C79A4B] font-extrabold">{s.val}</div>
                   <div className="text-[11px] text-slate-300 font-semibold tracking-wide mt-1 uppercase">{s.label}</div>
@@ -423,11 +423,11 @@ function ProductsContent() {
                   key={product.id}
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: index * 0.03, ease: [0.21, 0.47, 0.32, 0.98] }}
-                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                  className="relative bg-[#12304A] border border-white/8 hover:border-[#C79A4B]/50 rounded-[22px] overflow-hidden shadow-[0_8px_25px_-10px_rgba(18,48,74,0.4)] hover:shadow-[0_18px_38px_-10px_rgba(18,48,74,0.65)] transition-all duration-300 group cursor-pointer flex flex-col"
+                  transition={{ duration: 0.35, delay: index * 0.03, ease: [0.16, 1, 0.3, 1] }}
+                  whileHover={{ y: -6, transition: { duration: 0.2, ease: "easeOut" } }}
+                  className="relative bg-[#12304A] border border-white/8 hover:border-[#C79A4B]/50 rounded-[22px] overflow-hidden shadow-[0_8px_25px_-10px_rgba(18,48,74,0.4)] hover:shadow-[0_18px_38px_-10px_rgba(18,48,74,0.65)] transition-[border-color,box-shadow] duration-300 group cursor-pointer flex flex-col gpu-smooth"
                 >
-                  <div className="absolute -top-16 -right-16 w-32 h-32 rounded-full bg-[#C79A4B]/15 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute -top-16 -right-16 w-32 h-32 rounded-full bg-[#C79A4B]/15 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   <Link href={`/products/${product.slug}`} className="relative flex flex-col flex-1 p-5">
                     {/* Category pill & Desktop Quick Actions */}
                     <div className="flex items-center justify-between mb-4">
@@ -442,7 +442,7 @@ function ProductsContent() {
                             e.stopPropagation();
                             handleOpenQuote(product.name);
                           }}
-                          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all text-[10px] font-bold text-white bg-[#C79A4B] hover:bg-[#B88B3C] px-2.5 py-1 rounded-full shadow-sm"
+                          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-200 text-[10px] font-bold text-white bg-[#C79A4B] hover:bg-[#B88B3C] px-2.5 py-1 rounded-full shadow-sm cursor-pointer"
                           title="Instant Quote Request"
                         >
                           Quote
@@ -462,24 +462,30 @@ function ProductsContent() {
                     <div className="mt-4 pt-3 border-t border-white/10 space-y-1.5">
                       <div className="flex justify-between items-center text-[11px]">
                         <span className="text-slate-400 font-mono">CAS: <span className="text-slate-100 font-semibold">{product.casNumber}</span></span>
-                        <button
+                        <motion.button
                           type="button"
+                          whileHover={{ scale: 1.06 }}
+                          whileTap={{ scale: 0.92 }}
                           onClick={(e) => handleCopyCas(e, product.casNumber)}
-                          className="inline-flex items-center gap-1 text-[10px] text-slate-400 hover:text-[#C79A4B] transition-colors px-1.5 py-0.5 rounded hover:bg-white/5"
+                          className="inline-flex items-center gap-1 text-[10px] text-slate-400 hover:text-[#C79A4B] transition-colors px-1.5 py-0.5 rounded hover:bg-white/5 cursor-pointer"
                           title="Copy CAS to clipboard"
                         >
                           {copiedCas === product.casNumber ? (
-                            <>
+                            <motion.span
+                              initial={{ scale: 0.7 }}
+                              animate={{ scale: 1 }}
+                              className="inline-flex items-center gap-1"
+                            >
                               <Check className="w-3 h-3 text-emerald-400 stroke-[2.5]" />
                               <span className="text-emerald-400 font-medium text-[9px]">Copied</span>
-                            </>
+                            </motion.span>
                           ) : (
                             <>
                               <Copy className="w-3 h-3" />
                               <span className="text-[9px]">Copy</span>
                             </>
                           )}
-                        </button>
+                        </motion.button>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-[11px] text-slate-400">Purity: <span className="stat-num text-emerald-400 font-bold">{product.purity}</span></span>
@@ -626,7 +632,7 @@ function ProductsContent() {
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={isSubmittingInquiry}
-                    className="inline-flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] disabled:bg-[#C79A4B]/80 text-white font-extrabold text-sm px-10 py-4 rounded-full transition-all shadow-lg shadow-[#C79A4B]/20 w-full sm:w-auto"
+                    className="inline-flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] disabled:bg-[#C79A4B]/80 text-white font-extrabold text-sm px-10 py-4 rounded-full transition-colors shadow-lg shadow-[#C79A4B]/20 w-full sm:w-auto cursor-pointer gpu-smooth"
                   >
                     {isSubmittingInquiry ? (
                       <span className="inline-flex items-center gap-2">
@@ -680,7 +686,7 @@ function ProductsContent() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setInquirySubmitted(false)}
-                  className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-3 rounded-full text-sm font-bold transition-all shadow-md active:scale-95"
+                  className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-3 rounded-full text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
                 >
                   Submit Another Request
                 </motion.button>
@@ -802,7 +808,7 @@ function ProductsContent() {
                       whileTap={{ scale: 0.98 }}
                       type="submit"
                       disabled={isSubmittingQuote}
-                      className="w-full bg-[#12304A] hover:bg-[#0E263B] disabled:bg-[#12304A]/80 text-white py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all shadow-md"
+                      className="w-full bg-[#12304A] hover:bg-[#0E263B] disabled:bg-[#12304A]/80 text-white py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-md cursor-pointer gpu-smooth"
                     >
                       {isSubmittingQuote ? (
                         <span className="inline-flex items-center gap-2">
@@ -840,7 +846,7 @@ function ProductsContent() {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setQuoteModalOpen(false)}
-                    className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-full text-sm font-bold transition-all shadow-md"
+                    className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-full text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
                   >
                     Close Window
                   </motion.button>

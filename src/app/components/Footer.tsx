@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { MolecularDecoration, HEX_CLIP } from "./Hex";
 
 interface FooterProps {
@@ -21,7 +22,13 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start text-left">
 
           {/* Brand Column */}
-          <div className="w-full lg:w-[260px] shrink-0 space-y-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full lg:w-[260px] shrink-0 space-y-6"
+          >
             <div>
               <Image
                 src="/images/logo.svg"
@@ -43,9 +50,9 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
 
             {/* Contact info with hex icons */}
             <div className="space-y-4">
-              <div className="flex gap-3 items-start">
+              <div className="flex gap-3 items-start group">
                 <div
-                  className="w-7 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 bg-[#C79A4B] shadow-sm"
+                  className="w-7 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 bg-[#C79A4B] shadow-sm group-hover:scale-105 transition-transform"
                   style={{ clipPath: HEX_CLIP }}
                 >
                   <span className="w-2 h-2.5 bg-white" style={{ clipPath: HEX_CLIP }} />
@@ -60,9 +67,9 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
                 </div>
               </div>
 
-              <div className="flex gap-3 items-start">
+              <div className="flex gap-3 items-start group">
                 <div
-                  className="w-7 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 bg-[#C79A4B] shadow-sm"
+                  className="w-7 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 bg-[#C79A4B] shadow-sm group-hover:scale-105 transition-transform"
                   style={{ clipPath: HEX_CLIP }}
                 >
                   <span className="w-2 h-2.5 bg-white" style={{ clipPath: HEX_CLIP }} />
@@ -70,15 +77,15 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
                 <div>
                   <p className="text-sm font-bold text-white">Phone</p>
                   <div className="flex flex-col text-xs text-slate-300 mt-0.5 leading-relaxed">
-                    <a href="tel:+912222059494" className="hover:text-[#C79A4B] transition-colors">+91 22 22059494</a>
-                    <a href="tel:+912222068330" className="hover:text-[#C79A4B] transition-colors">+91 22 22068330</a>
+                    <a href="tel:+912222059494" className="hover:text-[#C79A4B] transition-colors py-0.5">+91 22 22059494</a>
+                    <a href="tel:+912222068330" className="hover:text-[#C79A4B] transition-colors py-0.5">+91 22 22068330</a>
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-3 items-start">
+              <div className="flex gap-3 items-start group">
                 <div
-                  className="w-7 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 bg-[#C79A4B] shadow-sm"
+                  className="w-7 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 bg-[#C79A4B] shadow-sm group-hover:scale-105 transition-transform"
                   style={{ clipPath: HEX_CLIP }}
                 >
                   <span className="w-2 h-2.5 bg-white" style={{ clipPath: HEX_CLIP }} />
@@ -86,8 +93,8 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
                 <div>
                   <p className="text-sm font-bold text-white">Email</p>
                   <div className="flex flex-col text-xs text-slate-300 mt-0.5 leading-relaxed">
-                    <a href="mailto:sourcing@ruskinchemipharm.in" className="hover:text-[#C79A4B] transition-colors">sourcing@ruskinchemipharm.in</a>
-                    <a href="mailto:sales@ruskinchemipharm.in" className="hover:text-[#C79A4B] transition-colors">sales@ruskinchemipharm.in</a>
+                    <a href="mailto:sourcing@ruskinchemipharm.in" className="hover:text-[#C79A4B] transition-colors py-0.5">sourcing@ruskinchemipharm.in</a>
+                    <a href="mailto:sales@ruskinchemipharm.in" className="hover:text-[#C79A4B] transition-colors py-0.5">sales@ruskinchemipharm.in</a>
                   </div>
                 </div>
               </div>
@@ -95,49 +102,73 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
 
             {/* Cert logos */}
             <div className="flex items-center gap-3 flex-wrap opacity-90">
-              <Image src="/images/cert (1).svg" alt="ISO 9001:2015" width={48} height={48} className="h-12 w-12 object-contain" />
-              <Image src="/images/cert (2).svg" alt="WHO-GMP" width={48} height={48} className="h-12 w-12 object-contain" />
-              <Image src="/images/cert (3).svg" alt="ISO 14001" width={48} height={48} className="h-12 w-12 object-contain" />
+              <motion.div whileHover={{ scale: 1.08 }} className="transition-transform">
+                <Image src="/images/cert (1).svg" alt="ISO 9001:2015" width={48} height={48} className="h-12 w-12 object-contain" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.08 }} className="transition-transform">
+                <Image src="/images/cert (2).svg" alt="WHO-GMP" width={48} height={48} className="h-12 w-12 object-contain" />
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.08 }} className="transition-transform">
+                <Image src="/images/cert (3).svg" alt="ISO 14001" width={48} height={48} className="h-12 w-12 object-contain" />
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Nav Columns */}
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-12">
 
             {/* Quick Links */}
-            <div className="space-y-5">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-5"
+            >
               <div>
                 <h4 className="text-base font-bold text-white">Quick Links</h4>
                 <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
               </div>
               <ul className="space-y-2.5 text-sm text-slate-300">
                 <li>
-                  <button onClick={onOpenCatalog} className="hover:text-[#C79A4B] transition-colors text-left">
+                  <button onClick={onOpenCatalog} className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 text-left cursor-pointer inline-block">
                     Products Directory
                   </button>
                 </li>
-                <li><a href="#services" className="hover:text-[#C79A4B] transition-colors">Services</a></li>
-                <li><a href="#services" className="hover:text-[#C79A4B] transition-colors">Regulatory Specs</a></li>
-                <li><a href="#about" className="hover:text-[#C79A4B] transition-colors">About Us</a></li>
+                <li><a href="#services" className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block">Services</a></li>
+                <li><a href="#services" className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block">Regulatory Specs</a></li>
+                <li><a href="#about" className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block">About Us</a></li>
               </ul>
-            </div>
+            </motion.div>
 
             {/* Compliance */}
-            <div className="space-y-5">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.55, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-5"
+            >
               <div>
                 <h4 className="text-base font-bold text-white">Compliance</h4>
                 <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
               </div>
               <ul className="space-y-2.5 text-sm text-slate-300">
-                <li><span className="hover:text-[#C79A4B] cursor-pointer transition-colors">WHO-GMP</span></li>
-                <li><span className="hover:text-[#C79A4B] cursor-pointer transition-colors">ISO 9001:2015</span></li>
-                <li><span className="hover:text-[#C79A4B] cursor-pointer transition-colors">CoA Verification</span></li>
-                <li><span className="hover:text-[#C79A4B] cursor-pointer transition-colors">Safety Data Sheets</span></li>
+                <li><span className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 cursor-pointer inline-block">WHO-GMP</span></li>
+                <li><span className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 cursor-pointer inline-block">ISO 9001:2015</span></li>
+                <li><span className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 cursor-pointer inline-block">CoA Verification</span></li>
+                <li><span className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 cursor-pointer inline-block">Safety Data Sheets</span></li>
               </ul>
-            </div>
+            </motion.div>
 
             {/* Reach Us */}
-            <div className="space-y-5">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.55, delay: 0.26, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-5"
+            >
               <div>
                 <h4 className="text-base font-bold text-white">Reach Us</h4>
                 <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
@@ -157,12 +188,12 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
                 </div>
                 <div>
                   <p className="font-semibold text-white text-xs">Website:</p>
-                  <a href="https://www.ruskinchemipharm.in" target="_blank" rel="noopener noreferrer" className="text-[#C79A4B] hover:underline">
+                  <a href="https://www.ruskinchemipharm.in" target="_blank" rel="noopener noreferrer" className="text-[#C79A4B] hover:underline inline-block">
                     www.ruskinchemipharm.in
                   </a>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
           </div>
         </div>

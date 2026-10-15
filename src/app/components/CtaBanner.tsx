@@ -19,14 +19,20 @@ export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
           transition={{ duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] }}
           className="relative bg-[#12304A] rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-14 overflow-hidden shadow-2xl"
         >
-          {/* Subtle gold molecular decoration */}
-          <div className="absolute top-0 right-0 w-[280px] sm:w-[360px] pointer-events-none translate-x-8 -translate-y-6 select-none opacity-10">
+          {/* Subtle gold molecular decoration with gentle floating micro-animation */}
+          <motion.div
+            animate={{ y: [0, -7, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" }}
+            className="absolute top-0 right-0 w-[280px] sm:w-[360px] pointer-events-none translate-x-8 -translate-y-6 select-none opacity-10 gpu-smooth"
+          >
             <MolecularDecoration color="#C79A4B" opacity={1} className="w-full h-auto" />
-          </div>
+          </motion.div>
 
           {/* Floating subtle geometric hex accent */}
-          <div
-            className="absolute bottom-6 right-1/4 w-8 h-9 border border-[#C79A4B]/20 pointer-events-none hidden lg:block opacity-40"
+          <motion.div
+            animate={{ rotate: [0, 10, 0], y: [0, -5, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" }}
+            className="absolute bottom-6 right-1/4 w-8 h-9 border border-[#C79A4B]/20 pointer-events-none hidden lg:block opacity-40 gpu-smooth"
             style={{ clipPath: HEX_CLIP }}
           />
 
@@ -35,6 +41,7 @@ export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
             <div className="space-y-4 max-w-2xl text-left">
               {/* Gold certification pill */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C79A4B]/15 border border-[#C79A4B]/30 text-[#C79A4B] text-xs font-semibold tracking-wide">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C79A4B] animate-pulse" />
                 <ShieldCheck className="w-3.5 h-3.5" />
                 cGMP &amp; ISO 9001:2015 Certified
               </div>
@@ -54,13 +61,13 @@ export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
             {/* Primary Action CTA — neatly spaced */}
             <div className="shrink-0 pt-2 lg:pt-0 w-full sm:w-auto">
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={onRequestQuote}
-                className="flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-4 rounded-full text-sm font-bold transition-all shadow-lg shadow-[#C79A4B]/25 group w-full sm:w-auto"
+                className="flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-4 rounded-full text-sm font-bold transition-colors shadow-lg shadow-[#C79A4B]/25 group w-full sm:w-auto cursor-pointer"
               >
                 <span>Request API Quote</span>
-                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform stroke-[2.5]" />
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform stroke-[2.5] duration-200" />
               </motion.button>
             </div>
           </div>

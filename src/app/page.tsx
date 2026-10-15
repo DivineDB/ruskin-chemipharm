@@ -315,23 +315,27 @@ export default function HomePage() {
 					<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center max-w-7xl w-full mx-auto">
 						
 						{/* Left: Headline & Actions */}
-						<motion.div
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
-							className="lg:col-span-7 space-y-6 text-left"
-						>
+						<div className="lg:col-span-7 space-y-6 text-left">
 							{/* Certification Pill Badge */}
-							<div>
-								<span className="inline-flex items-center gap-2.5 bg-white border border-[#C79A4B]/35 px-4 py-2 rounded-full text-[11px] font-bold tracking-widest uppercase text-[#0B1E2E] shadow-sm">
+							<motion.div
+								initial={{ opacity: 0, y: 14, scale: 0.96 }}
+								animate={{ opacity: 1, y: 0, scale: 1 }}
+								transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+							>
+								<span className="inline-flex items-center gap-2.5 bg-white border border-[#C79A4B]/35 px-4 py-2 rounded-full text-[11px] font-bold tracking-widest uppercase text-[#0B1E2E] shadow-sm hover:border-[#C79A4B]/70 transition-colors">
 									<span className="w-2 h-2 rounded-full bg-[#C79A4B] animate-pulse" />
 									<ShieldCheck className="w-4 h-4 text-[#C79A4B]" />
 									WHO-GMP &amp; ISO 9001:2015 Certified Partner
 								</span>
-							</div>
+							</motion.div>
 
 							{/* Headline Stack */}
-							<div className="space-y-1">
+							<motion.div
+								initial={{ opacity: 0, y: 18 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.65, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+								className="space-y-1"
+							>
 								<h1 className="text-5xl sm:text-6xl lg:text-[68px] font-extrabold text-[#0B1E2E] leading-[1.05] tracking-tight">
 									Precision
 									<br />
@@ -340,63 +344,78 @@ export default function HomePage() {
 								<h2 className="text-3xl sm:text-4xl lg:text-[44px] font-semibold text-slate-700 leading-[1.12] tracking-tight pt-1">
 									Global Standards<span className="text-[#C79A4B] font-bold">.</span>
 								</h2>
-							</div>
+							</motion.div>
 
 							{/* Body Paragraph */}
-							<p className="text-base sm:text-lg text-[#5A7A8E] leading-relaxed max-w-xl font-normal pt-1">
+							<motion.p
+								initial={{ opacity: 0, y: 16 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.6, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+								className="text-base sm:text-lg text-[#5A7A8E] leading-relaxed max-w-xl font-normal pt-1"
+							>
 								Connecting India’s formulation leaders to the world’s foremost API
 								manufacturers. Full DCGI registration support, batch COA verification,
 								and end-to-end dossier compliance from synthesis to delivery.
-							</p>
+							</motion.p>
 
 							{/* CTA Buttons */}
-							<div className="flex flex-col sm:flex-row gap-4 pt-2 w-full sm:w-auto">
+							<motion.div
+								initial={{ opacity: 0, y: 16 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ duration: 0.55, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
+								className="flex flex-col sm:flex-row gap-4 pt-2 w-full sm:w-auto"
+							>
 								<motion.button
-									whileHover={{ scale: 1.02 }}
+									whileHover={{ scale: 1.025, y: -2 }}
 									whileTap={{ scale: 0.98 }}
 									onClick={() => router.push("/products")}
-									className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#C79A4B] text-white font-bold text-sm shadow-lg shadow-[#C79A4B]/20 hover:bg-[#B58A3E] transition-all group w-full sm:w-auto"
+									className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#C79A4B] text-white font-bold text-sm shadow-lg shadow-[#C79A4B]/20 hover:bg-[#B58A3E] transition-colors group w-full sm:w-auto cursor-pointer gpu-smooth"
 								>
 									<span>Explore 46+ DCGI APIs</span>
-									<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+									<ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
 								</motion.button>
 
 								<motion.button
-									whileHover={{ scale: 1.02 }}
+									whileHover={{ scale: 1.025, y: -2 }}
 									whileTap={{ scale: 0.98 }}
 									onClick={() => handleOpenQuote("General Technical Inquiry")}
-									className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-white border border-[#12304A]/15 text-[#12304A] font-bold text-sm hover:bg-slate-50 transition-all shadow-sm w-full sm:w-auto"
+									className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-white border border-[#12304A]/15 text-[#12304A] font-bold text-sm hover:bg-slate-50 hover:border-[#12304A]/30 transition-[background-color,border-color] shadow-sm w-full sm:w-auto cursor-pointer gpu-smooth"
 								>
 									<span>Request Quote &amp; COA</span>
 								</motion.button>
-							</div>
+							</motion.div>
 
 							{/* Instant COA Download Trigger */}
-							<div className="pt-1">
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ duration: 0.5, delay: 0.32 }}
+								className="pt-1"
+							>
 								<button
 									onClick={handleDownloadPdf}
-									className="inline-flex items-center gap-2.5 text-xs font-semibold text-slate-600 hover:text-[#12304A] transition-colors group"
+									className="inline-flex items-center gap-2.5 text-xs font-semibold text-slate-600 hover:text-[#12304A] transition-colors group cursor-pointer"
 								>
-									<div className="w-5 h-5 rounded-full bg-[#C79A4B]/15 flex items-center justify-center flex-shrink-0">
-										<Check className="w-3 h-3 text-[#C79A4B] stroke-[3]" />
+									<div className="w-5 h-5 rounded-full bg-[#C79A4B]/15 flex items-center justify-center flex-shrink-0 group-hover:bg-[#C79A4B] transition-colors">
+										<Check className="w-3 h-3 text-[#C79A4B] group-hover:text-white stroke-[3] transition-colors" />
 									</div>
 									<span>Instant COA &amp; TDS Technical Downloads Available</span>
-									<Download className="w-3.5 h-3.5 text-[#C79A4B] group-hover:translate-y-0.5 transition-transform" />
+									<Download className="w-3.5 h-3.5 text-[#C79A4B] group-hover:translate-y-0.5 transition-transform duration-200" />
 								</button>
-							</div>
-						</motion.div>
+							</motion.div>
+						</div>
 
 						{/* Right: Floating Mathematically Regular Hex Cluster */}
 						<motion.div
-							initial={{ opacity: 0, x: 25 }}
-							animate={{ opacity: 1, x: 0 }}
-							transition={{ duration: 0.8, delay: 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
+							initial={{ opacity: 0, x: 30, scale: 0.95 }}
+							animate={{ opacity: 1, x: 0, scale: 1 }}
+							transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
 							className="lg:col-span-5 relative flex items-center justify-center"
 						>
 							<motion.div
-								animate={{ y: [0, -8, 0] }}
-								transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
-								className="relative w-[320px] h-[370px] sm:w-[380px] sm:h-[440px]"
+								animate={{ y: [0, -9, 0] }}
+								transition={{ duration: 6, ease: "easeInOut", repeat: Infinity, repeatType: "mirror" }}
+								className="relative w-[320px] h-[370px] sm:w-[380px] sm:h-[440px] gpu-smooth"
 							>
 								{/* Main Central Hexagon */}
 								<div className="absolute inset-0 flex items-center justify-center">
@@ -437,8 +456,9 @@ export default function HomePage() {
 								{/* Floating Dynamic Chip: Active DCGI Molecules */}
 								<motion.div
 									animate={{ y: [0, -6, 0] }}
-									transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-									className="absolute -left-5 top-1/3 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-[0_15px_35px_rgba(18,48,74,0.12)] border border-[#12304A]/10 text-left"
+									transition={{ repeat: Infinity, duration: 4.2, ease: "easeInOut", repeatType: "mirror" }}
+									whileHover={{ scale: 1.05 }}
+									className="absolute -left-5 top-1/3 bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-[0_15px_35px_rgba(18,48,74,0.12)] border border-[#12304A]/10 text-left cursor-default transition-shadow hover:shadow-[0_20px_40px_rgba(18,48,74,0.18)]"
 								>
 									<div className="stat-num text-2xl font-black text-[#12304A]">46+</div>
 									<div className="text-[11px] text-[#C79A4B] font-bold tracking-wider uppercase">
@@ -449,8 +469,9 @@ export default function HomePage() {
 								{/* Floating Dynamic Chip: Global Sourcing Network */}
 								<motion.div
 									animate={{ y: [0, 6, 0] }}
-									transition={{ repeat: Infinity, duration: 4.5, ease: "easeInOut" }}
-									className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md rounded-full px-5 py-2.5 shadow-[0_15px_35px_rgba(18,48,74,0.12)] border border-[#12304A]/10 flex items-center gap-3 whitespace-nowrap"
+									transition={{ repeat: Infinity, duration: 4.8, ease: "easeInOut", repeatType: "mirror" }}
+									whileHover={{ scale: 1.03 }}
+									className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md rounded-full px-5 py-2.5 shadow-[0_15px_35px_rgba(18,48,74,0.12)] border border-[#12304A]/10 flex items-center gap-3 whitespace-nowrap cursor-default transition-shadow hover:shadow-[0_20px_40px_rgba(18,48,74,0.18)]"
 								>
 									<div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
 									<span className="text-xs font-bold text-[#12304A]">
@@ -503,15 +524,22 @@ export default function HomePage() {
 							{ val: 250, suffix: "+", label: "Audited Partner Facilities" },
 							{ val: 46, suffix: "+", label: "Registered / In-Pipeline APIs" },
 							{ val: 7, suffix: "", label: "Therapeutic Categories" },
-						].map((s) => (
-							<div key={s.label} className="text-center group">
-								<div className="stat-num text-3xl sm:text-4xl text-[#C79A4B] font-extrabold group-hover:text-white transition-colors">
+						].map((s, idx) => (
+							<motion.div
+								key={s.label}
+								initial={{ opacity: 0, y: 22 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true, margin: "-40px" }}
+								transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+								className="text-center group cursor-default"
+							>
+								<div className="stat-num text-3xl sm:text-4xl text-[#C79A4B] font-extrabold group-hover:text-white transition-colors duration-300">
 									<CountUp end={s.val} suffix={s.suffix} />
 								</div>
-								<div className="text-[11px] sm:text-xs text-slate-300 font-semibold tracking-wider mt-1.5 uppercase">
+								<div className="text-[11px] sm:text-xs text-slate-300 font-semibold tracking-wider mt-1.5 uppercase transition-colors group-hover:text-slate-200">
 									{s.label}
 								</div>
-							</div>
+							</motion.div>
 						))}
 					</div>
 				</div>
@@ -520,13 +548,19 @@ export default function HomePage() {
 					<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 						
 						{/* Left: Sticky Navigation & Section Intro — Stays pinned until last card */}
-						<div className="lg:col-span-4 lg:sticky lg:top-28 self-start space-y-6">
+						<motion.div
+							initial={{ opacity: 0, x: -25 }}
+							whileInView={{ opacity: 1, x: 0 }}
+							viewport={{ once: true, margin: "-60px" }}
+							transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+							className="lg:col-span-4 lg:sticky lg:top-28 self-start space-y-6"
+						>
 							<span className="section-pill-light">What We Do</span>
 							<h2 className="text-4xl sm:text-5xl font-extrabold text-white leading-[1.08] tracking-tight">
 								Our <span className="text-[#C79A4B]">Services</span>
 							</h2>
 							<div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
-							<p className="text-slate-300/85 leading-relaxed text-sm sm:text-base">
+							<p className="text-slate-300/85 leading-relaxed text-sm sm:text-base font-normal">
 								Five specialized capabilities connecting bulk API reactors with
 								India’s advanced pharmaceutical formulation facilities — fully
 								compliant, documented, and reliably delivered.
@@ -552,20 +586,20 @@ export default function HomePage() {
 														el.scrollIntoView({ behavior: "smooth", block: "center" });
 													}
 												}}
-												className={`w-full group flex items-center gap-3 pl-5 py-2.5 -ml-px text-left transition-colors relative z-10 ${
+												className={`w-full group flex items-center gap-3 pl-5 py-2.5 -ml-px text-left transition-colors duration-200 relative z-10 cursor-pointer ${
 													isActive
 														? "text-white font-bold"
 														: "text-slate-400 hover:text-slate-200"
 												}`}
 											>
 												<span
-													className={`stat-num text-xs transition-colors ${
+													className={`stat-num text-xs transition-colors duration-200 ${
 														isActive ? "text-[#C79A4B] font-extrabold" : "text-slate-500 group-hover:text-slate-400"
 													}`}
 												>
 													{String(s.num).padStart(2, "0")}
 												</span>
-												<span className="text-sm font-semibold truncate">{s.title}</span>
+												<span className="text-sm font-semibold truncate group-hover:translate-x-0.5 transition-transform duration-200">{s.title}</span>
 											</button>
 										</div>
 									);
@@ -573,31 +607,35 @@ export default function HomePage() {
 							</nav>
 
 							<motion.button
-								whileHover={{ scale: 1.02 }}
+								whileHover={{ scale: 1.025, y: -2 }}
 								whileTap={{ scale: 0.98 }}
 								onClick={() => handleOpenQuote("Comprehensive Service Sourcing Inquiry")}
-								className="flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[#C79A4B] text-white font-bold text-sm shadow-xl hover:bg-[#B58A3E] transition-all group w-full sm:w-auto"
+								className="flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[#C79A4B] text-white font-bold text-sm shadow-xl hover:bg-[#B58A3E] transition-colors group w-full sm:w-auto cursor-pointer gpu-smooth"
 							>
 								<span>Discuss Your Sourcing Needs</span>
-								<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+								<ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
 							</motion.button>
 
 							<div className="hidden lg:block w-[180px] pt-4 opacity-30">
 								<MolecularDecoration color="#C79A4B" opacity={0.6} />
 							</div>
-						</div>
+						</motion.div>
 
 						{/* Right: Detailed 5 Service Cards */}
 						<div className="lg:col-span-8 space-y-10 pb-8">
-							{SERVICES.map((svc) => {
+							{SERVICES.map((svc, sIdx) => {
 								const Icon = svc.icon;
 								const isActive = activeService === svc.num;
 
 								return (
-									<article
+									<motion.article
 										id={`service-${svc.num}`}
 										key={svc.num}
-										className={`service-card group scroll-mt-28 overflow-hidden transition-all duration-500 ${
+										initial={{ opacity: 0, y: 32 }}
+										whileInView={{ opacity: 1, y: 0 }}
+										viewport={{ once: true, margin: "-60px" }}
+										transition={{ duration: 0.6, delay: sIdx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+										className={`service-card group scroll-mt-28 overflow-hidden transition-[border-color,box-shadow,opacity] duration-300 ${
 											isActive
 												? "border-white/25 shadow-2xl opacity-100"
 												: "border-white/10 opacity-80 hover:opacity-100 hover:border-white/20"
@@ -634,8 +672,8 @@ export default function HomePage() {
 															{svc.tag}
 														</span>
 													</div>
-													<div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-[#C79A4B] transition-colors">
-														<Icon className="w-5 h-5 text-[#C79A4B] group-hover:text-white transition-colors" />
+													<div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-[#C79A4B] transition-colors duration-300">
+														<Icon className="w-5 h-5 text-[#C79A4B] group-hover:text-white transition-colors duration-300" />
 													</div>
 												</div>
 
@@ -643,14 +681,14 @@ export default function HomePage() {
 													{svc.title}
 												</h3>
 												
-												<p className="text-sm text-slate-300/85 leading-relaxed">
+												<p className="text-sm text-slate-300/85 leading-relaxed font-normal">
 													{svc.desc}
 												</p>
 
 												<ul className="space-y-2 pt-1">
 													{svc.points.map((pt) => (
 														<li key={pt} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200">
-															<HexIcon size={18} bg="rgba(199,154,75,0.2)" className="mt-0.5">
+															<HexIcon size={18} bg="rgba(199,154,75,0.2)" className="mt-0.5 shrink-0">
 																<Check className="w-2.5 h-2.5 text-[#C79A4B] stroke-[3]" />
 															</HexIcon>
 															<span>{pt}</span>
@@ -661,15 +699,15 @@ export default function HomePage() {
 												<div className="pt-2">
 													<button
 														onClick={() => handleOpenQuote(`Service Sourcing Inquiry: ${svc.title}`)}
-														className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#C79A4B] hover:text-white transition-colors group/link"
+														className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#C79A4B] hover:text-white transition-colors group/link cursor-pointer"
 													>
 														<span>Enquire about {svc.title}</span>
-														<ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+														<ArrowUpRight className="w-4 h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-200" />
 													</button>
 												</div>
 											</div>
 										</div>
-									</article>
+									</motion.article>
 								);
 							})}
 						</div>
@@ -767,13 +805,20 @@ export default function HomePage() {
 									"Complete USDMF, CEP & CDSCO Regulatory Filing Support",
 									"Stringent HPLC, GC & Elemental Batch Purity Verification",
 									"Temperature-Controlled, Fully Documented Global Export Supply Chain",
-								].map((item) => (
-									<div key={item} className="flex items-center gap-3 text-sm text-[#3E5C72] font-medium">
-										<HexIcon size={24} bg="#12304A">
+								].map((item, i) => (
+									<motion.div
+										key={item}
+										initial={{ opacity: 0, x: 12 }}
+										whileInView={{ opacity: 1, x: 0 }}
+										viewport={{ once: true }}
+										transition={{ duration: 0.45, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+										className="flex items-center gap-3 text-sm text-[#3E5C72] font-medium"
+									>
+										<HexIcon size={24} bg="#12304A" className="shrink-0">
 											<Check className="w-3.5 h-3.5 text-white stroke-[3]" />
 										</HexIcon>
 										<span>{item}</span>
-									</div>
+									</motion.div>
 								))}
 							</div>
 
@@ -784,10 +829,15 @@ export default function HomePage() {
 									{ val: 250, suffix: "+", label: "Global Partners", color: "#12304A" },
 									{ val: 50, suffix: "+", label: "API Registrations", color: "#C79A4B" },
 									{ val: 20, suffix: "+", label: "Regulatory Experts", color: "#12304A" },
-								].map((s) => (
-									<div
+								].map((s, idx) => (
+									<motion.div
 										key={s.label}
-										className="bg-white border border-[#12304A]/8 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-all text-left"
+										initial={{ opacity: 0, y: 16 }}
+										whileInView={{ opacity: 1, y: 0 }}
+										viewport={{ once: true }}
+										transition={{ duration: 0.45, delay: 0.2 + idx * 0.06, ease: [0.16, 1, 0.3, 1] }}
+										whileHover={{ y: -3, scale: 1.015 }}
+										className="bg-white border border-[#12304A]/8 hover:border-[#C79A4B]/40 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-[border-color,box-shadow] duration-200 text-left cursor-default"
 									>
 										<div className="stat-num text-2xl sm:text-3xl font-black text-[#12304A]">
 											<CountUp end={s.val} suffix={s.suffix} />
@@ -795,18 +845,20 @@ export default function HomePage() {
 										<div className="text-[11px] font-bold tracking-wide mt-1" style={{ color: s.color }}>
 											{s.label}
 										</div>
-									</div>
+									</motion.div>
 								))}
 							</div>
 
 							<div className="pt-2">
-								<button
+								<motion.button
+									whileHover={{ scale: 1.025, y: -2 }}
+									whileTap={{ scale: 0.98 }}
 									onClick={() => router.push("/products")}
-									className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-[#12304A] text-white font-bold text-sm shadow-xl hover:bg-[#0E263B] transition-all group"
+									className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-[#12304A] text-white font-bold text-sm shadow-xl hover:bg-[#0E263B] transition-colors group cursor-pointer gpu-smooth"
 								>
 									<span>View Full API Catalog</span>
-									<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-								</button>
+									<ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
+								</motion.button>
 							</div>
 						</div>
 					</div>
@@ -861,14 +913,14 @@ export default function HomePage() {
 									initial={{ opacity: 0, y: 18 }}
 									whileInView={{ opacity: 1, y: 0 }}
 									viewport={{ once: true }}
-									transition={{ duration: 0.4, delay: i * 0.05 }}
+									transition={{ duration: 0.45, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
 									whileHover={{ y: -5 }}
 									whileTap={{ scale: 0.98 }}
 									onClick={() => router.push(`/products?category=${encodeURIComponent(cat.name)}`)}
-									className="bg-white border border-[#12304A]/8 rounded-[22px] p-6 cursor-pointer group shadow-md hover:shadow-xl hover:border-[#C79A4B]/40 transition-all flex flex-col justify-between min-h-[175px] text-left"
+									className="bg-white border border-[#12304A]/8 rounded-[22px] p-6 cursor-pointer group shadow-md hover:shadow-xl hover:border-[#C79A4B]/40 transition-[box-shadow,border-color] duration-300 flex flex-col justify-between min-h-[175px] text-left"
 								>
 									<div className="flex justify-between items-start">
-										<HexIcon size={46} bg={isGold ? "rgba(199,154,75,0.12)" : "rgba(18,48,74,0.08)"}>
+										<HexIcon size={46} bg={isGold ? "rgba(199,154,75,0.12)" : "rgba(18,48,74,0.08)"} className="group-hover:scale-105 transition-transform duration-300">
 											<Icon className="w-5 h-5" style={{ color: isGold ? "#C79A4B" : "#12304A" }} />
 										</HexIcon>
 										<div className="w-7 h-7 rounded-full flex items-center justify-center bg-[#12304A]/5 group-hover:bg-[#C79A4B] transition-colors">
@@ -877,7 +929,7 @@ export default function HomePage() {
 									</div>
 
 									<div className="space-y-1 pt-4">
-										<h3 className="text-sm sm:text-base font-bold leading-snug text-[#12304A] group-hover:text-[#C79A4B] transition-colors">
+										<h3 className="text-sm sm:text-base font-bold leading-snug text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200">
 											{cat.name}
 										</h3>
 										<div className="flex items-center gap-1.5">
@@ -893,13 +945,17 @@ export default function HomePage() {
 
 						{/* 8th Card: All Catalog card */}
 						<motion.div
+							initial={{ opacity: 0, y: 18 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.45, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
 							whileHover={{ y: -5 }}
 							whileTap={{ scale: 0.98 }}
 							onClick={() => router.push("/products")}
-							className="bg-[#12304A] text-white rounded-[22px] p-6 cursor-pointer group shadow-xl hover:shadow-2xl transition-all flex flex-col justify-between min-h-[175px] text-left"
+							className="bg-[#12304A] text-white rounded-[22px] p-6 cursor-pointer group shadow-xl hover:shadow-2xl transition-[box-shadow,border-color] duration-300 flex flex-col justify-between min-h-[175px] text-left border border-white/10 hover:border-[#C79A4B]/40"
 						>
 							<div className="flex justify-between items-start">
-								<HexIcon size={46} bg="rgba(199,154,75,0.25)">
+								<HexIcon size={46} bg="rgba(199,154,75,0.25)" className="group-hover:scale-105 transition-transform duration-300">
 									<Globe className="w-5 h-5 text-[#C79A4B]" />
 								</HexIcon>
 								<div className="w-7 h-7 rounded-full flex items-center justify-center bg-white/10 group-hover:bg-[#C79A4B] transition-colors">
@@ -920,13 +976,15 @@ export default function HomePage() {
 
 					{/* Action CTA */}
 					<div className="flex items-center justify-center pt-2">
-						<button
+						<motion.button
+							whileHover={{ scale: 1.025, y: -2 }}
+							whileTap={{ scale: 0.98 }}
 							onClick={() => router.push("/products")}
-							className="flex items-center gap-2.5 px-9 py-4 rounded-full bg-[#12304A] text-white font-bold text-sm shadow-xl hover:bg-[#0E263B] transition-all group"
+							className="flex items-center gap-2.5 px-9 py-4 rounded-full bg-[#12304A] text-white font-bold text-sm shadow-xl hover:bg-[#0E263B] transition-colors group cursor-pointer gpu-smooth"
 						>
 							<span>Explore Entire Product Directory</span>
-							<ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-						</button>
+							<ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200" />
+						</motion.button>
 					</div>
 				</div>
 			</motion.section>
@@ -934,7 +992,13 @@ export default function HomePage() {
 			{/* ══════════════════════════════════════════════════════════
           5. GLOBAL REACH — World Map with Live Pulse Pins
           ══════════════════════════════════════════════════════════ */}
-			<section className="relative bg-[#12304A] py-20 sm:py-28 overflow-hidden">
+			<motion.section
+				initial={{ opacity: 0, y: 25 }}
+				whileInView={{ opacity: 1, y: 0 }}
+				viewport={{ once: true, margin: "-80px" }}
+				transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+				className="relative bg-[#12304A] py-20 sm:py-28 overflow-hidden"
+			>
 				{/* Wave in */}
 				<div className="absolute top-0 inset-x-0 -mt-px">
 					<svg
@@ -947,7 +1011,13 @@ export default function HomePage() {
 				</div>
 
 				<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 pt-8">
-					<div className="text-center space-y-3">
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true }}
+						transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+						className="text-center space-y-3"
+					>
 						<span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
 							<div className="w-8 h-[2px] bg-[#C79A4B]" />
 							Global Reach
@@ -959,12 +1029,18 @@ export default function HomePage() {
 						<p className="text-base text-slate-300 font-normal max-w-xl mx-auto">
 							Supplying pharmaceutical formulators in 30+ countries across 5 continents with certified, compliant APIs.
 						</p>
-					</div>
+					</motion.div>
 
 					<div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 						{/* Interactive Map */}
-						<div className="lg:col-span-8">
-							<div className="bg-white/5 border border-white/10 rounded-[24px] p-6 sm:p-8 backdrop-blur-sm relative overflow-hidden">
+						<motion.div
+							initial={{ opacity: 0, scale: 0.98, y: 20 }}
+							whileInView={{ opacity: 1, scale: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+							className="lg:col-span-8"
+						>
+							<div className="bg-white/5 border border-white/10 rounded-[24px] p-6 sm:p-8 backdrop-blur-sm relative overflow-hidden shadow-2xl">
 								<div className="relative w-full" style={{ paddingBottom: "52%" }}>
 									<img
 										src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg"
@@ -1012,8 +1088,8 @@ export default function HomePage() {
 													</>
 												) : (
 													<>
-														<span className="absolute w-4 h-4 rounded-full bg-white/20 group-hover:scale-150 transition-transform" />
-														<div className="w-2.5 h-2.5 rounded-full bg-white group-hover:bg-[#C79A4B] border border-white shadow transition-colors relative z-10" />
+														<span className="absolute w-4 h-4 rounded-full bg-white/20 group-hover:scale-150 transition-transform duration-200" />
+														<div className="w-2.5 h-2.5 rounded-full bg-white group-hover:bg-[#C79A4B] border border-white shadow transition-colors duration-200 relative z-10" />
 													</>
 												)}
 											</div>
@@ -1036,7 +1112,7 @@ export default function HomePage() {
 									</span>
 								</div>
 							</div>
-						</div>
+						</motion.div>
 
 						{/* Infographic Stat Cards */}
 						<div className="lg:col-span-4 space-y-3.5">
@@ -1046,12 +1122,17 @@ export default function HomePage() {
 								{ icon: FlaskConical, label: "DCGI Molecules", value: "46+", color: "#C79A4B" },
 								{ icon: Award, label: "Compliance Benchmark", value: "WHO-GMP", color: "#FFFFFF" },
 								{ icon: TrendingUp, label: "Annual Supply Volume", value: "500+ MT", color: "#C79A4B" },
-							].map((s) => (
-								<div
+							].map((s, idx) => (
+								<motion.div
 									key={s.label}
-									className="bg-white/5 border border-white/10 rounded-xl p-3.5 flex items-center gap-4 hover:border-[#C79A4B]/40 hover:bg-white/10 transition-all text-left"
+									initial={{ opacity: 0, x: 20 }}
+									whileInView={{ opacity: 1, x: 0 }}
+									viewport={{ once: true }}
+									transition={{ duration: 0.45, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+									whileHover={{ x: 6 }}
+									className="bg-white/5 border border-white/10 rounded-xl p-3.5 flex items-center gap-4 hover:border-[#C79A4B]/40 hover:bg-white/10 transition-[border-color,background-color] duration-200 text-left cursor-default"
 								>
-									<div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-white/10">
+									<div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-white/10 group-hover:scale-105 transition-transform">
 										<s.icon className="w-5 h-5" style={{ color: s.color }} />
 									</div>
 									<div>
@@ -1060,7 +1141,7 @@ export default function HomePage() {
 											{s.value}
 										</div>
 									</div>
-								</div>
+								</motion.div>
 							))}
 						</div>
 					</div>
@@ -1076,10 +1157,10 @@ export default function HomePage() {
 						<path d="M0,80 C480,0 960,80 1440,20 L1440,80 L0,80 Z" fill="white" />
 					</svg>
 				</div>
-			</section>
+			</motion.section>
 
 			{/* ══════════════════════════════════════════════════════════
-          6. WHY RUSKIN — Bento Grid
+          6. WHY RUSKIN — Clinical Bento Grid
           ══════════════════════════════════════════════════════════ */}
 			<motion.section
 				initial={{ opacity: 0, y: 25 }}
@@ -1088,7 +1169,15 @@ export default function HomePage() {
 				transition={{ duration: 0.6 }}
 				className="py-20 sm:py-28 bg-white relative overflow-hidden text-left"
 			>
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+				{/* Ambient background molecular accents */}
+				<div className="absolute top-0 right-0 w-[360px] pointer-events-none translate-x-12 -translate-y-10 select-none opacity-[0.035]">
+					<MolecularDecoration color="#12304A" opacity={1} className="w-full h-auto" />
+				</div>
+				<div className="absolute bottom-0 left-0 w-[320px] pointer-events-none -translate-x-12 translate-y-10 select-none opacity-[0.03]">
+					<MolecularDecoration color="#C79A4B" opacity={1} className="w-full h-auto" />
+				</div>
+
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
 					<div className="space-y-3">
 						<span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
 							<div className="w-8 h-[2px] bg-[#C79A4B]" />
@@ -1103,62 +1192,74 @@ export default function HomePage() {
 						</p>
 					</div>
 
-					{/* Bento Grid */}
+					{/* Unified Luxury Photo Bento Grid */}
 					<div className="grid grid-cols-1 md:grid-cols-12 gap-5">
 						{[
 							{
 								img: "/images/quality.jpg",
 								title: "Uncompromising Quality & Compliance",
 								desc: "Full batch-to-batch documentation, analytical purity verification, and cGMP compliance standard across every global shipment.",
-								span: "md:col-span-7",
-								h: "h-[300px]",
+								span: "md:col-span-12 lg:col-span-7",
+								h: "min-h-[300px] sm:h-[320px]",
 							},
 							{
 								img: "/images/supply.jpg",
 								title: "Supply Chain Reliability",
 								desc: "Continuous stock availability with strategic warehousing in Mumbai to shield your formulation pipeline from shortages.",
-								span: "md:col-span-5",
-								h: "h-[300px]",
+								span: "md:col-span-12 lg:col-span-5",
+								h: "min-h-[300px] sm:h-[320px]",
 							},
 							{
 								img: "/images/sourcing.jpg",
 								title: "Direct Global Sourcing",
-								desc: "Established relationships with top audited manufacturers in Europe, Japan, China, and India.",
-								span: "md:col-span-4",
-								h: "h-[250px]",
+								desc: "Established relationships with top audited manufacturers across Europe, Japan, China, and India.",
+								span: "md:col-span-12 lg:col-span-4",
+								h: "min-h-[260px] sm:h-[280px]",
 							},
 							{
 								img: "/images/regulatory.avif",
 								title: "Regulatory Excellence",
 								desc: "End-to-end dossier support, CDSCO import registrations, DMF submissions, and customs clearance.",
-								span: "md:col-span-4",
-								h: "h-[250px]",
+								span: "md:col-span-12 lg:col-span-4",
+								h: "min-h-[260px] sm:h-[280px]",
 							},
 							{
 								img: "/images/strategic.jpg",
 								title: "Strategic Partnerships",
 								desc: "Long-term collaboration backed by 36+ years of industry credibility and deep supply chain visibility.",
-								span: "md:col-span-4",
-								h: "h-[250px]",
+								span: "md:col-span-12 lg:col-span-4",
+								h: "min-h-[260px] sm:h-[280px]",
 							},
-						].map((card) => (
+						].map((card, idx) => (
 							<motion.div
 								key={card.title}
-								whileHover={{ y: -5 }}
-								className={`${card.span} relative rounded-[24px] overflow-hidden ${card.h} group cursor-pointer shadow-md hover:shadow-xl transition-all duration-300`}
+								initial={{ opacity: 0, y: 24 }}
+								whileInView={{ opacity: 1, y: 0 }}
+								viewport={{ once: true, margin: "-40px" }}
+								transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+								whileHover={{ y: -4 }}
+								className={`${card.span} relative rounded-[28px] overflow-hidden ${card.h} group cursor-pointer shadow-lg hover:shadow-2xl transition-[box-shadow,border-color] duration-300 border border-white/15 hover:border-white/30 flex flex-col justify-end p-6 sm:p-8`}
 							>
 								<img
 									src={card.img}
 									alt={card.title}
-									className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+									className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
 								/>
-								<div className="absolute inset-0 bg-gradient-to-t from-[#12304A]/90 via-[#12304A]/40 to-transparent" />
-								<div className="absolute bottom-0 left-0 p-6 space-y-2 text-left">
-									<HexIcon size={28} bg="#C79A4B">
-										<Check className="w-3.5 h-3.5 text-white stroke-[3]" />
-									</HexIcon>
-									<h3 className="text-xl font-bold text-white tracking-tight">{card.title}</h3>
-									<p className="text-xs text-slate-200/90 font-normal leading-relaxed">{card.desc}</p>
+								<div className="absolute inset-0 bg-gradient-to-t from-[#071521]/95 via-[#0B1E2E]/60 to-transparent" />
+
+								{/* Bottom content */}
+								<div className="relative z-10 space-y-2 text-left">
+									<div className="flex items-center gap-2.5">
+										<HexIcon size={28} bg="#C79A4B">
+											<Check className="w-3.5 h-3.5 text-white stroke-[3]" />
+										</HexIcon>
+										<h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug">
+											{card.title}
+										</h3>
+									</div>
+									<p className="text-xs sm:text-sm text-slate-200/90 font-normal leading-relaxed max-w-xl">
+										{card.desc}
+									</p>
 								</div>
 							</motion.div>
 						))}
@@ -1197,10 +1298,10 @@ export default function HomePage() {
 							onClick={() => setCatalogModalOpen(false)}
 						/>
 						<motion.div
-							initial={{ opacity: 0, scale: 0.95, y: -8 }}
+							initial={{ opacity: 0, scale: 0.94, y: 16 }}
 							animate={{ opacity: 1, scale: 1, y: 0 }}
-							exit={{ opacity: 0, scale: 0.95, y: -8 }}
-							transition={{ duration: 0.2, ease: "easeOut" }}
+							exit={{ opacity: 0, scale: 0.94, y: 12 }}
+							transition={{ type: "spring", damping: 28, stiffness: 380 }}
 							className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(620px,calc(100vw-32px))] flex flex-col rounded-3xl overflow-hidden bg-white shadow-2xl border border-[#12304A]/10 max-h-[85vh]"
 						>
 							{/* Header */}
@@ -1255,7 +1356,7 @@ export default function HomePage() {
 									filteredCatalog.map((product) => (
 										<div
 											key={product.id}
-											className="rounded-2xl p-4 border border-[#12304A]/8 bg-white hover:border-[#C79A4B]/40 hover:shadow-md transition-all flex flex-col gap-2"
+											className="rounded-2xl p-4 border border-[#12304A]/8 bg-white hover:border-[#C79A4B]/40 hover:shadow-md transition-[border-color,box-shadow] duration-200 flex flex-col gap-2"
 										>
 											<div className="flex items-center justify-between">
 												<span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#C79A4B]/15 text-[#C79A4B] uppercase tracking-wide">
@@ -1418,7 +1519,7 @@ export default function HomePage() {
 											whileTap={{ scale: 0.98 }}
 											type="submit"
 											disabled={isSubmitting}
-											className="w-full bg-[#12304A] hover:bg-[#0E263B] disabled:bg-[#12304A]/80 text-white py-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-md active:scale-95"
+											className="w-full bg-[#12304A] hover:bg-[#0E263B] disabled:bg-[#12304A]/80 text-white py-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-md cursor-pointer gpu-smooth"
 										>
 											{isSubmitting ? (
 												<span className="inline-flex items-center gap-2">
@@ -1474,7 +1575,7 @@ export default function HomePage() {
 											whileHover={{ scale: 1.03 }}
 											whileTap={{ scale: 0.97 }}
 											onClick={() => setQuoteModalOpen(false)}
-											className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-full text-xs font-bold transition-all shadow-md"
+											className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-full text-xs font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
 										>
 											Done
 										</motion.button>

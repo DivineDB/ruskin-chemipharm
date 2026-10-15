@@ -128,17 +128,17 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onOpenSearch}
-              className="w-10 h-10 rounded-full flex items-center justify-center text-[#12304A] hover:text-[#C79A4B] bg-[#12304A]/5 hover:bg-[#C79A4B]/10 border border-[#12304A]/8 hover:border-[#C79A4B]/40 transition-all shadow-xs"
+              className="w-10 h-10 rounded-full flex items-center justify-center text-[#12304A] hover:text-[#C79A4B] bg-[#12304A]/5 hover:bg-[#C79A4B]/10 border border-[#12304A]/8 hover:border-[#C79A4B]/40 transition-[color,background-color,border-color] duration-200 shadow-xs cursor-pointer gpu-smooth"
               title="Search Catalog (Ctrl+K)"
               aria-label="Search Catalog"
             >
               <Search className="w-4 h-4 stroke-[2.2]" />
             </motion.button>
           ) : (
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="gpu-smooth">
               <Link
                 href="/products"
-                className="w-10 h-10 rounded-full flex items-center justify-center text-[#12304A] hover:text-[#C79A4B] bg-[#12304A]/5 hover:bg-[#C79A4B]/10 border border-[#12304A]/8 hover:border-[#C79A4B]/40 transition-all shadow-xs"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-[#12304A] hover:text-[#C79A4B] bg-[#12304A]/5 hover:bg-[#C79A4B]/10 border border-[#12304A]/8 hover:border-[#C79A4B]/40 transition-[color,background-color,border-color] duration-200 shadow-xs cursor-pointer"
                 title="Search Catalog"
                 aria-label="Search Catalog"
               >
@@ -154,18 +154,20 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
               if (onOpenQuote) onOpenQuote();
               else window.location.href = "/#contact";
             }}
-            className="hidden sm:flex items-center bg-[#12304A] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#0E263B] transition-all shadow-sm"
+            className="hidden sm:flex items-center bg-[#12304A] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#0E263B] transition-colors shadow-sm cursor-pointer gpu-smooth"
           >
             Request Quote
           </motion.button>
 
           {/* Mobile menu toggle */}
-          <button
-            className="md:hidden w-9 h-9 flex items-center justify-center text-[#12304A] rounded-lg hover:bg-[#12304A]/5"
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            className="md:hidden w-9 h-9 flex items-center justify-center text-[#12304A] rounded-lg hover:bg-[#12304A]/5 transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle Navigation Menu"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -176,7 +178,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
             className="md:hidden overflow-hidden border-t border-[#12304A]/10 bg-white/98 backdrop-blur-lg shadow-xl"
           >
             <div className="px-5 py-4 space-y-2">
@@ -218,7 +220,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
                     if (onOpenQuote) onOpenQuote();
                     else window.location.href = "/#contact";
                   }}
-                  className="w-full bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-5 py-3.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2"
+                  className="w-full bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-5 py-3.5 rounded-xl text-sm font-bold shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Request Commercial Quote</span>
                 </button>
