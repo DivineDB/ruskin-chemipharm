@@ -1,6 +1,7 @@
 # Ruskin Chemipharm Project - Agent Guidelines & System Prompt
 
 ## Framework & Tech Stack
+
 - **Framework**: Next.js 14+ (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
@@ -8,7 +9,8 @@
 - **Animation**: Framer Motion (`framer-motion`)
 
 ## Design System & Design Tokens (Ruskin Chemipharm)
-- **Background / Canvas**: Deep Navy `#0B192C`
+
+- **Background / Canvas**: Deep Navy `#12304A`
 - **Brand Accent**: Warm Gold `#C79A4B`
 - **Cards / Surfaces**: Dark Glassmorphism `rgba(255, 255, 255, 0.05)` with border `1px solid rgba(255, 255, 255, 0.1)`
 - **Typography & Text Colors**:
@@ -17,6 +19,7 @@
   - Muted Text: `#94A3B8` (Slate-400)
 
 ## Standing Instructions
+
 - Project is UI-driven via Figma MCP integration.
 - Keep code clean, modular, and fully typed in TypeScript.
 - Mobile-first responsive layout using Tailwind CSS.

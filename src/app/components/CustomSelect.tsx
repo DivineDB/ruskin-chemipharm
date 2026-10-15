@@ -16,6 +16,9 @@ interface CustomSelectProps {
   label?: string;
   required?: boolean;
   className?: string;
+  /** "dark" = navy dark bg (default, for dark sections); "light" = white bg (for cream/white sections) */
+  variant?: "dark" | "light";
+  size?: "sm" | "md";
 }
 
 export default function CustomSelect({
@@ -26,6 +29,8 @@ export default function CustomSelect({
   label,
   required = false,
   className = "",
+  variant = "dark",
+  size = "md",
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -43,10 +48,13 @@ export default function CustomSelect({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const isDark = variant === "dark";
+  const pyClass = size === "sm" ? "px-3 py-2" : "px-4 py-3";
+
   return (
     <div className={`relative flex flex-col text-left ${className}`} ref={dropdownRef}>
       {label && (
-        <label className="block text-xs font-semibold text-slate-200 mb-1.5">
+        <label className={`block text-xs font-semibold mb-1.5 ${isDark ? "text-slate-200" : "text-[#12304A]"}`}>
           {label} {required && <span className="text-[#C79A4B]">*</span>}
         </label>
       )}
@@ -55,25 +63,45 @@ export default function CustomSelect({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full bg-[#112436] border text-xs text-left px-4 py-3 rounded-xl flex items-center justify-between transition-colors focus:outline-none ${
-          isOpen
-            ? "border-[#C79A4B] text-white"
-            : "border-slate-700/70 hover:border-slate-500 text-slate-200"
+        className={`w-full text-xs text-left ${pyClass} rounded-xl flex items-center justify-between transition-colors focus:outline-none border ${
+          isDark
+            ? isOpen
+              ? "bg-[#112436] border-[#C79A4B] text-white"
+              : "bg-[#112436] border-slate-700/70 hover:border-slate-500 text-slate-200"
+            : isOpen
+            ? "bg-white border-[#C79A4B] text-[#12304A] shadow-sm"
+            : "bg-white border-[#12304A]/10 hover:border-[#C79A4B]/50 text-[#12304A] shadow-sm"
         }`}
       >
-        <span className={selectedOption ? "text-white font-medium" : "text-slate-400"}>
+        <span
+          className={
+            selectedOption
+              ? isDark
+                ? "text-white font-medium"
+                : "text-[#12304A] font-medium"
+              : isDark
+              ? "text-slate-400"
+              : "text-[#B0C4D4]"
+          }
+        >
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
-            isOpen ? "rotate-180 text-[#C79A4B]" : ""
+          className={`w-4 h-4 transition-transform duration-200 ${
+            isOpen ? "rotate-180 text-[#C79A4B]" : isDark ? "text-slate-400" : "text-[#7A93A8]"
           }`}
         />
       </button>
 
-      {/* Animated Dropdown Menu Popover */}
+      {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#0F2234] border border-slate-700/80 rounded-xl shadow-2xl py-1.5 z-50 max-h-60 overflow-y-auto custom-scrollbar">
+        <div
+          className={`absolute top-full left-0 right-0 mt-1.5 rounded-xl shadow-2xl py-1.5 z-50 max-h-60 overflow-y-auto custom-scrollbar border ${
+            isDark
+              ? "bg-[#0F2234] border-slate-700/80"
+              : "bg-white border-[#12304A]/10"
+          }`}
+        >
           {options.map((option) => {
             const isSelected = option.value === value;
             return (
@@ -86,8 +114,10 @@ export default function CustomSelect({
                 }}
                 className={`w-full text-left px-4 py-2.5 text-xs flex items-center justify-between transition-colors ${
                   isSelected
-                    ? "bg-[#C79A4B]/15 text-[#E5C378] font-bold"
-                    : "text-slate-200 hover:bg-[#18344E] hover:text-white"
+                    ? "bg-[#C79A4B]/15 text-[#C79A4B] font-bold"
+                    : isDark
+                    ? "text-slate-200 hover:bg-[#18344E] hover:text-white"
+                    : "text-[#3E5C72] hover:bg-[#FAF7F2] hover:text-[#12304A]"
                 }`}
               >
                 <span>{option.label}</span>

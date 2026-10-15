@@ -638,3 +638,28 @@ export function getRelatedProducts(currentProduct: ApiProduct, limit = 4): ApiPr
     (p) => p.category === currentProduct.category && p.id !== currentProduct.id
   ).slice(0, limit);
 }
+
+/** Categories with live product counts, in catalog order. Single source of truth for all filters. */
+export const PRODUCT_CATEGORIES: { name: string; count: number }[] = Array.from(
+  ALL_PRODUCTS.reduce(
+    (map, p) => map.set(p.category, (map.get(p.category) ?? 0) + 1),
+    new Map<string, number>()
+  )
+).map(([name, count]) => ({ name, count }));
+
+export function searchProducts(query: string, limit?: number): ApiProduct[] {
+  const q = query.trim().toLowerCase();
+  if (!q) return [];
+  const hits = ALL_PRODUCTS.filter(
+    (p) =>
+      p.name.toLowerCase().includes(q) ||
+      p.casNumber.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q)
+  ).sort((a, b) => {
+    // names that start with the query rank first
+    const as = a.name.toLowerCase().startsWith(q) ? 0 : 1;
+    const bs = b.name.toLowerCase().startsWith(q) ? 0 : 1;
+    return as - bs || a.name.localeCompare(b.name);
+  });
+  return limit ? hits.slice(0, limit) : hits;
+}

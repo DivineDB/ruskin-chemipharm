@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Search } from "lucide-react";
+import { Search, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
   onOpenSearch?: () => void;
@@ -12,116 +14,219 @@ interface NavbarProps {
 
 export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
   const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const isHome = pathname === "/";
   const isProducts = pathname.startsWith("/products");
 
+  const navLinks = [
+    { href: "/", label: "Home", active: isHome },
+    { href: "/products", label: "Products", active: isProducts },
+    { href: "/#services", label: "Services", active: false },
+    { href: "/#about", label: "About", active: false },
+    { href: "/#contact", label: "Contact", active: false },
+  ];
+
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 15);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Global Ctrl+K / Cmd+K Search Shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        if (onOpenSearch) onOpenSearch();
+        else window.location.href = "/products";
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onOpenSearch]);
+
   return (
-    <header className="bg-[#EAF2F4] border-b border-slate-200/80 shadow-sm py-3.5 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        
-        {/* Left Brand Logo */}
-        <Link href="/" className="flex items-center">
-          <img
-            src="/images/logo.svg"
-            alt="Ruskin Chemipharm Logo"
-            className="h-10 sm:h-12 w-auto object-contain"
-          />
-        </Link>
+    <header
+      className={`sticky top-0 z-50 h-[72px] sm:h-[76px] flex items-center transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-in-out ${
+        scrolled
+          ? "bg-white/95 backdrop-blur-md shadow-[0_4px_25px_-5px_rgba(18,48,74,0.08)] border-b border-[#12304A]/10"
+          : isHome
+          ? "bg-[#FAF7F2]/90 backdrop-blur-sm border-b border-[#12304A]/6"
+          : "bg-white/90 backdrop-blur-sm border-b border-[#12304A]/6"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between">
 
-        {/* Center Navigation Links & Search/CTA */}
-        <div className="flex items-center space-x-6 sm:space-x-8">
-          <nav className="hidden md:flex items-center space-x-7 text-base font-semibold">
-            {/* Home */}
-            <Link
-              href="/"
-              className={`relative py-1 font-semibold text-base transition-colors ${
-                isHome ? "text-[#12304A] font-bold" : "text-[#3E5C72] hover:text-[#12304A]"
-              }`}
-            >
-              Home
-              {isHome && (
-                <span className="absolute left-0 bottom-0 w-full h-[1.5px] bg-[#C79A4B] rounded-full" />
-              )}
-            </Link>
+        {/* Logo */}
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/logo.svg"
+              alt="Ruskin Chemipharm Logo"
+              width={160}
+              height={48}
+              priority
+              className="h-10 sm:h-12 w-auto object-contain"
+            />
+          </Link>
+        </motion.div>
 
-            {/* Products */}
-            <Link
-              href="/products"
-              className={`relative py-1 font-semibold text-base transition-colors ${
-                isProducts ? "text-[#12304A] font-bold" : "text-[#3E5C72] hover:text-[#12304A]"
-              }`}
-            >
-              Products
-              {isProducts && (
-                <span className="absolute left-0 bottom-0 w-full h-[1.5px] bg-[#C79A4B] rounded-full" />
-              )}
-            </Link>
+        {/* Desktop nav with smoothly gliding active underline via Framer Motion layoutId */}
+        <nav className="hidden md:flex items-center space-x-1 sm:space-x-3 relative py-2">
+          {navLinks.map((link) => {
+            const isCurrentActive = link.active;
 
-            {/* Services */}
-            <a
-              href="/#services"
-              className="text-[#3E5C72] hover:text-[#12304A] transition-colors py-1 text-base font-semibold"
-            >
-              Services
-            </a>
-
-            {/* Contact */}
-            <a
-              href="/#contact"
-              className="text-[#3E5C72] hover:text-[#12304A] transition-colors py-1 text-base font-semibold"
-            >
-              Contact
-            </a>
-
-            {/* About */}
-            <a
-              href="/#about"
-              className="text-[#3E5C72] hover:text-[#12304A] transition-colors py-1 text-base font-semibold"
-            >
-              About
-            </a>
-          </nav>
-
-          {/* Separator Line | */}
-          <div className="hidden md:block h-6 w-px bg-slate-300" />
-
-          {/* Search Circle Button & Request Quote Pill */}
-          <div className="flex items-center space-x-3">
-            {onOpenSearch ? (
-              <button
-                onClick={onOpenSearch}
-                className="w-10 h-10 rounded-full bg-[#12304A] flex items-center justify-center text-white hover:bg-[#0E263B] transition-colors shadow-sm"
-                title="Search Catalog"
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`relative px-3.5 py-1.5 text-sm font-semibold transition-colors duration-150 select-none ${
+                  isCurrentActive
+                    ? "text-[#12304A] font-bold"
+                    : "text-[#5A7A8E] hover:text-[#12304A]"
+                }`}
               >
-                <Search className="w-4 h-4" />
-              </button>
-            ) : (
+                <span>{link.label}</span>
+                {isCurrentActive && (
+                  <motion.span
+                    layoutId="navbar-active-underline"
+                    className="absolute -bottom-0.5 inset-x-3 h-[2.5px] bg-[#C79A4B] rounded-full pointer-events-none"
+                    transition={{
+                      type: "spring",
+                      stiffness: 420,
+                      damping: 34,
+                    }}
+                  />
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Right actions */}
+        <div className="flex items-center gap-3">
+          {/* Search Trigger — Sleek circular icon button */}
+          {onOpenSearch ? (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onOpenSearch}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-[#12304A] hover:text-[#C79A4B] bg-[#12304A]/5 hover:bg-[#C79A4B]/10 border border-[#12304A]/8 hover:border-[#C79A4B]/40 transition-all shadow-xs"
+              title="Search Catalog (Ctrl+K)"
+              aria-label="Search Catalog"
+            >
+              <Search className="w-4 h-4 stroke-[2.2]" />
+            </motion.button>
+          ) : (
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/products"
-                className="w-10 h-10 rounded-full bg-[#12304A] flex items-center justify-center text-white hover:bg-[#0E263B] transition-colors shadow-sm"
+                className="w-10 h-10 rounded-full flex items-center justify-center text-[#12304A] hover:text-[#C79A4B] bg-[#12304A]/5 hover:bg-[#C79A4B]/10 border border-[#12304A]/8 hover:border-[#C79A4B]/40 transition-all shadow-xs"
                 title="Search Catalog"
+                aria-label="Search Catalog"
               >
-                <Search className="w-4 h-4" />
+                <Search className="w-4 h-4 stroke-[2.2]" />
               </Link>
-            )}
+            </motion.div>
+          )}
 
-            <button
-              onClick={() => {
-                if (onOpenQuote) {
-                  onOpenQuote();
-                } else {
-                  window.location.href = "/#contact";
-                }
-              }}
-              className="bg-[#12304A] hover:bg-[#0E263B] text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-colors shadow-sm"
-            >
-              Request Quote
-            </button>
-          </div>
+          {/* Request Quote */}
+          <motion.button
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+            onClick={() => {
+              if (onOpenQuote) onOpenQuote();
+              else window.location.href = "/#contact";
+            }}
+            className="hidden sm:flex items-center bg-[#12304A] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#0E263B] transition-all shadow-sm"
+          >
+            Request Quote
+          </motion.button>
+
+          {/* Mobile menu toggle */}
+          <button
+            className="md:hidden w-9 h-9 flex items-center justify-center text-[#12304A] rounded-lg hover:bg-[#12304A]/5"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
-
       </div>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="md:hidden overflow-hidden border-t border-[#12304A]/10 bg-white/98 backdrop-blur-lg shadow-xl"
+          >
+            <div className="px-5 py-4 space-y-2">
+              {/* Mobile Quick Search Bar */}
+              <div className="pb-2">
+                <button
+                  onClick={() => {
+                    setMobileOpen(false);
+                    if (onOpenSearch) onOpenSearch();
+                    else window.location.href = "/products";
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#12304A]/10 text-xs font-semibold text-[#5A7A8E] hover:border-[#C79A4B]/40 transition-colors"
+                >
+                  <Search className="w-4 h-4 text-[#C79A4B]" />
+                  <span>Search 46+ DCGI APIs &amp; CAS...</span>
+                </button>
+              </div>
+
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-colors min-h-[46px] ${
+                    link.active
+                      ? "bg-[#12304A] text-white shadow-sm"
+                      : "text-[#12304A] hover:bg-[#12304A]/5"
+                  }`}
+                >
+                  <span>{link.label}</span>
+                  {link.active && <span className="w-2 h-2 rounded-full bg-[#C79A4B]" />}
+                </Link>
+              ))}
+
+              <div className="pt-2">
+                <button
+                  onClick={() => {
+                    setMobileOpen(false);
+                    if (onOpenQuote) onOpenQuote();
+                    else window.location.href = "/#contact";
+                  }}
+                  className="w-full bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-5 py-3.5 rounded-xl text-sm font-bold shadow-md transition-all flex items-center justify-center gap-2"
+                >
+                  <span>Request Commercial Quote</span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
