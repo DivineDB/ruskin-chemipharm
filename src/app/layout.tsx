@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import Navbar from "./components/Navbar";
 import BackToTop from "./components/BackToTop";
+import FloatingScrollbar from "./components/FloatingScrollbar";
+import SearchModal from "./components/SearchModal";
+import { ProductTransitionProvider } from "./context/ProductTransitionContext";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -47,9 +51,14 @@ export default function RootLayout({
 		>
 			<body
 				suppressHydrationWarning
-				className="bg-[#FAF7F2] text-[#3E5C72] antialiased min-h-screen selection:bg-[#C79A4B] selection:text-white"
+				className="bg-[#FAF7F2] text-[#5A7A8E] antialiased min-h-screen selection:bg-[#C79A4B] selection:text-white"
 			>
-				{children}
+				<SearchModal />
+				<FloatingScrollbar />
+				<Navbar />
+				<ProductTransitionProvider>
+					{children}
+				</ProductTransitionProvider>
 				<BackToTop />
 			</body>
 		</html>

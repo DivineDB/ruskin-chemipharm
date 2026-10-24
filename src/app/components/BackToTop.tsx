@@ -9,10 +9,15 @@ export default function BackToTop() {
 
   useEffect(() => {
     let ticking = false;
+    let lastVisible = false;
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setVisible(window.scrollY > 400);
+          const next = window.scrollY > 400;
+          if (next !== lastVisible) {
+            lastVisible = next;
+            setVisible(next);
+          }
           ticking = false;
         });
         ticking = true;
@@ -34,8 +39,8 @@ export default function BackToTop() {
           initial={{ opacity: 0, scale: 0.8, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 12 }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          whileHover={{ scale: 1.1, y: -2 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          whileHover={{ scale: 1.08, y: -2, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
           whileTap={{ scale: 0.94 }}
           onClick={scrollToTop}
           aria-label="Scroll back to top"

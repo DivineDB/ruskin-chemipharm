@@ -10,29 +10,25 @@ interface CtaBannerProps {
 
 export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
   return (
-    <section className="py-16 sm:py-20 bg-white relative overflow-hidden">
+    <section className="py-16 sm:py-20 bg-white relative overflow-hidden contain-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] }}
-          className="relative bg-[#12304A] rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-14 overflow-hidden shadow-2xl"
+          className="relative bg-[#0B1E2E] border border-white/10 rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-14 overflow-hidden shadow-2xl"
         >
           {/* Subtle gold molecular decoration with gentle floating micro-animation */}
-          <motion.div
-            animate={{ y: [0, -7, 0] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" }}
-            className="absolute top-0 right-0 w-[280px] sm:w-[360px] pointer-events-none translate-x-8 -translate-y-6 select-none opacity-10 gpu-smooth"
+          <div
+            className="animate-float-gentle-slow absolute top-0 right-0 w-[280px] sm:w-[360px] pointer-events-none translate-x-8 -translate-y-6 select-none opacity-10 gpu-smooth"
           >
             <MolecularDecoration color="#C79A4B" opacity={1} className="w-full h-auto" />
-          </motion.div>
+          </div>
 
           {/* Floating subtle geometric hex accent */}
-          <motion.div
-            animate={{ rotate: [0, 10, 0], y: [0, -5, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", repeatType: "mirror" }}
-            className="absolute bottom-6 right-1/4 w-8 h-9 border border-[#C79A4B]/20 pointer-events-none hidden lg:block opacity-40 gpu-smooth"
+          <div
+            className="animate-hex-rotate-float absolute bottom-6 right-1/4 w-8 h-9 border border-[#C79A4B]/20 pointer-events-none hidden lg:block opacity-40 gpu-smooth"
             style={{ clipPath: HEX_CLIP }}
           />
 

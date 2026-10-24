@@ -67,8 +67,8 @@ export default function CustomSelect({
         className={`w-full text-xs text-left ${pyClass} rounded-xl flex items-center justify-between transition-colors focus:outline-none border ${
           isDark
             ? isOpen
-              ? "bg-[#112436] border-[#C79A4B] text-white"
-              : "bg-[#112436] border-slate-700/70 hover:border-slate-500 text-slate-200"
+              ? "bg-[#0B1E2E] border-[#C79A4B] text-white"
+              : "bg-[#0B1E2E] border-slate-700/70 hover:border-slate-500 text-slate-200"
             : isOpen
             ? "bg-white border-[#C79A4B] text-[#12304A] shadow-sm"
             : "bg-white border-[#12304A]/10 hover:border-[#C79A4B]/50 text-[#12304A] shadow-sm"
@@ -82,14 +82,14 @@ export default function CustomSelect({
                 : "text-[#12304A] font-medium"
               : isDark
               ? "text-slate-400"
-              : "text-[#B0C4D4]"
+              : "text-[#5A7A8E]"
           }
         >
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <ChevronDown
           className={`w-4 h-4 transition-transform duration-200 ${
-            isOpen ? "rotate-180 text-[#C79A4B]" : isDark ? "text-slate-400" : "text-[#7A93A8]"
+            isOpen ? "rotate-180 text-[#C79A4B]" : isDark ? "text-slate-400" : "text-[#5A7A8E]"
           }`}
         />
       </button>
@@ -104,7 +104,7 @@ export default function CustomSelect({
             transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
             className={`absolute top-full left-0 right-0 mt-1.5 rounded-xl shadow-2xl py-1.5 z-50 max-h-60 overflow-y-auto custom-scrollbar border ${
               isDark
-                ? "bg-[#0F2234] border-slate-700/80"
+                ? "bg-[#071521] border-slate-700/80"
                 : "bg-white border-[#12304A]/10"
             }`}
           >
@@ -122,8 +122,8 @@ export default function CustomSelect({
                     isSelected
                       ? "bg-[#C79A4B]/15 text-[#C79A4B] font-bold"
                       : isDark
-                      ? "text-slate-200 hover:bg-[#18344E] hover:text-white"
-                      : "text-[#3E5C72] hover:bg-[#FAF7F2] hover:text-[#12304A]"
+                      ? "text-slate-200 hover:bg-[#12304A] hover:text-white"
+                      : "text-[#5A7A8E] hover:bg-[#FAF7F2] hover:text-[#12304A]"
                   }`}
                 >
                   <span>{option.label}</span>

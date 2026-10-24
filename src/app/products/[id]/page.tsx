@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect, use, useRef, useCallback } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +8,7 @@ import Footer from "../../components/Footer";
 import CustomSelect from "../../components/CustomSelect";
 import Navbar from "../../components/Navbar";
 import { getProductBySlugOrId, getRelatedProducts, ALL_PRODUCTS } from "@/lib/products";
+import { useProductTransition } from "../../context/ProductTransitionContext";
 import {
   ArrowLeft,
   ArrowRight,
@@ -38,6 +39,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   const currentProduct = product || ALL_PRODUCTS[0];
   const relatedProducts = getRelatedProducts(currentProduct, 4);
+
+  // Cross-page seamless title growth transition
+  const { isTransitioningFor, registerTarget, startTransition } = useProductTransition();
+  const isTransitioning = isTransitioningFor(currentProduct.name);
+
+  const handleTitleRef = useCallback(
+    (node: HTMLHeadingElement | null) => {
+      if (node) {
+        registerTarget(node);
+      }
+    },
+    [registerTarget]
+  );
 
   // Quote / Sample Modal state
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
@@ -80,11 +94,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     setFormSubmitted(false);
   };
 
+  useEffect(() => {
+    const handleQuote = () => handleOpenModal(`Quote Inquiry for ${currentProduct.name}`);
+    window.addEventListener("ruskin:open-quote", handleQuote);
+    return () => window.removeEventListener("ruskin:open-quote", handleQuote);
+  }, [currentProduct.name]);
+
   return (
-    <div className="min-h-screen bg-white text-[#3E5C72] flex flex-col font-sans selection:bg-[#C79A4B] selection:text-white">
-      
-      {/* ================= 1. HEADER ================= */}
-      <Navbar onOpenQuote={() => handleOpenModal(`Quote Inquiry for ${currentProduct.name}`)} />
+    <div className="min-h-screen bg-[#FAF7F2] text-[#5A7A8E] flex flex-col font-sans selection:bg-[#C79A4B] selection:text-white">
 
       {/* ================= 2. MAIN CONTENT AREA ================= */}
       <main className="flex-1 py-10 sm:py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full space-y-12">
@@ -93,7 +110,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         <div>
           <Link
             href="/products"
-            className="inline-flex items-center space-x-2 text-xs sm:text-sm font-semibold text-[#5A7A8E] hover:text-[#12304A] transition-colors group"
+            prefetch={true}
+            className="inline-flex items-center space-x-2 text-xs sm:text-sm font-semibold text-[#5A7A8E] hover:text-[#12304A] transition-colors group cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span>Back to all products</span>
@@ -102,9 +120,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
         {/* Product Details Main Card */}
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
           className="bg-white border border-[#12304A]/8 rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-12 shadow-xl space-y-8 text-left relative overflow-hidden"
         >
           
@@ -120,11 +138,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
             {/* Product Name Title */}
             <h1
-              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#12304A] tracking-tight leading-tight"
-              
+              ref={handleTitleRef}
+              className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#12304A] tracking-tight leading-tight transition-opacity duration-150 ease-out ${
+                isTransitioning ? "opacity-0 select-none" : "opacity-100"
+              }`}
             >
               {currentProduct.name}
             </h1>
+
+            {/* Signature Ruskin Gold Accent Bar */}
+            <div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
 
             {/* Tagline Sub-heading */}
             <p className="text-sm sm:text-base text-[#12304A] font-bold leading-relaxed max-w-3xl">
@@ -196,7 +219,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             </div>
 
             {/* Small Note */}
-            <p className="text-[11px] sm:text-xs text-[#7A93A8] italic pt-1">
+            <p className="text-[11px] sm:text-xs text-[#5A7A8E] italic pt-1">
               Full specification sheet and batch certificate of analysis available on request.
             </p>
 
@@ -215,7 +238,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleOpenModal(`Request COA & Technical Specs for ${currentProduct.name}`)}
-                className="inline-flex items-center gap-2 bg-[#12304A] hover:bg-[#0E263B] text-white px-7 py-3.5 rounded-full text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
+                className="inline-flex items-center gap-2 bg-[#12304A] hover:bg-[#0B1E2E] text-white px-7 py-3.5 rounded-full text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
               >
                 Request COA
               </motion.button>
@@ -241,38 +264,56 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
             <h2 className="text-2xl sm:text-3xl font-bold text-[#12304A] tracking-tight">
               Related Compounds in {currentProduct.category}
             </h2>
-            <div className="w-12 h-[2px] bg-[#C79A4B] rounded-full" />
+            <div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
           </div>
 
           {/* Grid of Related Product Cards — matching navy product cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {relatedProducts.map((rel) => (
+            {relatedProducts.map((rel) => {
+              const isRelTransitioning = isTransitioningFor(rel.name);
+              return (
               <motion.div
                 key={rel.id}
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                className="relative bg-[#12304A] border border-white/10 rounded-[22px] overflow-hidden shadow-lg hover:border-[#C79A4B]/50 transition-[border-color,box-shadow] duration-200 group flex flex-col justify-between p-5 gpu-smooth cursor-pointer"
+                whileHover={{ y: -4, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } }}
+                className="relative bg-[#0B1E2E] border border-white/[0.08] hover:border-[#C79A4B]/35 rounded-[22px] overflow-hidden shadow-sm hover:shadow-[0_16px_36px_-8px_rgba(7,21,33,0.5)] transition-[border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group flex flex-col justify-between p-5 gpu-smooth cursor-pointer"
               >
-                <div className="absolute -top-12 -right-12 w-28 h-28 rounded-full bg-[#C79A4B]/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                <Link href={`/products/${rel.slug}`} className="relative flex flex-col flex-1 justify-between">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-bold text-[#E5C378] bg-[#C79A4B]/15 border border-[#C79A4B]/25 px-2.5 py-0.5 rounded-full uppercase tracking-wide">
+                <Link
+                  href={`/products/${rel.slug}`}
+                  onClick={(e) => {
+                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                    e.preventDefault();
+                    const headingEl = e.currentTarget.querySelector("h3");
+                    if (headingEl) {
+                      startTransition(rel, headingEl, e.currentTarget.parentElement);
+                    }
+                  }}
+                  className="relative flex flex-col flex-1 justify-between"
+                >
+                  <div className="flex items-center justify-between mb-3.5">
+                    <span className="text-[9.5px] font-medium text-slate-400 bg-white/[0.04] border border-white/[0.08] px-2.5 py-0.5 rounded-full uppercase tracking-widest">
                       {rel.category}
                     </span>
-                    <div className="w-7 h-7 rounded-full flex items-center justify-center bg-white/5 group-hover:bg-[#C79A4B] transition-all">
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#C79A4B] group-hover:text-white stroke-[2.5]" />
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/[0.04] group-hover:bg-[#C79A4B] text-slate-400 group-hover:text-white transition-[background-color,color] duration-200">
+                      <ArrowUpRight className="w-3.5 h-3.5 stroke-[2] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </div>
                   </div>
-                  <h3 className="text-sm font-bold text-white group-hover:text-[#E5C378] transition-colors duration-200 leading-snug">
-                    {rel.name}
-                  </h3>
-                  <div className="mt-3 pt-2.5 border-t border-white/10 flex justify-between items-center text-[11px] text-slate-400 font-mono">
-                    <span>CAS: <span className="text-slate-200">{rel.casNumber}</span></span>
-                    <span className="text-emerald-400 font-semibold">{rel.purity}</span>
+                  <div className="flex-1 flex flex-col justify-start mb-4">
+                    <h3
+                      className={`text-base sm:text-[17px] font-bold text-white group-hover:text-[#E5C378] transition-colors duration-200 leading-snug tracking-tight ${
+                        isRelTransitioning ? "opacity-0 select-none" : "opacity-100"
+                      }`}
+                    >
+                      {rel.name}
+                    </h3>
+                  </div>
+                  <div className="pt-3 border-t border-white/[0.08] flex justify-between items-center text-[11px] text-slate-400 font-mono">
+                    <span>CAS: <span className="text-slate-200 font-medium">{rel.casNumber}</span></span>
+                    <span className="text-slate-200 font-semibold">{rel.purity}</span>
                   </div>
                 </Link>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
 
           {/* See all link */}
@@ -336,7 +377,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                       required
                       type="text"
                       placeholder="Enter your name..."
-                      className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#B0C4D4] focus:outline-none transition-colors shadow-sm"
+                      className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                     />
                   </div>
                   <div>
@@ -344,7 +385,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <input
                       type="text"
                       placeholder="Company Name"
-                      className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#B0C4D4] focus:outline-none transition-colors shadow-sm"
+                      className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                     />
                   </div>
                 </div>
@@ -359,7 +400,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                       required
                       type="email"
                       placeholder="Email Address"
-                      className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#B0C4D4] focus:outline-none transition-colors shadow-sm"
+                      className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                     />
                   </div>
                   <div>
@@ -370,7 +411,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                       required
                       type="tel"
                       placeholder="Phone Number"
-                      className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#B0C4D4] focus:outline-none transition-colors shadow-sm"
+                      className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                     />
                   </div>
                 </div>
@@ -382,7 +423,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <input
                       type="text"
                       placeholder="Country"
-                      className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#B0C4D4] focus:outline-none transition-colors shadow-sm"
+                      className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                     />
                   </div>
                   <div>
@@ -407,7 +448,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     type="text"
                     defaultValue={currentProduct.name}
                     placeholder="Enter compound name, CAS number, or specification..."
-                    className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#B0C4D4] focus:outline-none transition-colors shadow-sm"
+                    className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                   />
                 </div>
 
@@ -417,7 +458,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   <textarea
                     rows={4}
                     placeholder="Provide estimated batch volume, target compliance specs (USDMF, CEP, IP/BP), or required delivery timeline..."
-                    className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#B0C4D4] focus:outline-none transition-colors resize-none shadow-sm"
+                    className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors resize-none shadow-sm"
                   />
                 </div>
 
@@ -465,15 +506,15 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 </p>
                 <div className="bg-[#FAF7F2] border border-[#12304A]/8 rounded-xl p-4 max-w-md mx-auto text-xs text-left space-y-2">
                   <div className="flex justify-between border-b border-[#12304A]/6 pb-1.5">
-                    <span className="text-[#7A93A8]">Inquiry Type:</span>
+                    <span className="text-[#5A7A8E]">Inquiry Type:</span>
                     <span className="text-[#12304A] font-semibold">{inquiryType}</span>
                   </div>
                   <div className="flex justify-between border-b border-[#12304A]/6 pb-1.5">
-                    <span className="text-[#7A93A8]">Target Compound:</span>
+                    <span className="text-[#5A7A8E]">Target Compound:</span>
                     <span className="text-[#C79A4B] font-semibold">{currentProduct.name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#7A93A8]">Response SLA:</span>
+                    <span className="text-[#5A7A8E]">Response SLA:</span>
                     <span className="text-emerald-600 font-semibold">Under 2 Hours</span>
                   </div>
                 </div>
@@ -505,10 +546,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 12 }}
               transition={{ type: "spring", damping: 26, stiffness: 380 }}
-              className="bg-white border border-[#C79A4B]/25 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl text-left space-y-5 max-h-[90vh] overflow-y-auto"
+              className="bg-white border border-[#C79A4B]/25 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl text-left space-y-5 max-h-[90vh] overflow-y-auto custom-scrollbar"
             >
               <button onClick={() => setQuoteModalOpen(false)}
-                className="absolute top-5 right-5 text-[#7A93A8] hover:text-[#12304A] p-1 rounded-full hover:bg-[#12304A]/5">
+                className="absolute top-5 right-5 text-[#5A7A8E] hover:text-[#12304A] p-1 rounded-full hover:bg-[#12304A]/5">
                 <X className="w-5 h-5" />
               </button>
               {!formSubmitted ? (
@@ -556,7 +597,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                       whileTap={{ scale: 0.98 }}
                       disabled={isSubmittingQuote}
                       type="submit"
-                      className="w-full bg-[#12304A] hover:bg-[#0E263B] disabled:opacity-75 text-white py-3.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-md shadow-[#12304A]/20"
+                      className="w-full bg-[#12304A] hover:bg-[#0B1E2E] disabled:opacity-75 text-white py-3.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-md shadow-[#12304A]/20"
                     >
                       {isSubmittingQuote ? (
                         <>

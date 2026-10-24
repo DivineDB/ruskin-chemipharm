@@ -51,6 +51,16 @@ const BONDS: [number, number][] = [
 ];
 const CENTERS = CELLS.map((c) => cellCenter(c.q, c.r));
 
+// Pre-computed static geometry (zero runtime trigonometric math during render)
+const STATIC_CELL_POINTS = CELLS.map((_, i) => hexPoints(CENTERS[i].x, CENTERS[i].y, R));
+const STATIC_BOND_DATA = BONDS.map(([ci, vi]) => {
+	const { x, y } = CENTERS[ci];
+	const a = hexVertex(x, y, vi, R);
+	const b = hexVertex(x, y, vi, R + 22);
+	return { a, b };
+});
+const STATIC_DOTS = CENTERS.map((c, i) => hexVertex(c.x, c.y, (i * 2) % 6, R));
+
 export function MolecularDecoration({
 	className = "",
 	color = "#12304A",
@@ -74,7 +84,7 @@ export function MolecularDecoration({
 				{CELLS.map((c, i) => (
 					<polygon
 						key={i}
-						points={hexPoints(CENTERS[i].x, CENTERS[i].y, R)}
+						points={STATIC_CELL_POINTS[i]}
 						fill={c.fill ? color : "none"}
 						fillOpacity={c.fill ?? 0}
 					/>
@@ -87,22 +97,16 @@ export function MolecularDecoration({
 					) : null,
 				)}
 			</g>
-			{BONDS.map(([ci, vi], k) => {
-				const { x, y } = CENTERS[ci];
-				const a = hexVertex(x, y, vi, R);
-				const b = hexVertex(x, y, vi, R + 22);
-				return (
-					<g key={k}>
-						<line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={color} strokeWidth="1.5" />
-						<circle cx={b.x} cy={b.y} r="4" fill={color} />
-					</g>
-				);
-			})}
+			{STATIC_BOND_DATA.map(({ a, b }, k) => (
+				<g key={k}>
+					<line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={color} strokeWidth="1.5" />
+					<circle cx={b.x} cy={b.y} r="4" fill={color} />
+				</g>
+			))}
 			<g fill={color}>
-				{CENTERS.map((c, i) => {
-					const v = hexVertex(c.x, c.y, (i * 2) % 6, R);
-					return <circle key={i} cx={v.x} cy={v.y} r="2.5" />;
-				})}
+				{STATIC_DOTS.map((v, i) => (
+					<circle key={i} cx={v.x} cy={v.y} r="2.5" />
+				))}
 			</g>
 		</svg>
 	);
@@ -116,27 +120,41 @@ export function HexImage({
 	src,
 	alt,
 	width,
+	height: customHeight,
 	frame = "#FFFFFF",
 	frameWidth = 4,
 	className = "",
 	imgClassName = "",
+	glow = false,
+	priority = false,
 }: {
 	src: string;
 	alt: string;
 	/** rendered width in px; height follows the regular-hexagon ratio */
-	width: number;
+	width?: number;
+	height?: number;
 	frame?: string;
 	frameWidth?: number;
 	className?: string;
 	imgClassName?: string;
+	glow?: boolean;
+	priority?: boolean;
 }) {
-	const height = width / HEX_RATIO;
+	const height = customHeight ?? (width ? Math.round(width / HEX_RATIO) : undefined);
 	return (
 		<div
-			className={`relative drop-shadow-[0_18px_30px_rgba(11,30,46,0.18)] ${className}`}
-			style={{ width, height }}
+			className={`relative transition-[filter,transform] duration-300 ${
+				glow
+					? "drop-shadow-[0_24px_45px_rgba(199,154,75,0.3)]"
+					: "drop-shadow-[0_22px_40px_rgba(11,30,46,0.18)]"
+			} ${className}`}
+			style={{
+				width: width ? `${width}px` : undefined,
+				height: height ? `${height}px` : undefined,
+				aspectRatio: !width && !height ? `${HEX_RATIO} / 1` : undefined,
+			}}
 		>
-			<div className="absolute inset-0" style={{ clipPath: HEX_CLIP, background: frame }} />
+			<div className="absolute inset-0 transition-colors duration-300" style={{ clipPath: HEX_CLIP, background: frame }} />
 			<div
 				className="absolute overflow-hidden"
 				style={{
@@ -147,8 +165,10 @@ export function HexImage({
 				<img
 					src={src}
 					alt={alt}
-					loading="lazy"
-					className={`w-full h-full object-cover ${imgClassName}`}
+					loading={priority ? "eager" : "lazy"}
+					fetchPriority={priority ? "high" : "auto"}
+					decoding="async"
+					className={`w-full h-full object-cover transition-transform duration-700 ease-out ${imgClassName}`}
 				/>
 			</div>
 		</div>

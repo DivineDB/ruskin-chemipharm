@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -19,21 +19,48 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
 
   const isHome = pathname === "/";
   const isProducts = pathname.startsWith("/products");
+  const isServices = pathname.startsWith("/services");
+  const isAbout = pathname.startsWith("/about");
+  const isContact = pathname.startsWith("/contact");
 
   const navLinks = [
     { href: "/", label: "Home", active: isHome },
     { href: "/products", label: "Products", active: isProducts },
-    { href: "/#services", label: "Services", active: false },
-    { href: "/#about", label: "About", active: false },
-    { href: "/#contact", label: "Contact", active: false },
+    { href: "/services", label: "Services", active: isServices },
+    { href: "/about", label: "About", active: isAbout },
+    { href: "/contact", label: "Contact", active: isContact },
   ];
+
+  const handleQuoteClick = useCallback(() => {
+    if (onOpenQuote) {
+      onOpenQuote();
+      return;
+    }
+    window.dispatchEvent(new CustomEvent("ruskin:open-quote"));
+    if (pathname === "/contact") {
+      document.getElementById("contact-form")?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [onOpenQuote, pathname]);
+
+  const handleSearchClick = useCallback(() => {
+    if (onOpenSearch) {
+      onOpenSearch();
+      return;
+    }
+    window.dispatchEvent(new CustomEvent("ruskin:open-search"));
+  }, [onOpenSearch]);
 
   useEffect(() => {
     let ticking = false;
+    let lastScrolled = false;
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 15);
+          const next = window.scrollY > 15;
+          if (next !== lastScrolled) {
+            lastScrolled = next;
+            setScrolled(next);
+          }
           ticking = false;
         });
         ticking = true;
@@ -54,17 +81,16 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        if (onOpenSearch) onOpenSearch();
-        else window.location.href = "/products";
+        handleSearchClick();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onOpenSearch]);
+  }, [handleSearchClick]);
 
   return (
     <header
-      className={`sticky top-0 z-50 h-[72px] sm:h-[76px] flex items-center transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300 ease-in-out ${
+      className={`sticky top-0 z-50 h-[72px] sm:h-[76px] flex items-center transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         scrolled
           ? "bg-white/95 backdrop-blur-md shadow-[0_4px_25px_-5px_rgba(18,48,74,0.08)] border-b border-[#12304A]/10"
           : isHome
@@ -80,16 +106,18 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
             <Image
               src="/images/logo.svg"
               alt="Ruskin Chemipharm Logo"
-              width={160}
-              height={48}
+              width={110}
+              height={30}
               priority
-              className="h-10 sm:h-12 w-auto object-contain"
+              loading="eager"
+              style={{ width: "auto", height: "auto" }}
+              className="h-[21px] sm:h-[23px] w-auto object-contain"
             />
           </Link>
         </motion.div>
 
-        {/* Desktop nav with smoothly gliding active underline via Framer Motion layoutId */}
-        <nav className="hidden md:flex items-center space-x-1 sm:space-x-3 relative py-2">
+        {/* Desktop nav with layoutId spring-physics continuous active underline */}
+        <nav className="hidden md:flex items-center space-x-1 sm:space-x-2 relative py-2">
           {navLinks.map((link) => {
             const isCurrentActive = link.active;
 
@@ -99,62 +127,39 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
                 href={link.href}
                 className={`relative px-3.5 py-1.5 text-sm font-semibold transition-colors duration-150 select-none ${
                   isCurrentActive
-                    ? "text-[#12304A] font-bold"
+                    ? "text-[#12304A]"
                     : "text-[#5A7A8E] hover:text-[#12304A]"
                 }`}
               >
                 <span>{link.label}</span>
                 {isCurrentActive && (
-                  <motion.span
-                    layoutId="navbar-active-underline"
-                    className="absolute -bottom-0.5 inset-x-3 h-[2.5px] bg-[#C79A4B] rounded-full pointer-events-none"
-                    transition={{
-                      type: "spring",
-                      stiffness: 420,
-                      damping: 34,
-                    }}
-                  />
+                  <div className="absolute -bottom-0.5 left-3.5 right-3.5 h-[2px] bg-[#C79A4B] rounded-full pointer-events-none" />
                 )}
               </Link>
             );
           })}
         </nav>
 
-        {/* Right actions */}
-        <div className="flex items-center gap-3">
-          {/* Search Trigger — Sleek circular icon button */}
-          {onOpenSearch ? (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onOpenSearch}
-              className="w-10 h-10 rounded-full flex items-center justify-center text-[#12304A] hover:text-[#C79A4B] bg-[#12304A]/5 hover:bg-[#C79A4B]/10 border border-[#12304A]/8 hover:border-[#C79A4B]/40 transition-[color,background-color,border-color] duration-200 shadow-xs cursor-pointer gpu-smooth"
-              title="Search Catalog (Ctrl+K)"
-              aria-label="Search Catalog"
-            >
-              <Search className="w-4 h-4 stroke-[2.2]" />
-            </motion.button>
-          ) : (
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="gpu-smooth">
-              <Link
-                href="/products"
-                className="w-10 h-10 rounded-full flex items-center justify-center text-[#12304A] hover:text-[#C79A4B] bg-[#12304A]/5 hover:bg-[#C79A4B]/10 border border-[#12304A]/8 hover:border-[#C79A4B]/40 transition-[color,background-color,border-color] duration-200 shadow-xs cursor-pointer"
-                title="Search Catalog"
-                aria-label="Search Catalog"
-              >
-                <Search className="w-4 h-4 stroke-[2.2]" />
-              </Link>
-            </motion.div>
-          )}
+        {/* Right actions — shifted inward to the left */}
+        <div className="flex items-center gap-3 mr-3 sm:mr-6 lg:mr-8">
+          {/* Search Trigger */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleSearchClick}
+            className="w-10 h-10 rounded-full flex items-center justify-center text-[#12304A] hover:text-[#C79A4B] bg-[#12304A]/5 hover:bg-[#C79A4B]/10 border border-[#12304A]/8 hover:border-[#C79A4B]/40 transition-[color,background-color,border-color] duration-200 shadow-xs cursor-pointer gpu-smooth"
+            title="Search Catalog (Ctrl+K)"
+            aria-label="Search Catalog"
+          >
+            <Search className="w-4 h-4 stroke-[2.2]" />
+          </motion.button>
 
           {/* Request Quote */}
           <motion.button
-            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-            onClick={() => {
-              if (onOpenQuote) onOpenQuote();
-              else window.location.href = "/#contact";
-            }}
-            className="hidden sm:flex items-center bg-[#12304A] text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-[#0E263B] transition-colors shadow-sm cursor-pointer gpu-smooth"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={handleQuoteClick}
+            className="hidden sm:flex items-center justify-center bg-[#12304A] text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-[#0B1E2E] transition-colors shadow-sm cursor-pointer gpu-smooth"
           >
             Request Quote
           </motion.button>
@@ -187,8 +192,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
                 <button
                   onClick={() => {
                     setMobileOpen(false);
-                    if (onOpenSearch) onOpenSearch();
-                    else window.location.href = "/products";
+                    handleSearchClick();
                   }}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-[#FAF7F2] border border-[#12304A]/10 text-xs font-semibold text-[#5A7A8E] hover:border-[#C79A4B]/40 transition-colors"
                 >

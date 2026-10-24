@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { MolecularDecoration, HEX_CLIP } from "./Hex";
 
@@ -10,7 +11,7 @@ interface FooterProps {
 
 export default function Footer({ onOpenCatalog }: FooterProps) {
   return (
-    <footer id="contact" className="bg-[#12304A] text-white pt-16 pb-10 relative overflow-hidden">
+    <footer id="contact" className="bg-[#071521] text-white pt-16 pb-10 relative overflow-hidden border-t border-white/10 contain-section">
       {/* Subtle gold molecular deco bottom left */}
       <div className="absolute -bottom-10 -left-12 w-[300px] sm:w-[380px] pointer-events-none select-none opacity-10">
         <MolecularDecoration color="#C79A4B" opacity={1} className="w-full h-auto" />
@@ -35,6 +36,7 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
                 alt="Ruskin Chemipharm Logo"
                 width={150}
                 height={40}
+                style={{ width: "auto", height: "auto" }}
                 className="h-10 w-auto object-contain brightness-0 invert"
               />
             </div>
@@ -103,13 +105,13 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
             {/* Cert logos */}
             <div className="flex items-center gap-3 flex-wrap opacity-90">
               <motion.div whileHover={{ scale: 1.08 }} className="transition-transform">
-                <Image src="/images/cert (1).svg" alt="ISO 9001:2015" width={48} height={48} className="h-12 w-12 object-contain" />
+                <Image src="/images/cert (1).svg" alt="ISO 9001:2015" width={48} height={48} style={{ width: "auto", height: "auto" }} className="h-12 w-12 object-contain" />
               </motion.div>
               <motion.div whileHover={{ scale: 1.08 }} className="transition-transform">
-                <Image src="/images/cert (2).svg" alt="WHO-GMP" width={48} height={48} className="h-12 w-12 object-contain" />
+                <Image src="/images/cert (2).svg" alt="WHO-GMP" width={48} height={48} style={{ width: "auto", height: "auto" }} className="h-12 w-12 object-contain" />
               </motion.div>
               <motion.div whileHover={{ scale: 1.08 }} className="transition-transform">
-                <Image src="/images/cert (3).svg" alt="ISO 14001" width={48} height={48} className="h-12 w-12 object-contain" />
+                <Image src="/images/cert (3).svg" alt="ISO 14001" width={48} height={48} style={{ width: "auto", height: "auto" }} className="h-12 w-12 object-contain" />
               </motion.div>
             </div>
           </motion.div>
@@ -135,9 +137,10 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
                     Products Directory
                   </button>
                 </li>
-                <li><a href="#services" className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block">Services</a></li>
-                <li><a href="#services" className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block">Regulatory Specs</a></li>
-                <li><a href="#about" className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block">About Us</a></li>
+                <li><Link href="/services" className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block">Services</Link></li>
+                <li><Link href="/services#regulatory" className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block">Regulatory Specs</Link></li>
+                <li><Link href="/about" className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block">About Us</Link></li>
+                <li><Link href="/contact" className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block">Contact &amp; Offices</Link></li>
               </ul>
             </motion.div>
 
@@ -201,7 +204,7 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs text-slate-400">
           <div className="space-y-1">
-            <p className="font-bold text-slate-200 text-sm">Ruskin Chemipharm · Est. 1990 · Mumbai, India</p>
+            <p className="font-bold text-slate-200 text-sm">Ruskin Chemipharm · Est. 1984 · Mumbai, India</p>
             <p>&copy; {new Date().getFullYear()} Ruskin Chemipharm. All rights reserved.</p>
             <p className="text-[10px] text-slate-400 max-w-2xl leading-normal">
               Disclaimer: API/Substances covered by patent are not offered to countries where patent law is in force. Final responsibility lies with the customer.

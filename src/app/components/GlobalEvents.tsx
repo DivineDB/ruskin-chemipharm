@@ -37,14 +37,30 @@ interface GlobalEventsProps {
 export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
   const [cphiSlide, setCphiSlide] = useState(0);
   const [pharmapackSlide, setPharmapackSlide] = useState(0);
+  const [isInView, setIsInView] = useState(false);
+  const sectionRef = React.useRef<HTMLElement>(null);
 
   useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isInView) return;
     const timer = setInterval(() => {
       setCphiSlide((s) => (s + 1) % EVENT_SLIDES.cphi.length);
       setPharmapackSlide((s) => (s + 1) % EVENT_SLIDES.pharmapack.length);
     }, 4500);
     return () => clearInterval(timer);
-  }, []);
+  }, [isInView]);
 
   const nextSlide = (key: "cphi" | "pharmapack") => {
     if (key === "cphi") setCphiSlide((s) => (s + 1) % EVENT_SLIDES.cphi.length);
@@ -83,7 +99,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
       hall: "Hall 7.2 — Stand J48",
       zone: "Drug Delivery & Formulation Hub",
       badge: "Confirmed Delegation",
-      badgeColor: "#12304A",
+      badgeColor: "#071521",
       agenda: [
         "Sterile Formulation Excipients",
         "Cold-Chain Logistics Protocols (2°C–8°C)",
@@ -93,7 +109,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
   ];
 
   return (
-    <section className="py-20 sm:py-28 bg-[#FAF7F2] relative overflow-hidden border-t border-[#12304A]/8">
+    <section ref={sectionRef} className="py-20 sm:py-28 bg-[#FAF7F2] relative overflow-hidden border-t border-[#12304A]/8 contain-section">
       {/* Top subtle gold accent line */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C79A4B]/35 to-transparent" />
 
@@ -150,6 +166,8 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
                           src={src}
                           alt={`${event.title} exhibition view ${i + 1}`}
                           className="w-full h-full object-cover"
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
                     ))}
@@ -161,7 +179,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
                   {/* Top Badges */}
                   <div className="absolute top-4 inset-x-4 flex items-center justify-between z-10 pointer-events-none">
                     <div
-                      className="px-3.5 py-1.5 rounded-full text-[11px] font-bold text-white flex items-center gap-1.5 shadow-md pointer-events-auto"
+                      className="px-3.5 py-1.5 rounded-full text-[11px] font-bold text-white flex items-center gap-1.5 shadow-md pointer-events-auto border border-white/15"
                       style={{ background: event.badgeColor }}
                     >
                       <Calendar className="w-3.5 h-3.5" />
@@ -305,7 +323,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onScheduleMeeting("Virtual Technical Dossier & Sourcing Consultation")}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#12304A] text-white text-xs font-bold hover:bg-[#0E263B] transition-colors shrink-0 cursor-pointer shadow-sm"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#12304A] text-white text-xs font-bold hover:bg-[#0B1E2E] transition-colors shrink-0 cursor-pointer shadow-sm"
           >
             <ShieldCheck className="w-3.5 h-3.5 text-[#C79A4B]" />
             <span>Book Virtual Dossier Meeting</span>

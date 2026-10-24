@@ -9,13 +9,25 @@
 	--font-sans: var(--font-plus-jakarta), system-ui, sans-serif;
 	--font-body: var(--font-inter), system-ui, sans-serif;
 	--font-mono: var(--font-inter), system-ui, sans-serif;
+
+	--color-abyss: #071521;
+	--color-navy-dark: #0b1e2e;
+	--color-navy: #12304a;
+	--color-gold: #c79a4b;
+	--color-gold-hover: #b58a3e;
+	--color-gold-light: #e5c378;
+	--color-cream: #faf7f2;
+	--color-cream-deep: #f5f0e8;
+	--color-text-secondary: #5a7a8e;
+	--color-text-muted: #5a7a8e;
 }
 
 :root {
 	/* Brand Primitives */
+	--abyss: #071521;
 	--navy: #12304a;
 	--navy-dark: #0b1e2e;
-	--navy-mid: #1c3a55;
+	--navy-mid: #0b1e2e;
 	--gold-accent: #c79a4b;
 	--gold-light: #e5c378;
 
@@ -31,9 +43,9 @@
 
 	/* Text & Surface Tokens */
 	--text-heading: #12304a;
-	--text-body: #3e5c72;
-	--text-muted: #7a93a8;
-	--text-light: #b0c4d4;
+	--text-body: #5a7a8e;
+	--text-muted: #5a7a8e;
+	--text-light: #5a7a8e;
 
 	/* Floating Card Shadows */
 	--float-shadow:
@@ -47,16 +59,16 @@
 }
 
 html {
-	scrollbar-gutter: stable;
-	scroll-behavior: smooth;
+	background-color: var(--cream);
+	scrollbar-width: none;
 }
 
 body {
 	background-color: var(--cream);
 	color: var(--text-body);
 	font-family: var(--font-plus-jakarta), sans-serif;
-	overflow-x: hidden;
 	min-height: 100vh;
+	overflow-x: clip;
 }
 
 p {
@@ -85,14 +97,21 @@ p {
    SERVICES — scroll-reveal cards
    ===================================================== */
 .service-card {
-	background: linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+	background: linear-gradient(
+		160deg,
+		rgba(255, 255, 255, 0.06) 0%,
+		rgba(255, 255, 255, 0.02) 100%
+	);
 	border: 1px solid rgba(255, 255, 255, 0.1);
 	border-radius: 28px;
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
 	transform: translateZ(0);
 	backface-visibility: hidden;
-	transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.35s ease;
+	transition:
+		border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+		background-color 0.35s ease;
 }
 .service-card:hover {
 	border-color: rgba(255, 255, 255, 0.22);
@@ -205,15 +224,25 @@ p {
 	font-weight: 700;
 	font-size: 14px;
 	letter-spacing: 0.02em;
-	transition: all 0.25s ease;
+	transition:
+		transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+		background-color 0.25s ease,
+		box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 	cursor: pointer;
 	box-shadow: var(--gold-shadow);
+	transform: translateZ(0);
+	backface-visibility: hidden;
 }
 
 .hex-cta:hover {
 	background: #b58a3e;
 	box-shadow: var(--gold-shadow-hover);
-	transform: translateY(-1px);
+	transform: translateY(-2px) translateZ(0);
+}
+
+.hex-cta:active {
+	transform: translateY(0) scale(0.985);
+	transition-duration: 0.12s;
 }
 
 .hex-cta-outline {
@@ -238,12 +267,22 @@ p {
 	border: none;
 	outline: 2px solid var(--navy);
 	outline-offset: -2px;
-	transition: all 0.25s ease;
+	transition:
+		transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+		background-color 0.25s ease;
 	cursor: pointer;
+	transform: translateZ(0);
+	backface-visibility: hidden;
 }
 
 .hex-cta-outline:hover {
 	background: rgba(18, 48, 74, 0.06);
+	transform: translateY(-2px) translateZ(0);
+}
+
+.hex-cta-outline:active {
+	transform: translateY(0) scale(0.985);
+	transition-duration: 0.12s;
 }
 
 /* =====================================================
@@ -253,14 +292,17 @@ p {
 /* Main floating card — outlined, blurred drop shadow */
 .float-card {
 	background: rgba(255, 255, 255, 0.92);
-	backdrop-filter: blur(20px);
-	-webkit-backdrop-filter: blur(20px);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
 	border: 1.5px solid rgba(18, 48, 74, 0.1);
 	border-radius: 24px;
 	box-shadow: var(--float-shadow);
 	transform: translateZ(0);
 	backface-visibility: hidden;
-	transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+	transition:
+		transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+		border-color 0.25s ease;
 }
 
 .float-card:hover {
@@ -279,7 +321,10 @@ p {
 		0 1px 8px -1px rgba(18, 48, 74, 0.06);
 	transform: translateZ(0);
 	backface-visibility: hidden;
-	transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+	transition:
+		transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		border-color 0.25s ease;
 }
 
 .product-float-card:hover {
@@ -299,7 +344,10 @@ p {
 	border-radius: 20px;
 	transform: translateZ(0);
 	backface-visibility: hidden;
-	transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	transition:
+		transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		border-color 0.25s ease,
+		box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card-dark:hover {
@@ -322,7 +370,7 @@ p {
 }
 
 .navy-gradient-text {
-	background: linear-gradient(135deg, #12304a 0%, #1c4a6e 100%);
+	background: linear-gradient(135deg, #12304a 0%, #0b1e2e 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
@@ -336,30 +384,50 @@ p {
 	background-color: var(--gold-accent);
 	color: #ffffff !important;
 	font-weight: 600;
-	transition: all 0.25s ease;
+	transition:
+		transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+		background-color 0.25s ease,
+		box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 	box-shadow: var(--gold-shadow);
+	transform: translateZ(0);
+	backface-visibility: hidden;
 }
 
 .gold-btn:hover {
 	background-color: #b58a3e;
 	color: #ffffff !important;
 	box-shadow: var(--gold-shadow-hover);
-	transform: translateY(-1px);
+	transform: translateY(-2px) translateZ(0);
+}
+
+.gold-btn:active {
+	transform: translateY(0) scale(0.985);
+	transition-duration: 0.12s;
 }
 
 .navy-btn {
 	background-color: var(--navy);
 	color: #ffffff !important;
 	font-weight: 600;
-	transition: all 0.25s ease;
+	transition:
+		transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+		background-color 0.25s ease,
+		box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 	box-shadow: 0 4px 15px rgba(18, 48, 74, 0.25);
+	transform: translateZ(0);
+	backface-visibility: hidden;
 }
 
 .navy-btn:hover {
-	background-color: #0e263b;
+	background-color: var(--navy-dark);
 	color: #ffffff !important;
-	box-shadow: 0 6px 20px rgba(18, 48, 74, 0.4);
-	transform: translateY(-1px);
+	box-shadow: 0 8px 24px rgba(18, 48, 74, 0.35);
+	transform: translateY(-2px) translateZ(0);
+}
+
+.navy-btn:active {
+	transform: translateY(0) scale(0.985);
+	transition-duration: 0.12s;
 }
 
 /* =====================================================
@@ -385,7 +453,8 @@ p {
 }
 
 /* =====================================================
-   SCROLLBAR STYLES
+   SCROLLBAR STYLES — Distinctive Ruskin Chemipharm Brand
+   Warm Gold (#C79A4B), Floating Pill & Transparent Track
    ===================================================== */
 
 .no-scrollbar::-webkit-scrollbar {
@@ -396,34 +465,102 @@ p {
 	scrollbar-width: none;
 }
 
-::-webkit-scrollbar {
-	width: 5px;
-	height: 5px;
+/* ─── 1. Native Viewport Scrollbar (Zero Gutter Box: Hidden natively, handled by FloatingScrollbar) ─── */
+html,
+body {
+	scrollbar-width: none !important;
+	-ms-overflow-style: none !important;
 }
 
-::-webkit-scrollbar-track {
-	background: var(--cream-deep);
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+	display: none !important;
+	width: 0 !important;
+	height: 0 !important;
+	background: transparent !important;
 }
 
-::-webkit-scrollbar-thumb {
-	background: rgba(18, 48, 74, 0.25);
-	border-radius: 4px;
+/* ─── 2. Popups, Modals, Search Results & Dropdown Wells (.custom-scrollbar) ─── */
+.custom-scrollbar {
+	overflow-y: auto;
 }
 
-::-webkit-scrollbar-thumb:hover {
-	background: rgba(18, 48, 74, 0.45);
+.custom-scrollbar::-webkit-scrollbar {
+	width: 4px;
+	height: 4px;
+	background: transparent !important;
 }
 
-* {
-	scrollbar-width: thin;
-	scrollbar-color: rgba(18, 48, 74, 0.25) var(--cream-deep);
+.custom-scrollbar::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track-piece {
+	background: transparent !important;
+	background-color: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background-color: #c79a4b;
+	border-radius: 9999px;
+	transition: background-color 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+	background-color: #b58a3e;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+	background-color: #966e28;
+}
+
+.custom-scrollbar::-webkit-scrollbar-button {
+	display: none !important;
+	width: 0 !important;
+	height: 0 !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+	background: transparent !important;
+	background-color: transparent !important;
+}
+
+/* Dark containers track inside custom-scrollbar — completely transparent */
+.bg-\[\#0B1E2E\] .custom-scrollbar::-webkit-scrollbar-track,
+.bg-\[\#071521\] .custom-scrollbar::-webkit-scrollbar-track,
+.bg-\[\#12304A\] .custom-scrollbar::-webkit-scrollbar-track {
+	background: transparent !important;
+	background-color: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+/* ─── 3. Dark Sections Thumb Accent ─── */
+.bg-\[\#0B1E2E\]::-webkit-scrollbar-thumb,
+.bg-\[\#071521\]::-webkit-scrollbar-thumb,
+.bg-\[\#12304A\]::-webkit-scrollbar-thumb {
+	background-color: #c79a4b;
+}
+
+/* ─── 4. Firefox & Standards Support (Zero Track Color) ─── */
+@supports (-moz-appearance: none) {
+	html,
+	body {
+		scrollbar-color: #c79a4b transparent;
+		scrollbar-width: thin;
+	}
+	* {
+		scrollbar-color: #c79a4b transparent;
+	}
+	.custom-scrollbar {
+		scrollbar-width: thin;
+		scrollbar-color: #c79a4b transparent;
+	}
 }
 
 /* =====================================================
    PERFORMANCE & GPU SCROLL OPTIMIZATIONS
    ===================================================== */
 html {
-	scroll-behavior: smooth;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -434,12 +571,132 @@ html {
 	transform: translateZ(0);
 	backface-visibility: hidden;
 	-webkit-backface-visibility: hidden;
+}
+
+/* Off-thread GPU compositor floating animations (auto-paused by browser when offscreen) */
+@keyframes float-soft {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+	50% {
+		transform: translate3d(0, -6px, 0);
+	}
+}
+
+@keyframes float-soft-reverse {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+	50% {
+		transform: translate3d(0, 6px, 0);
+	}
+}
+
+.animate-float-soft {
+	animation: float-soft 4.2s ease-in-out infinite;
+	will-change: transform;
+}
+
+.animate-float-soft-reverse {
+	animation: float-soft-reverse 4.8s ease-in-out infinite;
+	will-change: transform;
+}
+
+@keyframes float-gentle-slow {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+	50% {
+		transform: translate3d(0, -7px, 0);
+	}
+}
+
+@keyframes hex-rotate-float {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0) rotate(0deg);
+	}
+	50% {
+		transform: translate3d(0, -5px, 0) rotate(10deg);
+	}
+}
+
+@keyframes float-tilt-1 {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0) rotate(0deg);
+	}
+	50% {
+		transform: translate3d(0, -8px, 0) rotate(1.5deg);
+	}
+}
+
+@keyframes float-tilt-2 {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0) rotate(0deg);
+	}
+	50% {
+		transform: translate3d(0, 6px, 0) rotate(-1.5deg);
+	}
+}
+
+.animate-float-gentle-slow {
+	animation: float-gentle-slow 8s ease-in-out infinite;
+	will-change: transform;
+}
+
+.animate-hex-rotate-float {
+	animation: hex-rotate-float 6s ease-in-out infinite;
+	will-change: transform;
+}
+
+.animate-float-tilt-1 {
+	animation: float-tilt-1 9s ease-in-out infinite;
+	will-change: transform;
+}
+
+.animate-float-tilt-2 {
+	animation: float-tilt-2 11s ease-in-out infinite;
+	will-change: transform;
+}
+
+@keyframes float-hex-drift-1 {
+	0%, 100% {
+		transform: translate3d(0, 0, 0) rotate(0deg);
+	}
+	50% {
+		transform: translate3d(4px, -6px, 0) rotate(1.5deg);
+	}
+}
+
+@keyframes float-hex-drift-2 {
+	0%, 100% {
+		transform: translate3d(0, 0, 0) rotate(0deg);
+	}
+	50% {
+		transform: translate3d(-5px, 5px, 0) rotate(-2deg);
+	}
+}
+
+.animate-float-hex-1 {
+	animation: float-hex-drift-1 13s ease-in-out infinite;
+	will-change: transform;
+}
+
+.animate-float-hex-2 {
+	animation: float-hex-drift-2 16s ease-in-out infinite;
 	will-change: transform;
 }
 
 /* Subtle micro-interaction utilities */
 .hover-lift {
-	transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+	transition:
+		transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 	transform: translateZ(0);
 	backface-visibility: hidden;
 }
@@ -452,9 +709,9 @@ img {
 	content-visibility: auto;
 }
 
-.contain-layout {
-	content-visibility: auto;
-	contain-intrinsic-size: 1px 600px;
+.contain-layout,
+.contain-section {
+	contain: layout style;
 }
 
 /* =====================================================
@@ -559,8 +816,8 @@ img {
    ===================================================== */
 .hero-floating-card {
 	background: rgba(255, 255, 255, 0.88);
-	backdrop-filter: blur(24px);
-	-webkit-backdrop-filter: blur(24px);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
 	border: 1.5px solid rgba(18, 48, 74, 0.12);
 	border-radius: 28px;
 	box-shadow:
@@ -592,7 +849,7 @@ img {
 }
 
 .navy-gradient-bg {
-	background: linear-gradient(135deg, #0b1e2e 0%, #12304a 50%, #1c3a55 100%);
+	background: linear-gradient(135deg, #071521 0%, #0b1e2e 50%, #12304a 100%);
 }
 
 /* =====================================================
@@ -640,23 +897,6 @@ img {
 }
 
 /* =====================================================
-   CUSTOM SCROLLBAR (for dropdowns, modals)
-   ===================================================== */
-.custom-scrollbar::-webkit-scrollbar {
-	width: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-	background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-	background: rgba(199, 154, 75, 0.35);
-	border-radius: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-	background: rgba(199, 154, 75, 0.6);
-}
-
-/* =====================================================
    FOCUS RING (gold, accessible)
    ===================================================== */
 input:focus-visible,
@@ -679,7 +919,11 @@ select:focus-visible {
 		0 1px 6px -1px rgba(18, 48, 74, 0.05);
 	transform: translateZ(0);
 	backface-visibility: hidden;
-	transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, background-color 0.25s ease;
+	transition:
+		transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+		border-color 0.25s ease,
+		background-color 0.25s ease;
 	cursor: pointer;
 }
 
@@ -690,4 +934,21 @@ select:focus-visible {
 		0 2px 12px -2px rgba(199, 154, 75, 0.12);
 	transform: translateY(-4px) translateZ(0);
 	background: #ffffff;
+}
+
+/* =====================================================
+   INFINITE MARQUEE TICKER (GPU Accelerated)
+   ===================================================== */
+@keyframes marquee {
+	0% {
+		transform: translate3d(0, 0, 0);
+	}
+	100% {
+		transform: translate3d(-50%, 0, 0);
+	}
+}
+
+.animate-marquee {
+	animation: marquee 40s linear infinite;
+	will-change: transform;
 }
