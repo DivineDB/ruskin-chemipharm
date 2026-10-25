@@ -107,14 +107,14 @@ const CATEGORY_ICON_MAP: Record<string, React.ComponentType<{ className?: string
 	"Nootropics": Brain,
 };
 
-// ─── 5 Core Ruskin Services ───────────────────────────────────────────────────
+// ─── 4 Core Ruskin Services ───────────────────────────────────────────────────
 const SERVICES = [
 	{
 		num: 1,
 		id: "sourcing",
 		numberStr: "01.",
-		title: "Global Sourcing of APIs & Intermediates",
-		shortTitle: "Global Sourcing of APIs",
+		title: "End-to-End Sourcing",
+		shortTitle: "End-to-End Sourcing",
 		tag: "Global Procurement",
 		handledByLabel: "HANDLED BY",
 		handledBy: [
@@ -122,7 +122,7 @@ const SERVICES = [
 			"Vendor Qualification Directorate",
 			"Direct Factory Pricing",
 		],
-		desc: "Comprehensive sourcing of APIs, Intermediates, and specialty pharma materials from audited, world-leading cGMP manufacturers across India, China, Europe, and Japan.",
+		desc: "Complete procurement and reliable supply chain management tailored to your production demands.",
 		points: [
 			"250+ audited & qualified partner facilities",
 			"Physical site quality inspections & vendor qualification",
@@ -137,8 +137,8 @@ const SERVICES = [
 		num: 2,
 		id: "registration",
 		numberStr: "02.",
-		title: "Registration & DCGI / CDSCO Approvals",
-		shortTitle: "Registration & DCGI Approvals",
+		title: "Regulatory & Documentation Support",
+		shortTitle: "Regulatory & Documentation Support",
 		tag: "Regulatory Affairs",
 		handledByLabel: "HANDLED BY",
 		handledBy: [
@@ -146,7 +146,7 @@ const SERVICES = [
 			"Form 41 & Form 10 Specialists",
 			"Authorized Indian Representation",
 		],
-		desc: "End-to-end registration of APIs & New Drug approvals with the Indian Drug Authority (CDSCO / DCGI), Form 41 foreign site registrations, and Form 10 import licensing.",
+		desc: "Full assistance with DCGI registration processes, technical dossiers, and compliance requirements.",
 		points: [
 			"Form 41 & Form 10 import registration dossier management",
 			"New Drug application filing & expert CDSCO query resolution",
@@ -161,8 +161,8 @@ const SERVICES = [
 		num: 3,
 		id: "quality",
 		numberStr: "03.",
-		title: "Technical Dossiers & Quality Documentation",
-		shortTitle: "Technical Dossiers & Quality Docs",
+		title: "Batch COA Verification",
+		shortTitle: "Batch COA Verification",
 		tag: "Quality & Compliance",
 		handledByLabel: "HANDLED BY",
 		handledBy: [
@@ -170,7 +170,7 @@ const SERVICES = [
 			"ICH & EDQM Compliance Team",
 			"Analytical Dossier Specialists",
 		],
-		desc: "Full regulatory documentation backup — USDMF, CEP open-parts, batch COAs, and stability data ensuring zero friction in formulation filings and USFDA / EDQM audits.",
+		desc: "Strict quality checks and batch-wise Certificate of Analysis (COA) validation for every shipment.",
 		points: [
 			"Full USDMF, EDQM CEP & Tech Pack open-part access",
 			"Batch-to-batch HPLC / GC purity certificate verification",
@@ -185,8 +185,8 @@ const SERVICES = [
 		num: 4,
 		id: "distribution",
 		numberStr: "04.",
-		title: "Strategic Marketing & Distribution",
-		shortTitle: "Strategic Marketing & Distribution",
+		title: "Global & Domestic Footprint",
+		shortTitle: "Global & Domestic Footprint",
 		tag: "Market Access",
 		handledByLabel: "HANDLED BY",
 		handledBy: [
@@ -194,40 +194,16 @@ const SERVICES = [
 			"Key Account Management",
 			"Formulation Technical Sales",
 		],
-		desc: "Targeted marketing of active ingredients across leading Indian pharmaceutical formulation companies, CMOs, and institutional hospital networks.",
+		desc: "Connecting certified global suppliers with top-tier healthcare manufacturers in India and worldwide.",
 		points: [
 			"Established relationships with 200+ Indian formulation giants",
 			"Dedicated technical sales force with deep molecule expertise",
 			"Long-term annual supply agreements & strategic safety stocks",
 		],
-		specs: ["200+ Formulators", "40+ Years in Market", "Dedicated Sales Force", "Strategic Safety Stocks"],
+		specs: ["200+ Formulators", "40+ Years in Market", "Worldwide Reach", "Strategic Safety Stocks"],
 		metric: { val: "40+", label: "Years in Market" },
 		icon: TrendingUp,
 		img: "/images/strategic.webp",
-	},
-	{
-		num: 5,
-		id: "logistics",
-		numberStr: "05.",
-		title: "Export & Cold-Chain Logistics",
-		shortTitle: "Export & Cold-Chain Logistics",
-		tag: "Global Logistics",
-		handledByLabel: "HANDLED BY",
-		handledBy: [
-			"Cold-Chain Logistics Unit",
-			"DG Shipping & Bonded Air",
-			"SEZ & Advance Licence Team",
-		],
-		desc: "Full-service pharmaceutical export logistics handling advance licenses, SEZ/EOU dispatches, and temperature-controlled air & sea freight to 30+ countries.",
-		points: [
-			"Advance Licence, SEZ & EOU export compliance expertise",
-			"Validated temperature-controlled cold-chain packaging (2–8°C / -20°C)",
-			"Door-to-door bonded shipping with live GPS temperature tracking",
-		],
-		specs: ["Validated Cold Chain (2–8°C)", "30+ Export Nations", "SEZ & Advance Licence", "Real-Time GPS Tracking"],
-		metric: { val: "30+", label: "Export Nations" },
-		icon: Truck,
-		img: "/images/export.webp",
 	},
 ];
 
@@ -550,7 +526,7 @@ export default function HomePage() {
 
 							{/* 4. Descriptive Subtitle */}
 							<p className="text-base text-[#5A7A8E] font-normal max-w-2xl leading-relaxed">
-								Five specialized capabilities connecting bulk API reactors with leading formulation facilities — fully compliant, documented, and reliably delivered.
+								Four specialized capabilities connecting bulk API reactors with leading formulation facilities — fully compliant, documented, and reliably delivered.
 							</p>
 						</div>
 
@@ -937,144 +913,6 @@ export default function HomePage() {
 				</div>
 			</section>
 
-			{/* ══════════════════════════════════════════════════════════
-          4. ABOUT US — Clean Warm Cream Background & White Cards
-          ══════════════════════════════════════════════════════════ */}
-			<motion.section
-				initial={{ opacity: 0, y: 25 }}
-				whileInView={{ opacity: 1, y: 0 }}
-				viewport={{ once: true, margin: "-80px" }}
-				transition={{ duration: 0.6 }}
-				id="about"
-				className="py-20 sm:py-28 bg-[#FAF7F2] relative overflow-hidden contain-section border-t border-[#12304A]/6"
-			>
-				<div className="absolute bottom-0 right-0 w-[240px] opacity-10 pointer-events-none">
-					<MolecularDecoration color="#12304A" opacity={1} />
-				</div>
-
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-						
-						{/* Left: Building Image with Stat Card */}
-						<motion.div
-							initial={{ opacity: 0, x: -20 }}
-							whileInView={{ opacity: 1, x: 0 }}
-							viewport={{ once: true }}
-							transition={{ duration: 0.7 }}
-							className="lg:col-span-5 relative"
-						>
-							<div className="relative rounded-[28px] overflow-hidden h-[380px] sm:h-[460px] lg:h-[500px] w-full shadow-2xl border border-[#12304A]/8">
-								<Image
-									src="/images/building.webp"
-									alt="Ruskin Chemipharm Headquarters"
-									fill
-									className="object-cover"
-									sizes="(max-width: 1024px) 100vw, 42vw"
-								/>
-								<div className="absolute inset-0 bg-gradient-to-t from-[#12304A]/40 to-transparent" />
-							</div>
-
-							{/* Floating Year Established */}
-							<motion.div
-								initial={{ opacity: 0, scale: 0.9 }}
-								whileInView={{ opacity: 1, scale: 1 }}
-								viewport={{ once: true }}
-								transition={{ delay: 0.2 }}
-								className="absolute -bottom-5 -right-3 sm:-bottom-6 sm:-right-4 bg-white rounded-2xl p-4 sm:p-5 shadow-2xl border border-[#12304A]/10 text-left"
-							>
-								<div className="stat-num text-2xl sm:text-3xl font-black text-[#12304A]">Est. 1984</div>
-								<div className="text-[11px] text-[#C79A4B] font-bold tracking-wider mt-0.5 uppercase">
-									Mumbai, India
-								</div>
-							</motion.div>
-						</motion.div>
-
-						{/* Right: Overview Content */}
-						<div className="lg:col-span-7 space-y-6 text-left">
-							<div className="space-y-3">
-								<span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
-									<div className="w-8 h-[2px] bg-[#C79A4B]" />
-									Company Overview
-								</span>
-								<h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#12304A] leading-tight tracking-tight">
-									Bridging Global Compliance with{" "}
-									<span className="text-[#C79A4B]">Precision Chemistry.</span>
-								</h2>
-								<div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
-							</div>
-
-							<p className="text-base text-[#5A7A8E] leading-relaxed font-normal">
-								Partnering with domestic and international formulation leaders to deliver
-								high-yield APIs and regulatory solutions — from synthesis reactor to
-								batch release, with unyielding adherence to cGMP.
-							</p>
-
-							{/* Checklist with Hex Icons */}
-							<div className="space-y-3">
-								{[
-									"WHO–GMP & ISO 9001:2015 Certified Manufacturing Partners",
-									"Complete USDMF, CEP & CDSCO Regulatory Filing Support",
-									"Stringent HPLC, GC & Elemental Batch Purity Verification",
-									"Temperature-Controlled, Fully Documented Global Export Supply Chain",
-								].map((item, i) => (
-									<motion.div
-										key={item}
-										initial={{ opacity: 0, x: 12 }}
-										whileInView={{ opacity: 1, x: 0 }}
-										viewport={{ once: true }}
-										transition={{ duration: 0.45, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-										className="flex items-center gap-3 text-sm text-[#12304A] font-medium"
-									>
-										<HexIcon size={24} bg="#12304A" className="shrink-0">
-											<Check className="w-3.5 h-3.5 text-white stroke-[3]" />
-										</HexIcon>
-										<span>{item}</span>
-									</motion.div>
-								))}
-							</div>
-
-							{/* Stat Cards Row */}
-							<div className="grid grid-cols-2 gap-4 pt-2">
-								{[
-									{ val: 40, suffix: "+", label: "Years Experience", color: "#C79A4B" },
-									{ val: 250, suffix: "+", label: "Global Sourcing Partners", color: "#12304A" },
-									{ val: 46, suffix: "+", label: "DCGI Approved APIs", color: "#C79A4B" },
-									{ val: 200, suffix: "+", label: "Formulator Network", color: "#12304A" },
-								].map((s, idx) => (
-									<motion.div
-										key={s.label}
-										initial={{ opacity: 0, y: 16 }}
-										whileInView={{ opacity: 1, y: 0 }}
-										viewport={{ once: true }}
-										transition={{ duration: 0.45, delay: 0.2 + idx * 0.06, ease: [0.16, 1, 0.3, 1] }}
-										whileHover={{ y: -3, scale: 1.015 }}
-										className="bg-white border border-[#12304A]/8 hover:border-[#C79A4B]/40 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md transition-[border-color,box-shadow] duration-200 text-left cursor-default"
-									>
-										<div className="stat-num text-2xl sm:text-3xl font-black text-[#12304A]">
-											<CountUp end={s.val} suffix={s.suffix} />
-										</div>
-										<div className="text-[11px] font-bold tracking-wide mt-1" style={{ color: s.color }}>
-											{s.label}
-										</div>
-									</motion.div>
-								))}
-							</div>
-
-							<div className="pt-2">
-								<motion.button
-									whileHover={{ scale: 1.025, y: -2 }}
-									whileTap={{ scale: 0.98 }}
-									onClick={() => router.push("/about")}
-									className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-[#12304A] text-white font-bold text-sm shadow-xl hover:bg-[#0B1E2E] transition-colors group cursor-pointer gpu-smooth"
-								>
-									<span>Learn More About Us</span>
-									<ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
-								</motion.button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</motion.section>
 
 			{/* ══════════════════════════════════════════════════════════
           4. PRODUCT RANGE — Cream background, Dynamic Categories
@@ -1412,119 +1250,8 @@ export default function HomePage() {
 						className="w-full h-[50px] sm:h-[80px]"
 						preserveAspectRatio="none"
 					>
-						<path d="M0,80 C480,0 960,80 1440,20 L1440,80 L0,80 Z" fill="white" />
+						<path d="M0,80 C480,0 960,80 1440,20 L1440,80 L0,80 Z" fill="#FAF7F2" />
 					</svg>
-				</div>
-			</motion.section>
-
-			{/* ══════════════════════════════════════════════════════════
-          6. WHY RUSKIN — Clinical Bento Grid
-          ══════════════════════════════════════════════════════════ */}
-			<motion.section
-				initial={{ opacity: 0, y: 25 }}
-				whileInView={{ opacity: 1, y: 0 }}
-				viewport={{ once: true, margin: "-80px" }}
-				transition={{ duration: 0.6 }}
-				className="py-20 sm:py-28 bg-white relative overflow-hidden text-left contain-section"
-			>
-				{/* Ambient background molecular accents */}
-				<div className="absolute top-0 right-0 w-[360px] pointer-events-none translate-x-12 -translate-y-10 select-none opacity-[0.035]">
-					<MolecularDecoration color="#12304A" opacity={1} className="w-full h-auto" />
-				</div>
-				<div className="absolute bottom-0 left-0 w-[320px] pointer-events-none -translate-x-12 translate-y-10 select-none opacity-[0.03]">
-					<MolecularDecoration color="#C79A4B" opacity={1} className="w-full h-auto" />
-				</div>
-
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
-					<div className="space-y-3">
-						<span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
-							<div className="w-8 h-[2px] bg-[#C79A4B]" />
-							Why Ruskin Chemipharm
-						</span>
-						<h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#12304A] leading-tight tracking-tight">
-							Why pharmaceutical leaders <span className="text-[#C79A4B]">trust Ruskin</span>
-						</h2>
-						<div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
-						<p className="text-base text-[#5A7A8E] font-normal max-w-3xl lg:max-w-4xl leading-relaxed">
-							Connecting audited global API manufacturing with swift CDSCO drug authority approvals, validated cold-chain shipping, and batch-by-batch certified purity.
-						</p>
-					</div>
-
-					{/* Unified Luxury Photo Bento Grid */}
-					<div className="grid grid-cols-1 md:grid-cols-12 gap-5 lg:gap-6">
-						{[
-							{
-								img: "/images/sourcing.webp",
-								title: "Sourcing Network",
-								desc: "Direct procurement from 250+ audited API synthesizers across Europe, Japan, China & India with full supply traceability.",
-								span: "md:col-span-12 lg:col-span-6",
-								h: "min-h-[270px] sm:min-h-[290px] lg:h-[310px]",
-							},
-							{
-								img: "/images/quality.webp",
-								title: "Compliance Process",
-								desc: "WHO-GMP, ISO 9001:2015 & USFDA compliant facilities with 100% HPLC & GC batch analytical purity verification.",
-								span: "md:col-span-12 lg:col-span-6",
-								h: "min-h-[270px] sm:min-h-[290px] lg:h-[310px]",
-							},
-							{
-								img: "/images/strategic.webp",
-								title: "Supply Flexibility",
-								desc: "Low MOQ flexibility, custom chemical formulation, pilot-to-commercial batch scaling, and private labeling.",
-								span: "md:col-span-12 lg:col-span-4",
-								h: "min-h-[250px] sm:min-h-[270px] lg:h-[285px]",
-							},
-							{
-								img: "/images/supply.webp",
-								title: "Turnaround & Dispatch",
-								desc: "Under 4-hour quote response with strategic Mumbai warehousing and express cold-chain dispatch.",
-								span: "md:col-span-12 lg:col-span-4",
-								h: "min-h-[250px] sm:min-h-[270px] lg:h-[285px]",
-							},
-							{
-								img: "/images/regulatory.avif",
-								title: "Regulatory Support",
-								desc: "Comprehensive CDSCO import filings, USDMF & CEP dossiers, and dedicated drug authority liaison.",
-								span: "md:col-span-12 lg:col-span-4",
-								h: "min-h-[250px] sm:min-h-[270px] lg:h-[285px]",
-							},
-						].map((card, idx) => (
-							<motion.div
-								key={card.title}
-								initial={{ opacity: 0, y: 24 }}
-								whileInView={{ opacity: 1, y: 0 }}
-								viewport={{ once: true, margin: "-40px" }}
-								transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-								whileHover={{ y: -4 }}
-								className={`${card.span} relative rounded-[24px] overflow-hidden ${card.h} group cursor-pointer shadow-md hover:shadow-2xl transition-[box-shadow,border-color,transform] duration-300 border border-black/5 hover:border-[#C79A4B]/40 flex flex-col justify-end p-5 sm:p-6 lg:p-7`}
-							>
-								<img
-									src={card.img}
-									alt={card.title}
-									className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-									loading="lazy"
-									decoding="async"
-								/>
-								{/* Enhanced bottom vignette for crisp text readability while keeping upper image open */}
-								<div className="absolute inset-0 bg-gradient-to-t from-[#071521] via-[#071521]/70 via-42% to-transparent group-hover:via-[#071521]/75 transition-colors duration-500" />
-
-								{/* Bottom content */}
-								<div className="relative z-10 space-y-1.5 text-left">
-									<div className="flex items-center gap-2.5">
-										<HexIcon size={24} bg="#C79A4B">
-											<Check className="w-3 h-3 text-white stroke-[3]" />
-										</HexIcon>
-										<h3 className="text-lg sm:text-xl font-bold text-white tracking-tight leading-snug drop-shadow-sm">
-											{card.title}
-										</h3>
-									</div>
-									<p className="text-xs sm:text-[13.5px] text-slate-200/90 font-normal leading-relaxed drop-shadow-sm max-w-lg">
-										{card.desc}
-									</p>
-								</div>
-							</motion.div>
-						))}
-					</div>
 				</div>
 			</motion.section>
 

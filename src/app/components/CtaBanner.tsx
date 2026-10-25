@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ShieldCheck, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface CtaBannerProps {
@@ -33,12 +33,6 @@ export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
           {/* Content */}
           <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
             <div className="space-y-3 max-w-2xl text-left">
-              {/* Ultra-compact sleek micro-badge */}
-              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#C79A4B]/10 border border-[#C79A4B]/20 text-[#C79A4B] text-[9.5px] font-semibold tracking-wider uppercase">
-                <span className="w-1 h-1 rounded-full bg-[#C79A4B] animate-pulse" />
-                <ShieldCheck className="w-2.5 h-2.5" />
-                <span>cGMP &amp; ISO 9001:2015 Certified</span>
-              </div>
 
               <div className="space-y-2">
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight">

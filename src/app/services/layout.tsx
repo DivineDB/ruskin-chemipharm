@@ -1,18 +1,16 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pharmaceutical Services & Sourcing Capabilities | Ruskin Chemipharm",
+  title: "Pharmaceutical Services | Ruskin Chemipharm",
   description:
-    "Comprehensive pharmaceutical indenting capabilities: Global API sourcing from 250+ audited cGMP facilities, CDSCO/DCGI import registrations, USDMF/CEP technical documentation, domestic distribution, and temperature-controlled cold-chain logistics.",
+    "Ruskin Chemipharm services: CDSCO registration support, indenting and global sourcing, pharmaceutical trading and distribution, and import & export facilitation. Serving the industry since 1984.",
   keywords: [
-    "Pharmaceutical Indenting Services",
-    "API Sourcing",
-    "DCGI Registration India",
-    "CDSCO Form 41 Form 10",
-    "USDMF CEP Documentation",
-    "Pharma Cold-Chain Logistics",
-    "Active Pharmaceutical Ingredients Distribution",
-    "cGMP Vendor Auditing",
+    "CDSCO Registration",
+    "Pharmaceutical Indenting",
+    "Global API Sourcing",
+    "Pharmaceutical Trading and Distribution",
+    "Pharma Import Export India",
+    "Ruskin Chemipharm Services",
   ],
 };
 

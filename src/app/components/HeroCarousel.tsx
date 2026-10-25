@@ -11,7 +11,7 @@ import {
 	useTransform,
 } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Check, Download, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, Download } from "lucide-react";
 import { HexImage } from "./Hex";
 
 /* ───────────────────────────────────────────────────────────────────────────
@@ -240,23 +240,7 @@ export default function HeroCarousel({
 				aria-roledescription="carousel"
 				aria-label="Ruskin Chemipharm highlights"
 			>
-				{/* Certification Pill Badge */}
-				<motion.div
-					variants={{
-						hidden: { opacity: 0, y: 14, scale: 0.95 },
-						visible: {
-							opacity: 1,
-							y: 0,
-							scale: 1,
-							transition: { duration: 0.55, ease: EASE_PREMIUM },
-						},
-					}}
-				>
-					<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-sm border border-[#12304A]/10 text-[10px] font-semibold tracking-wider uppercase text-[#12304A]/80 hover:border-[#C79A4B]/40 transition-colors shadow-sm">
-						<ShieldCheck className="w-3.5 h-3.5 text-[#C79A4B] shrink-0" />
-						<span>WHO-GMP &amp; ISO 9001:2015 Certified</span>
-					</span>
-				</motion.div>
+
 
 				{/* Slide Eyebrow */}
 				<motion.div
