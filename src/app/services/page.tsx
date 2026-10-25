@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
@@ -187,6 +187,18 @@ function SectionHeader({
    PAGE
    ─────────────────────────────────────────────────────────────────────────── */
 export default function ServicesPage() {
+	const [activeStep, setActiveStep] = useState(0);
+
+	// 0.5s per step: 0 -> 1 -> 2 -> 3 (0.5s each), hold on step 3 for 1s, then cycle
+	useEffect(() => {
+		let current = 0;
+		const interval = setInterval(() => {
+			current = (current + 1) % 6; // 0, 1, 2, 3, 4, 5 (4 & 5 hold at completion)
+			setActiveStep(Math.min(current, 3));
+		}, 500);
+		return () => clearInterval(interval);
+	}, []);
+
 	return (
 		<div className="min-h-screen bg-[#FAF7F2] text-[#5A7A8E] flex flex-col">
 			<main className="flex-grow">
@@ -409,13 +421,6 @@ export default function ServicesPage() {
 
 				{/* ════════════════ 4. HOW SERVICES WORK TOGETHER ════════════════ */}
 				<section className="relative bg-[#0B1E2E] overflow-hidden">
-					<div
-						className="absolute inset-0 opacity-[0.35] pointer-events-none"
-						style={{
-							background:
-								"radial-gradient(60% 50% at 50% 0%, rgba(199,154,75,0.16) 0%, rgba(11,30,46,0) 70%)",
-						}}
-					/>
 					<MolecularDecoration
 						color="#C79A4B"
 						opacity={0.07}
@@ -449,14 +454,15 @@ export default function ServicesPage() {
 
 						{/* Steps */}
 						<ol className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-							{/* desktop connector line through the badges */}
-							<div className="hidden lg:block absolute top-7 left-[12.5%] right-[12.5%] h-px bg-white/10">
+							{/* desktop connector progress bar: advances 0.5s per step */}
+							<div className="hidden lg:block absolute top-7 left-[12.5%] right-[12.5%] h-[2px] bg-white/10 overflow-hidden">
 								<motion.div
-									initial={{ scaleX: 0 }}
-									whileInView={{ scaleX: 1 }}
-									viewport={{ once: true, margin: "-80px" }}
-									transition={{ duration: 1.2, delay: 0.2, ease: EASE }}
-									className="absolute inset-0 origin-left bg-[#C79A4B]/60"
+									className="h-full bg-[#C79A4B]"
+									animate={{ width: `${(activeStep / (FLOW.length - 1)) * 100}%` }}
+									transition={{
+										duration: activeStep === 0 ? 0.3 : 0.5,
+										ease: "easeInOut",
+									}}
 								/>
 							</div>
 
@@ -470,7 +476,7 @@ export default function ServicesPage() {
 									className="relative flex flex-col items-center text-center gap-5"
 								>
 									<div className="relative z-10 bg-[#0B1E2E] px-2">
-										<HexBadge num={i + 1} active={i === FLOW.length - 1} />
+										<HexBadge num={i + 1} active={i <= activeStep} />
 									</div>
 
 									<a

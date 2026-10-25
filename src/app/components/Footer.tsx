@@ -118,16 +118,16 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
 
-        {/* Top layout */}
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start text-left">
+        {/* Top layout: 4 well-balanced columns with clean, open typography and actual product categories */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 xl:gap-12 items-start text-left w-full">
 
-          {/* Brand Column — aligned with Quick Links title */}
+          {/* Column 1: Brand & Headquarters */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full lg:w-[260px] shrink-0 space-y-7"
+            className="space-y-6"
           >
             <div className="-mt-3.5 sm:-mt-4 lg:-mt-[18px]">
               <Image
@@ -192,117 +192,167 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
             </div>
           </motion.div>
 
-          {/* Nav Columns: 4 well-balanced columns filling the full width */}
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
+          {/* Column 2: Quick Links */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-4"
+          >
+            <div>
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider">Quick Links</h4>
+              <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
+            </div>
 
-            {/* Quick Links */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="space-y-4"
-            >
-              <div>
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider">Quick Links</h4>
-                <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
-              </div>
-              <ul className="space-y-2.5 text-xs text-slate-300">
-                <li>
-                  <button onClick={onOpenCatalog} className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 text-left cursor-pointer inline-block">
-                    Products Directory
-                  </button>
-                </li>
-                <li><Link href="/services" className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 inline-block">Services</Link></li>
-                <li><Link href="/services#regulatory" className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 inline-block">Regulatory Specs</Link></li>
-                <li><Link href="/about" className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 inline-block">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 inline-block">Contact &amp; Offices</Link></li>
-              </ul>
-            </motion.div>
+            <ul className="space-y-3 text-xs text-slate-300">
+              <li>
+                <button
+                  onClick={onOpenCatalog}
+                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 text-left cursor-pointer inline-block"
+                >
+                  Products Directory
+                </button>
+              </li>
+              <li>
+                <Link
+                  href="/services"
+                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
+                >
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services#regulatory"
+                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
+                >
+                  Regulatory Specs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
+                >
+                  Contact &amp; Offices
+                </Link>
+              </li>
+            </ul>
+          </motion.div>
 
-            {/* API Portfolios */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.55, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="space-y-4"
-            >
-              <div>
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider">Key Portfolios</h4>
-                <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
-              </div>
-              <ul className="space-y-2.5 text-xs text-slate-300">
-                <li><Link href="/products?category=Cardiovascular" className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 inline-block">Cardiovascular APIs</Link></li>
-                <li><Link href="/products?category=Anti-Infective" className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 inline-block">Anti-Infectives</Link></li>
-                <li><Link href="/products?category=Anti-Diabetic" className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 inline-block">Anti-Diabetic Agents</Link></li>
-                <li><Link href="/products?category=CNS%20Agents" className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 inline-block">CNS &amp; Neuro Chemistry</Link></li>
-                <li><Link href="/products?category=Gastrointestinal" className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 inline-block">Gastrointestinal APIs</Link></li>
-              </ul>
-            </motion.div>
+          {/* Column 3: Key Portfolios (Actual categories in products catalog) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.55, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-4"
+          >
+            <div>
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider">Key Portfolios</h4>
+              <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
+            </div>
 
-            {/* Compliance */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.55, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="space-y-4"
-            >
-              <div>
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider">Compliance</h4>
-                <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
-              </div>
-              <ul className="space-y-2.5 text-xs text-slate-300">
-                <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">cGMP Regulatory Liaison</span></li>
-                <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">Batch Traceability Standards</span></li>
-                <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">CoA &amp; TDS Verification</span></li>
-                <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">Safety Data Sheets (SDS)</span></li>
-                <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">US-DMF / CEP Dossiers</span></li>
-              </ul>
-            </motion.div>
+            <ul className="space-y-3 text-xs text-slate-300">
+              <li>
+                <Link
+                  href="/products?category=Pharma"
+                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
+                >
+                  Pharma APIs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/products?category=Animal%20Care"
+                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
+                >
+                  Animal Care
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/products?category=Excipients"
+                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
+                >
+                  Excipients
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/products?category=Food%20%26%20Nutrition"
+                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
+                >
+                  Food &amp; Nutrition
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/products?category=Nootropics"
+                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
+                >
+                  Nootropics
+                </Link>
+              </li>
+            </ul>
+          </motion.div>
 
-            {/* Reach Us */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.55, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="space-y-4"
-            >
+          {/* Column 4: Reach Us */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.55, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-4"
+          >
+            <div>
+              <h4 className="text-sm font-bold text-white uppercase tracking-wider">Reach Us</h4>
+              <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
+            </div>
+
+            <div className="space-y-4 text-xs text-slate-300 leading-relaxed">
               <div>
-                <h4 className="text-sm font-bold text-white uppercase tracking-wider">Reach Us</h4>
-                <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
-              </div>
-              <div className="space-y-3 text-xs text-slate-300 leading-relaxed">
-                <div>
-                  <p className="font-semibold text-slate-400 text-[11px] uppercase tracking-wide mb-1">Direct Contacts</p>
-                  <div className="space-y-1">
-                    <p>
-                      <span className="text-slate-400">Krishnakumar:</span>{" "}
-                      <a href="tel:+919322226307" className="text-slate-200 hover:text-[#C79A4B] transition-colors font-medium">+91 93222 26307</a>
-                    </p>
-                    <p>
-                      <span className="text-slate-400">Yash:</span>{" "}
-                      <a href="tel:+919819826611" className="text-slate-200 hover:text-[#C79A4B] transition-colors font-medium">+91 98198 26611</a>
-                    </p>
-                    <p>
-                      <span className="text-slate-400">Atman:</span>{" "}
-                      <a href="tel:+919967155543" className="text-slate-200 hover:text-[#C79A4B] transition-colors font-medium">+91 99671 55543</a>
-                    </p>
-                  </div>
+                <p className="font-semibold text-slate-400 text-[11px] uppercase tracking-wide mb-2">Direct Contacts</p>
+                <div className="space-y-2">
+                  <p>
+                    <span className="text-slate-400">Yash:</span>{" "}
+                    <a href="tel:+919819826611" className="text-slate-200 hover:text-[#C79A4B] transition-colors font-medium">+91 98198 26611</a>
+                  </p>
+                  <p>
+                    <span className="text-slate-400">Krishna:</span>{" "}
+                    <a href="tel:+919322226307" className="text-slate-200 hover:text-[#C79A4B] transition-colors font-medium">+91 93222 26307</a>
+                  </p>
+                  <p>
+                    <span className="text-slate-400">Atman:</span>{" "}
+                    <a href="tel:+919967155543" className="text-slate-200 hover:text-[#C79A4B] transition-colors font-medium">+91 99671 55543</a>
+                  </p>
                 </div>
-                <div className="pt-1">
-                  <p className="font-semibold text-slate-400 text-[11px] uppercase tracking-wide mb-1">Official Portal</p>
-                  <a href="https://www.ruskinchemipharm.in" target="_blank" rel="noopener noreferrer" className="text-[#C79A4B] hover:text-[#E5C378] text-xs font-semibold hover:underline inline-flex items-center gap-1 transition-colors">
-                    <span>www.ruskinchemipharm.in</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
               </div>
-            </motion.div>
 
-          </div>
+              <div className="pt-1">
+                <p className="font-semibold text-slate-400 text-[11px] uppercase tracking-wide mb-1.5">Official Portal</p>
+                <a
+                  href="https://www.ruskinchemipharm.in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#C79A4B] hover:text-[#E5C378] text-xs font-semibold hover:underline inline-flex items-center gap-1.5 transition-colors"
+                >
+                  <span>www.ruskinchemipharm.in</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          </motion.div>
+
         </div>
 
         {/* Bottom Bar */}

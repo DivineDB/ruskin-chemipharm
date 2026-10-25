@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Search, Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 
 interface NavbarProps {
   onOpenSearch?: () => void;
@@ -30,6 +30,42 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
     { href: "/about", label: "About", active: isAbout },
     { href: "/contact", label: "Contact", active: isContact },
   ];
+
+  const currentActiveHref = navLinks.find((link) => link.active)?.href || "/";
+  const [activeTab, setActiveTab] = useState(currentActiveHref);
+  const linkRefs = useRef<{ [key: string]: HTMLAnchorElement | null }>({});
+  const [indicator, setIndicator] = useState<{ x: number; width: number; top: number } | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  const updateIndicator = useCallback((targetTab?: string) => {
+    const tabToUse = targetTab || activeTab;
+    const el = linkRefs.current[tabToUse];
+    if (el) {
+      setIndicator({
+        x: el.offsetLeft + 14,
+        width: Math.max(0, el.offsetWidth - 28),
+        top: el.offsetTop + el.offsetHeight,
+      });
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    setActiveTab(currentActiveHref);
+  }, [currentActiveHref]);
+
+  useEffect(() => {
+    setIsMounted(true);
+    updateIndicator();
+  }, [updateIndicator]);
+
+  useEffect(() => {
+    const handleResize = () => updateIndicator();
+    window.addEventListener("resize", handleResize);
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(handleResize);
+    }
+    return () => window.removeEventListener("resize", handleResize);
+  }, [updateIndicator]);
 
   const handleQuoteClick = useCallback(() => {
     if (onOpenQuote) {
@@ -117,29 +153,57 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
           />
         </Link>
 
-        {/* Desktop nav with layoutId spring-physics continuous active underline */}
-        <nav className="hidden md:flex items-center space-x-1 sm:space-x-2 relative py-2">
-          {navLinks.map((link) => {
-            const isCurrentActive = link.active;
+        {/* Desktop nav with physics-aware continuous active underline */}
+        <LayoutGroup id="desktop-nav">
+          <nav className="hidden md:flex items-center space-x-1 sm:space-x-2 relative py-2">
+            {navLinks.map((link) => {
+              const isCurrentActive = activeTab === link.href;
 
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`relative px-3.5 py-1.5 text-sm font-semibold transition-colors duration-150 select-none ${
-                  isCurrentActive
-                    ? "text-[#12304A]"
-                    : "text-[#5A7A8E] hover:text-[#12304A]"
-                }`}
-              >
-                <span>{link.label}</span>
-                {isCurrentActive && (
-                  <div className="absolute -bottom-0.5 left-3.5 right-3.5 h-[2px] bg-[#C79A4B] rounded-full pointer-events-none" />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
+              return (
+                <Link
+                  key={link.href}
+                  ref={(el) => {
+                    linkRefs.current[link.href] = el;
+                  }}
+                  href={link.href}
+                  onClick={() => {
+                    setActiveTab(link.href);
+                    updateIndicator(link.href);
+                  }}
+                  className={`relative px-3.5 py-1.5 text-sm font-semibold transition-colors duration-150 select-none ${
+                    isCurrentActive
+                      ? "text-[#12304A]"
+                      : "text-[#5A7A8E] hover:text-[#12304A]"
+                  }`}
+                >
+                  <span>{link.label}</span>
+                  {!isMounted && isCurrentActive && (
+                    <div className="absolute -bottom-0.5 left-3.5 right-3.5 h-[2px] bg-[#C79A4B] rounded-full pointer-events-none" />
+                  )}
+                </Link>
+              );
+            })}
+
+            {/* Persistent physics-aware underline: animates only x & width, completely immune to page scroll jumps */}
+            {isMounted && indicator && (
+              <motion.div
+                className="absolute left-0 h-[2px] bg-[#C79A4B] rounded-full pointer-events-none"
+                style={{ top: indicator.top }}
+                initial={false}
+                animate={{
+                  x: indicator.x,
+                  width: indicator.width,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 380,
+                  damping: 30,
+                  mass: 0.8,
+                }}
+              />
+            )}
+          </nav>
+        </LayoutGroup>
 
         {/* Right actions — shifted inward to the left */}
         <div className="flex items-center gap-3 mr-3 sm:mr-6 lg:mr-8">

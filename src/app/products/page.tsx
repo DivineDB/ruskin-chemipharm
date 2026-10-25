@@ -391,101 +391,37 @@ function ProductsContent() {
 				<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 text-center sm:text-left">
 					<div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
 						{/* Left Column: Heading & Value Proposition */}
-						<div className="lg:col-span-7 space-y-5 text-left">
-							<motion.div
-								initial={{ opacity: 0, y: 14 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-							>
+						<motion.div
+							initial={{ opacity: 0, y: 16 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+							style={{ transform: "translateZ(0)" }}
+							className="lg:col-span-7 space-y-5 text-left gpu-smooth"
+						>
+							<div>
 								<span className="inline-flex items-center gap-2.5 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
-									<motion.div
-										initial={{ width: 0, opacity: 0 }}
-										animate={{ width: "2rem", opacity: 1 }}
-										transition={{
-											duration: 0.6,
-											delay: 0.05,
-											ease: [0.16, 1, 0.3, 1],
-										}}
-										className="h-[2px] bg-[#C79A4B] rounded-full shrink-0"
-									/>
-									<motion.span
-										initial={{ opacity: 0, x: -6 }}
-										animate={{ opacity: 1, x: 0 }}
-										transition={{ duration: 0.5, delay: 0.12 }}
-									>
-										Product Directory
-									</motion.span>
+									<div className="w-8 h-[2px] bg-[#C79A4B] rounded-full shrink-0" />
+									Product Directory
 								</span>
-							</motion.div>
+							</div>
 
-							<motion.h1
-								initial={{ opacity: 0, y: 22 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.65,
-									delay: 0.14,
-									ease: [0.16, 1, 0.3, 1],
-								}}
-								className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-white leading-tight tracking-tight"
-							>
-								<motion.span
-									initial={{ opacity: 0, y: 10 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{ duration: 0.5, delay: 0.16 }}
-									className="inline-block"
-								>
-									DCGI-Approved &amp;
-								</motion.span>
-								<br />
-								<motion.span
-									initial={{ opacity: 0, y: 10 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{ duration: 0.5, delay: 0.22 }}
-									className="inline-block text-[#C79A4B]"
-								>
-									Registered API Directory
-								</motion.span>
-							</motion.h1>
+							<h1 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-white leading-tight tracking-tight">
+								DCGI-Approved &amp; <br />
+								<span className="text-[#C79A4B]">Registered API Directory</span>
+							</h1>
 
 							{/* Mandatory Signature Gold Accent Bar */}
-							<motion.div
-								initial={{ width: 0, opacity: 0 }}
-								animate={{ width: "4rem", opacity: 1 }}
-								transition={{
-									duration: 0.75,
-									delay: 0.28,
-									ease: [0.16, 1, 0.3, 1],
-								}}
-								className="h-[3px] rounded-full bg-[#C79A4B]"
-							/>
+							<div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
 
-							<motion.p
-								initial={{ opacity: 0, y: 16 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.55,
-									delay: 0.34,
-									ease: [0.16, 1, 0.3, 1],
-								}}
-								className="text-base text-slate-300 font-normal leading-relaxed max-w-2xl"
-							>
+							<p className="text-base text-slate-300 font-normal leading-relaxed max-w-2xl">
 								Explore our catalog of {ALL_PRODUCTS.length}+ high-purity APIs,
 								veterinary actives, excipients, dietary nutrients, and
 								nootropics sourced directly from audited global manufacturing
 								partners.
-							</motion.p>
+							</p>
 
 							{/* Hero CTA Buttons matching Services Page */}
-							<motion.div
-								initial={{ opacity: 0, y: 16 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.55,
-									delay: 0.4,
-									ease: [0.16, 1, 0.3, 1],
-								}}
-								className="flex flex-col sm:flex-row items-center gap-4 pt-2"
-							>
+							<div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
 								<motion.button
 									whileHover={{ scale: 1.025, y: -2 }}
 									whileTap={{ scale: 0.98 }}
@@ -515,11 +451,17 @@ function ProductsContent() {
 										<ArrowUpRight className="w-4 h-4 text-[#C79A4B]" />
 									</button>
 								</motion.div>
-							</motion.div>
-						</div>
+							</div>
+						</motion.div>
 
 						{/* Right Column: Key Operational Metrics with Elegant Vertical Anchor */}
-						<div className="lg:col-span-5 grid grid-cols-2 gap-x-6 gap-y-6 sm:gap-x-8 sm:gap-y-7 pl-0 lg:pl-8 lg:border-l lg:border-white/10 text-left">
+						<motion.div
+							initial={{ opacity: 0, y: 16 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+							style={{ transform: "translateZ(0)" }}
+							className="lg:col-span-5 grid grid-cols-2 gap-x-6 gap-y-6 sm:gap-x-8 sm:gap-y-7 pl-0 lg:pl-8 lg:border-l lg:border-white/10 text-left gpu-smooth"
+						>
 							{[
 								{
 									val: ALL_PRODUCTS.length,
@@ -545,16 +487,9 @@ function ProductsContent() {
 									label: "Years in Market",
 									sub: "Founded in 1984",
 								},
-							].map((stat, idx) => (
-								<motion.div
+							].map((stat) => (
+								<div
 									key={stat.label}
-									initial={{ opacity: 0, y: 24, scale: 0.94 }}
-									animate={{ opacity: 1, y: 0, scale: 1 }}
-									transition={{
-										duration: 0.6,
-										delay: 0.22 + idx * 0.1,
-										ease: [0.16, 1, 0.3, 1],
-									}}
 									className="group cursor-default"
 								>
 									<div className="text-2xl sm:text-2xl lg:text-[28px] font-bold tracking-tight text-white group-hover:text-[#C79A4B] transition-colors duration-300 font-sans">
@@ -567,9 +502,9 @@ function ProductsContent() {
 									<div className="text-[11px] text-slate-400 mt-0.5">
 										{stat.sub}
 									</div>
-								</motion.div>
+								</div>
 							))}
-						</div>
+						</motion.div>
 					</div>
 				</div>
 
