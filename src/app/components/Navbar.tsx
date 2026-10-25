@@ -102,16 +102,15 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
 
         {/* Logo */}
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Link href="/" className="flex items-center">
+          <Link href="/" className="flex items-center" aria-label="Ruskin Chemipharm Home">
             <Image
-              src="/images/logo.svg"
+              src="/logoline.svg"
               alt="Ruskin Chemipharm Logo"
-              width={110}
-              height={30}
+              width={240}
+              height={42}
               priority
               loading="eager"
-              style={{ width: "auto", height: "auto" }}
-              className="h-[21px] sm:h-[23px] w-auto object-contain"
+              className="h-[32px] sm:h-[36px] lg:h-[40px] w-auto object-contain"
             />
           </Link>
         </motion.div>
@@ -187,8 +186,17 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
             className="md:hidden overflow-hidden border-t border-[#12304A]/10 bg-white/98 backdrop-blur-lg shadow-xl"
           >
             <div className="px-5 py-4 space-y-2">
+              {/* Mobile Brand Accent */}
+              <div className="flex items-center justify-between pb-2.5 pt-0.5 border-b border-[#12304A]/8">
+                <div className="flex items-center gap-2">
+                  <Image src="/logoonly-navy.svg" alt="Ruskin" width={20} height={20} className="w-5 h-5 object-contain" />
+                  <span className="text-xs font-bold text-[#12304A] tracking-wider uppercase">Navigation</span>
+                </div>
+                <span className="text-[11px] font-bold text-[#C79A4B] uppercase tracking-wider">Est. 1984</span>
+              </div>
+
               {/* Mobile Quick Search Bar */}
-              <div className="pb-2">
+              <div className="pt-1 pb-2">
                 <button
                   onClick={() => {
                     setMobileOpen(false);

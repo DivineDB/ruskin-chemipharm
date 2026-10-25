@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { ShieldCheck, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { MolecularDecoration, HEX_CLIP } from "./Hex";
 
 interface CtaBannerProps {
   onRequestQuote: () => void;
@@ -19,27 +19,25 @@ export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
           transition={{ duration: 0.5, ease: [0.21, 0.47, 0.32, 0.98] }}
           className="relative bg-[#0B1E2E] border border-white/10 rounded-[28px] sm:rounded-[36px] p-6 sm:p-10 lg:p-14 overflow-hidden shadow-2xl"
         >
-          {/* Subtle gold molecular decoration with gentle floating micro-animation */}
-          <div
-            className="animate-float-gentle-slow absolute top-0 right-0 w-[280px] sm:w-[360px] pointer-events-none translate-x-8 -translate-y-6 select-none opacity-10 gpu-smooth"
-          >
-            <MolecularDecoration color="#C79A4B" opacity={1} className="w-full h-auto" />
+          {/* Large subtle Ruskin logo-only emblem watermark on the right */}
+          <div className="absolute top-1/2 -translate-y-1/2 -right-6 sm:-right-8 w-52 h-52 sm:w-72 sm:h-72 pointer-events-none select-none opacity-[0.04]">
+            <Image
+              src="/logoonly.svg"
+              alt="Ruskin Chemipharm Emblem"
+              width={288}
+              height={288}
+              className="w-full h-full object-contain"
+            />
           </div>
-
-          {/* Floating subtle geometric hex accent */}
-          <div
-            className="animate-hex-rotate-float absolute bottom-6 right-1/4 w-8 h-9 border border-[#C79A4B]/20 pointer-events-none hidden lg:block opacity-40 gpu-smooth"
-            style={{ clipPath: HEX_CLIP }}
-          />
 
           {/* Content */}
           <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-            <div className="space-y-4 max-w-2xl text-left">
-              {/* Gold certification pill */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C79A4B]/15 border border-[#C79A4B]/30 text-[#C79A4B] text-xs font-semibold tracking-wide">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C79A4B] animate-pulse" />
-                <ShieldCheck className="w-3.5 h-3.5" />
-                cGMP &amp; ISO 9001:2015 Certified
+            <div className="space-y-3 max-w-2xl text-left">
+              {/* Ultra-compact sleek micro-badge */}
+              <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#C79A4B]/10 border border-[#C79A4B]/20 text-[#C79A4B] text-[9.5px] font-semibold tracking-wider uppercase">
+                <span className="w-1 h-1 rounded-full bg-[#C79A4B] animate-pulse" />
+                <ShieldCheck className="w-2.5 h-2.5" />
+                <span>cGMP &amp; ISO 9001:2015 Certified</span>
               </div>
 
               <div className="space-y-2">
@@ -54,16 +52,16 @@ export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
               </p>
             </div>
 
-            {/* Primary Action CTA — neatly spaced */}
+            {/* Primary Action CTA — solid clean button without glow */}
             <div className="shrink-0 pt-2 lg:pt-0 w-full sm:w-auto">
               <motion.button
-                whileHover={{ scale: 1.03, y: -2 }}
+                whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={onRequestQuote}
-                className="flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-4 rounded-full text-sm font-bold transition-colors shadow-lg shadow-[#C79A4B]/25 group w-full sm:w-auto cursor-pointer"
+                className="flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-7 py-3.5 sm:px-8 sm:py-3.5 rounded-full text-sm font-bold transition-colors group w-full sm:w-auto cursor-pointer"
               >
                 <span>Request API Quote</span>
-                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform stroke-[2.5] duration-200" />
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform stroke-[2.5] duration-200" />
               </motion.button>
             </div>
           </div>

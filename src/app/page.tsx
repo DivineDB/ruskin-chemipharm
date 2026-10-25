@@ -12,6 +12,7 @@ import Navbar from "./components/Navbar";
 import CustomSelect from "./components/CustomSelect";
 import InteractiveHexNetwork from "./components/InteractiveHexNetwork";
 import SupplierBand from "./components/SupplierBand";
+import HeroCarousel from "./components/HeroCarousel";
 import {
 	HexImage,
 	HexBadge,
@@ -27,6 +28,7 @@ import {
 	Search,
 	ArrowRight,
 	ArrowUpRight,
+	ArrowDown,
 	ShieldCheck,
 	FileCheck,
 	Truck,
@@ -230,7 +232,19 @@ const SERVICES = [
 ];
 
 
-// ─── Global World Pins (Accurate Equirectangular Coordinates) ───────────────────
+// ─── Global World Pins & Supply Route Arcs (Equirectangular System) ─────────
+const TRADE_ROUTES = [
+	{ d: "M 680 218 Q 445 100 210 182", id: "route-usa" },
+	{ d: "M 680 218 Q 580 130 480 135", id: "route-uk" },
+	{ d: "M 680 218 Q 595 145 510 140", id: "route-germany" },
+	{ d: "M 680 218 Q 645 195 610 208", id: "route-uae" },
+	{ d: "M 680 218 Q 720 185 760 187", id: "route-china" },
+	{ d: "M 680 218 Q 765 150 850 177", id: "route-japan" },
+	{ d: "M 680 218 Q 725 240 770 265", id: "route-singapore" },
+	{ d: "M 680 218 Q 770 290 850 374", id: "route-australia" },
+	{ d: "M 680 218 Q 500 280 320 348", id: "route-brazil" },
+];
+
 const WORLD_PINS = [
 	{ id: "india", label: "Mumbai HQ", top: "42%", left: "68%", primary: true, desc: "Global Headquarters & Central Distribution Hub" },
 	{ id: "usa", label: "USA", top: "35%", left: "21%", primary: false, desc: "Formulation Partners & CDSCO Import Network" },
@@ -398,170 +412,14 @@ export default function HomePage() {
 
 				{/* Center hero content */}
 				<div className="relative z-10 flex-1 flex items-center justify-center pt-6 pb-12">
-					<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
-						
-						{/* Left: Headline & Actions — Generous breathing room, never overpowered */}
-						<div className="lg:col-span-7 space-y-6 text-left">
-							{/* Certification Pill Badge */}
-							<motion.div
-								initial={{ opacity: 0, y: 14, scale: 0.96 }}
-								animate={{ opacity: 1, y: 0, scale: 1 }}
-								transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-							>
-								<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-sm border border-[#12304A]/10 text-[10px] font-semibold tracking-wider uppercase text-[#12304A]/80 hover:border-[#C79A4B]/40 transition-colors shadow-sm">
-									<ShieldCheck className="w-3.5 h-3.5 text-[#C79A4B] shrink-0" />
-									<span>WHO-GMP &amp; ISO 9001:2015 Certified</span>
-								</span>
-							</motion.div>
-
-							{/* Headline Stack */}
-							<motion.div
-								initial={{ opacity: 0, y: 18 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.65, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-								className="space-y-1"
-							>
-								<h1 className="text-4xl sm:text-5xl lg:text-[54px] font-extrabold text-[#12304A] leading-[1.12] tracking-tight">
-									Your trusted partner in{" "}
-									<span className="text-[#C79A4B]">pharmaceutical raw materials</span>
-								</h1>
-							</motion.div>
-
-							{/* Subheadline */}
-							<motion.p
-								initial={{ opacity: 0, y: 16 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.6, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
-								className="text-base sm:text-lg text-[#5A7A8E] leading-relaxed max-w-xl font-normal pt-1"
-							>
-								Ruskin Chemipharm, Mumbai founded in 1984. We provide seamless end-to-end sourcing and supply of high-quality active ingredients and raw materials for leading manufacturers in India and worldwide.
-							</motion.p>
-
-							{/* CTA Buttons */}
-							<motion.div
-								initial={{ opacity: 0, y: 16 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ duration: 0.55, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
-								className="flex flex-col sm:flex-row gap-4 pt-2 w-full sm:w-auto"
-							>
-								<motion.button
-									whileHover={{ scale: 1.025, y: -2 }}
-									whileTap={{ scale: 0.98 }}
-									onClick={() => router.push("/products")}
-									className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#C79A4B] text-white font-bold text-sm shadow-lg shadow-[#C79A4B]/20 hover:bg-[#B58A3E] transition-colors group w-full sm:w-auto cursor-pointer gpu-smooth"
-								>
-									<span>Explore 46+ DCGI APIs</span>
-									<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-								</motion.button>
-
-								<motion.button
-									whileHover={{ scale: 1.025, y: -2 }}
-									whileTap={{ scale: 0.98 }}
-									onClick={() => handleOpenQuote("General Technical Inquiry")}
-									className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-white border border-[#12304A]/15 text-[#12304A] font-bold text-sm hover:bg-[#FAF7F2] hover:border-[#12304A]/30 transition-[background-color,border-color] shadow-sm w-full sm:w-auto cursor-pointer gpu-smooth"
-								>
-									<span>Request Quote &amp; COA</span>
-								</motion.button>
-							</motion.div>
-
-							{/* Instant COA Download Trigger */}
-							<motion.div
-								initial={{ opacity: 0 }}
-								animate={{ opacity: 1 }}
-								transition={{ duration: 0.5, delay: 0.32 }}
-								className="pt-1"
-							>
-								<button
-									onClick={handleDownloadPdf}
-									className="inline-flex items-center gap-2.5 text-xs font-semibold text-[#5A7A8E] hover:text-[#12304A] transition-colors group cursor-pointer"
-								>
-									<div className="w-5 h-5 rounded-full bg-[#C79A4B]/15 flex items-center justify-center flex-shrink-0 group-hover:bg-[#C79A4B] transition-colors">
-										<Check className="w-3 h-3 text-[#C79A4B] group-hover:text-white stroke-[3] transition-colors" />
-									</div>
-									<span>Instant COA &amp; TDS Technical Downloads Available</span>
-									<Download className="w-3.5 h-3.5 text-[#C79A4B] group-hover:translate-y-0.5 transition-transform duration-200" />
-								</button>
-							</motion.div>
-						</div>
-
-						{/* Right: Floating Hex Cluster — Tasteful, compact, positioned towards right side only */}
-						<motion.div
-							initial={{ opacity: 0, x: 25, scale: 0.96 }}
-							animate={{ opacity: 1, x: 0, scale: 1 }}
-							transition={{ duration: 0.85, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-							className="lg:col-span-5 relative flex items-center justify-center lg:justify-end py-6 lg:py-0"
-						>
-							<motion.div
-								style={{
-									rotateX: clusterRotateX,
-									rotateY: clusterRotateY,
-									x: clusterTranslateX,
-									y: clusterTranslateY,
-									transformPerspective: 1000,
-								}}
-								className="relative w-[300px] h-[360px] sm:w-[350px] sm:h-[410px] lg:w-[380px] lg:h-[440px] gpu-smooth flex items-center justify-center"
-							>
-								{/* Main Central Hexagon — Tasteful, balanced size */}
-								<div className="absolute inset-0 flex items-center justify-center">
-									<HexImage
-										src="/images/hero-image.jpg"
-										alt="Pharmaceutical Synthesis Laboratory"
-										width={330}
-										frame="#FFFFFF"
-										frameWidth={5}
-										priority={true}
-										className="w-[260px] sm:w-[300px] lg:w-[330px] transition-transform duration-500 hover:scale-[1.03]"
-									/>
-								</div>
-
-								{/* Top-Right Accent Hexagon */}
-								<div className="absolute -top-2 right-0 sm:-top-3 sm:-right-2 lg:-top-4 lg:-right-3 z-10">
-									<HexImage
-										src="/images/quality.jpg"
-										alt="GMP Purity Testing"
-										width={140}
-										frame="#C79A4B"
-										frameWidth={3}
-										className="w-[110px] sm:w-[125px] lg:w-[140px] transition-transform duration-500 hover:scale-105"
-									/>
-								</div>
-
-								{/* Bottom-Right Accent Hexagon */}
-								<div className="absolute bottom-1 right-0 sm:bottom-2 sm:-right-1 lg:bottom-2 lg:-right-2 z-10">
-									<HexImage
-										src="/images/export.jpg"
-										alt="Global Export Logistics"
-										width={130}
-										frame="#FFFFFF"
-										frameWidth={3}
-										className="w-[100px] sm:w-[115px] lg:w-[130px] transition-transform duration-500 hover:scale-105"
-									/>
-								</div>
-
-								{/* Floating Dynamic Chip: Active DCGI Molecules — Compact, neatly tucked */}
-								<motion.div
-									whileHover={{ scale: 1.04 }}
-									className="animate-float-soft absolute -left-3 sm:-left-5 lg:-left-6 top-[32%] bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-[0_12px_28px_rgba(18,48,74,0.12)] border border-[#12304A]/10 text-left cursor-default transition-shadow hover:shadow-[0_16px_32px_rgba(18,48,74,0.18)] z-20"
-								>
-									<div className="stat-num text-xl sm:text-2xl font-black text-[#12304A]">46+</div>
-									<div className="text-[10px] text-[#C79A4B] font-bold tracking-wider uppercase">
-										DCGI Active APIs
-									</div>
-								</motion.div>
-
-								{/* Floating Dynamic Chip: Global Sourcing Network */}
-								<motion.div
-									whileHover={{ scale: 1.03 }}
-									className="animate-float-soft-reverse absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md rounded-full px-4 py-2 shadow-[0_12px_28px_rgba(18,48,74,0.12)] border border-[#12304A]/10 flex items-center gap-2.5 whitespace-nowrap cursor-default transition-shadow hover:shadow-[0_18px_32px_rgba(18,48,74,0.18)] z-20"
-								>
-									<div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-									<span className="text-[11px] font-bold text-[#12304A]">
-										Global Sourcing Network Active
-									</span>
-								</motion.div>
-							</motion.div>
-						</motion.div>
-					</div>
+					<HeroCarousel
+						clusterRotateX={clusterRotateX}
+						clusterRotateY={clusterRotateY}
+						clusterTranslateX={clusterTranslateX}
+						clusterTranslateY={clusterTranslateY}
+						onRequestQuote={() => handleOpenQuote("General Technical Inquiry")}
+						onDownloadPdf={handleDownloadPdf}
+					/>
 				</div>
 
 				{/* Symmetrical Gentle Horizon Transition */}
@@ -681,7 +539,7 @@ export default function HomePage() {
 								aria-label="Explore all services"
 								title="Explore All Services"
 							>
-								<ArrowUpRight className="w-5 h-5 stroke-[2] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+								<ArrowUpRight className="w-5 h-5 stroke-[2]" />
 							</Link>
 						</div>
 					</motion.div>
@@ -703,10 +561,11 @@ export default function HomePage() {
 							return (
 								<motion.div
 									key={svc.num}
+									layout="position"
 									initial={{ opacity: 0, y: 18 }}
 									whileInView={{ opacity: 1, y: 0 }}
 									viewport={{ once: true, margin: "-40px" }}
-									transition={{ duration: 0.5, delay: index * 0.06, ease: [0.16, 1, 0.3, 1] }}
+									transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
 									onClick={() => setActiveService(activeService === svc.num ? null : svc.num)}
 									onKeyDown={(e) => {
 										if (e.key === "Enter" || e.key === " ") {
@@ -717,10 +576,10 @@ export default function HomePage() {
 									role="button"
 									tabIndex={0}
 									aria-expanded={isActive}
-									className={`group w-full text-left transition-[background-color,padding,border-radius] duration-300 outline-none cursor-pointer ${
+									className={`group w-full text-left outline-none cursor-pointer rounded-2xl -mx-4 px-4 sm:-mx-6 sm:px-6 transition-[background-color,border-color] duration-300 ${
 										isActive
-											? "py-8 sm:py-10 bg-[#FAF7F2]/50 -mx-4 px-4 sm:-mx-6 sm:px-6 rounded-2xl shadow-xs"
-											: "py-6 sm:py-7 hover:bg-[#FAF7F2]/60 -mx-4 px-4 sm:-mx-6 sm:px-6 rounded-xl"
+											? "py-7 sm:py-8 bg-[#FAF7F2] border border-[#C79A4B]/25"
+											: "py-5 sm:py-6 hover:bg-[#FAF7F2]/60 border border-transparent"
 									}`}
 								>
 									{/* Desktop & Tablet Layout (md and up) */}
@@ -728,12 +587,12 @@ export default function HomePage() {
 										{/* Column 1: Image Container */}
 										<div className="w-44 sm:w-52 lg:w-56 shrink-0">
 											<motion.div
-												layout
-												transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-												className={`relative rounded-2xl overflow-hidden border border-[#12304A]/10 transition-all duration-300 ${
+												animate={{ height: isActive ? 220 : 64 }}
+												transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+												className={`relative rounded-2xl overflow-hidden border transition-colors duration-300 ${
 													isActive
-														? "h-[210px] sm:h-[230px] shadow-[0_12px_28px_rgba(18,48,74,0.12)] border-[#C79A4B]/30"
-														: "h-[58px] sm:h-[64px] opacity-75 group-hover:opacity-100 shadow-sm group-hover:border-[#C79A4B]/30"
+														? "shadow-[0_12px_28px_rgba(18,48,74,0.12)] border-[#C79A4B]/40"
+														: "opacity-80 group-hover:opacity-100 shadow-sm border-[#12304A]/10 group-hover:border-[#C79A4B]/30"
 												}`}
 											>
 												<img
@@ -749,7 +608,7 @@ export default function HomePage() {
 											</motion.div>
 										</div>
 
-										{/* Column 2: Number + Handled By (matches reference image exactly) */}
+										{/* Column 2: Number + Handled By */}
 										<div className="w-40 sm:w-48 lg:w-52 shrink-0">
 											<div className="flex items-center gap-2">
 												<span
@@ -761,28 +620,43 @@ export default function HomePage() {
 												</span>
 											</div>
 
-											{/* Handled By Section — exclusively visible and animated when active */}
+											{/* Handled By Section — synchronized height animation */}
 											<AnimatePresence initial={false}>
 												{isActive && (
 													<motion.div
-														initial={{ opacity: 0, y: 10, height: 0 }}
-														animate={{ opacity: 1, y: 0, height: "auto" }}
-														exit={{ opacity: 0, y: -6, height: 0 }}
-														transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-														className="pt-4 overflow-hidden"
+														initial={{ opacity: 0, height: 0 }}
+														animate={{
+															opacity: 1,
+															height: "auto",
+															transition: {
+																height: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+																opacity: { duration: 0.32, delay: 0.08, ease: "easeOut" },
+															},
+														}}
+														exit={{
+															opacity: 0,
+															height: 0,
+															transition: {
+																opacity: { duration: 0.18, ease: "easeIn" },
+																height: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+															},
+														}}
+														className="overflow-hidden"
 													>
-														<div className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-[#94A3B8]">
-															{svc.handledByLabel}
-														</div>
-														<div className="space-y-1 pt-2">
-															{svc.handledBy.map((item) => (
-																<div
-																	key={item}
-																	className="text-xs font-medium text-[#5A7A8E] leading-tight"
-																>
-																	{item}
-																</div>
-															))}
+														<div className="pt-4 space-y-1">
+															<div className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-[#94A3B8]">
+																{svc.handledByLabel}
+															</div>
+															<div className="space-y-1 pt-1.5">
+																{svc.handledBy.map((item) => (
+																	<div
+																		key={item}
+																		className="text-xs font-medium text-[#5A7A8E] leading-tight"
+																	>
+																		{item}
+																	</div>
+																))}
+															</div>
 														</div>
 													</motion.div>
 												)}
@@ -793,78 +667,104 @@ export default function HomePage() {
 										<div className="flex-1 min-w-0 pr-2">
 											<div className="flex items-center justify-between gap-4">
 												<h3
-													className={`font-extrabold tracking-tight transition-[color,transform] duration-200 ${
+													className={`font-extrabold tracking-tight transition-colors duration-200 ${
 														isActive
 															? "text-2xl sm:text-3xl text-[#12304A]"
-															: "text-lg sm:text-xl text-[#12304A] group-hover:text-[#C79A4B] group-hover:translate-x-0.5"
+															: "text-lg sm:text-xl text-[#12304A] group-hover:text-[#C79A4B]"
 													}`}
 												>
 													{svc.title}
 												</h3>
-												{!isActive && (
-													<div className="w-9 h-9 rounded-full border border-[#C79A4B] group-hover:bg-[#C79A4B] text-[#C79A4B] group-hover:text-white flex items-center justify-center shrink-0 transition-[background-color,color] duration-300 shadow-xs">
-														<ArrowUpRight className="w-4 h-4 stroke-[2] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-													</div>
-												)}
+												<div
+													className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 shadow-xs ${
+														isActive
+															? "bg-[#C79A4B] text-white"
+															: "border border-[#C79A4B] text-[#C79A4B] group-hover:bg-[#C79A4B] group-hover:text-white"
+													}`}
+												>
+													<motion.div
+														animate={{ rotate: isActive ? 180 : 0 }}
+														transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+														className="flex items-center justify-center"
+													>
+														<ArrowDown className="w-4 h-4 stroke-[2]" />
+													</motion.div>
+												</div>
 											</div>
 
 											{/* Expanded Content with Smooth Framer Motion */}
 											<AnimatePresence initial={false}>
 												{isActive && (
 													<motion.div
-														initial={{ opacity: 0, y: 12, height: 0 }}
+														initial={{ opacity: 0, height: 0 }}
 														animate={{
 															opacity: 1,
-															y: 0,
 															height: "auto",
-															transitionEnd: { overflow: "visible" },
+															transition: {
+																height: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+																opacity: { duration: 0.32, delay: 0.06, ease: "easeOut" },
+															},
 														}}
-														exit={{ opacity: 0, y: -8, height: 0, overflow: "hidden" }}
-														transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-														className="space-y-5 pt-3 pb-6 overflow-hidden"
+														exit={{
+															opacity: 0,
+															height: 0,
+															transition: {
+																opacity: { duration: 0.18, ease: "easeIn" },
+																height: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+															},
+														}}
+														className="overflow-hidden"
 													>
-														<p className="text-sm sm:text-base text-[#5A7A8E] leading-relaxed max-w-3xl font-normal">
-															{svc.desc}
-														</p>
+														<motion.div
+															initial={{ opacity: 0, y: 8 }}
+															animate={{ opacity: 1, y: 0 }}
+															exit={{ opacity: 0, y: -4 }}
+															transition={{ duration: 0.35, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
+															className="space-y-5 pt-3 pb-6"
+														>
+															<p className="text-sm sm:text-base text-[#5A7A8E] leading-relaxed max-w-3xl font-normal">
+																{svc.desc}
+															</p>
 
-														{/* Capability Specs Badges */}
-														<div className="flex flex-wrap gap-2 pt-1">
-															{svc.specs.map((spec) => (
-																<span
-																	key={spec}
-																	className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white border border-[#12304A]/10 text-[#12304A] shadow-xs hover:border-[#C79A4B]/40 transition-colors"
+															{/* Capability Specs Badges */}
+															<div className="flex flex-wrap gap-2 pt-1">
+																{svc.specs.map((spec) => (
+																	<span
+																		key={spec}
+																		className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white border border-[#12304A]/10 text-[#12304A] shadow-xs hover:border-[#C79A4B]/40 transition-colors"
+																	>
+																		<div className="w-1.5 h-1.5 rounded-full bg-[#C79A4B] mr-2" />
+																		{spec}
+																	</span>
+																))}
+															</div>
+
+															{/* Action Button & Link (Matching reference design "Get a Quote") */}
+															<div className="flex flex-wrap items-center gap-4 pt-3 pb-1 px-1 -mx-1">
+																<motion.button
+																	style={{ originX: 0 }}
+																	whileHover={{ scale: 1.03, y: -2 }}
+																	whileTap={{ scale: 0.98 }}
+																	onClick={(e) => {
+																		e.stopPropagation();
+																		handleOpenQuote(`Service Sourcing Inquiry: ${svc.title}`);
+																	}}
+																	className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-xs uppercase tracking-wider transition-[background-color,box-shadow] duration-300 shadow-md hover:shadow-xl cursor-pointer"
 																>
-																	<div className="w-1.5 h-1.5 rounded-full bg-[#C79A4B] mr-2" />
-																	{spec}
-																</span>
-															))}
-														</div>
+																	<span>Get a Quote</span>
+																	<ArrowRight className="w-3.5 h-3.5" />
+																</motion.button>
 
-														{/* Action Button & Link (Matching reference design "Get a Quote") */}
-														<div className="flex flex-wrap items-center gap-4 pt-3 pb-3 px-1 -mx-1">
-															<motion.button
-																style={{ originX: 0 }}
-																whileHover={{ scale: 1.03, y: -2 }}
-																whileTap={{ scale: 0.98 }}
-																onClick={(e) => {
-																	e.stopPropagation();
-																	handleOpenQuote(`Service Sourcing Inquiry: ${svc.title}`);
-																}}
-																className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-xs uppercase tracking-wider transition-[background-color,box-shadow] duration-300 shadow-md hover:shadow-xl cursor-pointer"
-															>
-																<span>Get a Quote</span>
-																<ArrowRight className="w-3.5 h-3.5" />
-															</motion.button>
-
-															<Link
-																href={`/services#${svc.id}`}
-																onClick={(e) => e.stopPropagation()}
-																className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5A7A8E] hover:text-[#C79A4B] transition-colors py-2 px-1 group/spec"
-															>
-																<span>Detailed Specifications</span>
-																<ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/spec:translate-x-0.5 group-hover/spec:-translate-y-0.5" />
-															</Link>
-														</div>
+																<Link
+																	href={`/services#${svc.id}`}
+																	onClick={(e) => e.stopPropagation()}
+																	className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5A7A8E] hover:text-[#C79A4B] transition-colors py-2 px-1 group/spec"
+																>
+																	<span>Detailed Specifications</span>
+																	<ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/spec:translate-x-0.5 group-hover/spec:-translate-y-0.5" />
+																</Link>
+															</div>
+														</motion.div>
 													</motion.div>
 												)}
 											</AnimatePresence>
@@ -873,91 +773,121 @@ export default function HomePage() {
 
 									{/* Mobile Layout (< md) */}
 									<div className="block md:hidden">
-										{!isActive ? (
-											<div className="flex items-center gap-3.5">
-												<div className="w-14 h-12 rounded-lg overflow-hidden shrink-0 border border-[#12304A]/10">
+										{/* Persistent Header Bar */}
+										<div className="flex items-center justify-between gap-3">
+											<div className="flex items-center gap-3 min-w-0">
+												<motion.div
+													animate={{
+														width: isActive ? 52 : 44,
+														height: isActive ? 52 : 44,
+													}}
+													transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+													className="rounded-xl overflow-hidden shrink-0 border border-[#12304A]/10 shadow-xs"
+												>
 													<img
 														src={svc.img}
 														alt={svc.title}
 														className="w-full h-full object-cover"
 													/>
-												</div>
+												</motion.div>
 												<span className="text-base font-bold text-[#C79A4B] shrink-0 font-sans">
 													{svc.numberStr}
 												</span>
-												<span className="text-sm font-bold text-[#12304A] truncate flex-1">
-													{svc.shortTitle}
+												<span className="text-sm font-bold text-[#12304A] truncate">
+													{isActive ? svc.title : svc.shortTitle}
 												</span>
-												<div className="w-7 h-7 rounded-full border border-[#C79A4B] group-hover:bg-[#C79A4B] text-[#C79A4B] group-hover:text-white flex items-center justify-center shrink-0 transition-colors">
-													<ArrowUpRight className="w-3.5 h-3.5 stroke-[2]" />
-												</div>
 											</div>
-										) : (
-											<div className="space-y-4">
-												<div className="flex items-start gap-4">
-													<div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 border border-[#12304A]/10 shadow-sm">
-														<img
-															src={svc.img}
-															alt={svc.title}
-															className="w-full h-full object-cover"
-														/>
-													</div>
-													<div className="flex-1">
-														<div className="text-2xl font-extrabold text-[#C79A4B]">
-															{svc.numberStr}
+
+											<div
+												className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 shadow-xs ${
+													isActive
+														? "bg-[#C79A4B] text-white"
+														: "border border-[#C79A4B] text-[#C79A4B] group-hover:bg-[#C79A4B] group-hover:text-white"
+												}`}
+											>
+												<motion.div
+													animate={{ rotate: isActive ? 180 : 0 }}
+													transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+													className="flex items-center justify-center"
+												>
+													<ArrowDown className="w-3.5 h-3.5 stroke-[2]" />
+												</motion.div>
+											</div>
+										</div>
+
+										{/* Mobile Smooth Expanded Content */}
+										<AnimatePresence initial={false}>
+											{isActive && (
+												<motion.div
+													initial={{ opacity: 0, height: 0 }}
+													animate={{
+														opacity: 1,
+														height: "auto",
+														transition: {
+															height: { duration: 0.38, ease: [0.16, 1, 0.3, 1] },
+															opacity: { duration: 0.28, delay: 0.06 },
+														},
+													}}
+													exit={{
+														opacity: 0,
+														height: 0,
+														transition: {
+															opacity: { duration: 0.16 },
+															height: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
+														},
+													}}
+													className="overflow-hidden"
+												>
+													<div className="pt-3.5 space-y-3">
+														<div className="bg-[#12304A]/[0.03] p-3 rounded-xl border border-[#12304A]/5">
+															<div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#94A3B8]">
+																{svc.handledByLabel}
+															</div>
+															<div className="text-xs text-[#5A7A8E] space-y-0.5 mt-1">
+																{svc.handledBy.map((item) => (
+																	<div key={item}>{item}</div>
+																))}
+															</div>
 														</div>
-														<div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#94A3B8] mt-1">
-															{svc.handledByLabel}
-														</div>
-														<div className="text-xs text-[#5A7A8E] space-y-0.5 mt-0.5">
-															{svc.handledBy.map((item) => (
-																<div key={item}>{item}</div>
+
+														<p className="text-xs sm:text-sm text-[#5A7A8E] leading-relaxed">
+															{svc.desc}
+														</p>
+
+														<div className="flex flex-wrap gap-1.5 pt-0.5">
+															{svc.specs.map((spec) => (
+																<span
+																	key={spec}
+																	className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white border border-[#12304A]/10 text-[#12304A] shadow-xs"
+																>
+																	{spec}
+																</span>
 															))}
 														</div>
+
+														<div className="pt-1 pb-1 flex flex-col gap-2">
+															<button
+																onClick={(e) => {
+																	e.stopPropagation();
+																	handleOpenQuote(`Service Sourcing Inquiry: ${svc.title}`);
+																}}
+																className="w-full py-3 rounded-full bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm"
+															>
+																<span>Get a Quote</span>
+																<ArrowRight className="w-3.5 h-3.5" />
+															</button>
+															<Link
+																href={`/services#${svc.id}`}
+																onClick={(e) => e.stopPropagation()}
+																className="w-full py-2 text-center text-xs font-bold text-[#5A7A8E] hover:text-[#C79A4B] transition-colors"
+															>
+																Detailed Specifications &rarr;
+															</Link>
+														</div>
 													</div>
-												</div>
-
-												<div>
-													<h3 className="text-xl font-extrabold text-[#12304A]">
-														{svc.title}
-													</h3>
-													<p className="text-xs sm:text-sm text-[#5A7A8E] leading-relaxed mt-2">
-														{svc.desc}
-													</p>
-												</div>
-
-												<div className="flex flex-wrap gap-1.5 pt-1">
-													{svc.specs.map((spec) => (
-														<span
-															key={spec}
-															className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white border border-[#12304A]/10 text-[#12304A]"
-														>
-															{spec}
-														</span>
-													))}
-												</div>
-
-												<div className="pt-2 pb-2 flex flex-col gap-2">
-													<button
-														onClick={(e) => {
-															e.stopPropagation();
-															handleOpenQuote(`Service Sourcing Inquiry: ${svc.title}`);
-														}}
-														className="w-full py-3 rounded-full bg-[#12304A] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
-													>
-														<span>Get a Quote</span>
-														<ArrowRight className="w-3.5 h-3.5" />
-													</button>
-													<Link
-														href={`/services#${svc.id}`}
-														onClick={(e) => e.stopPropagation()}
-														className="w-full py-2 text-center text-xs font-bold text-[#5A7A8E] hover:text-[#C79A4B]"
-													>
-														Detailed Specifications &rarr;
-													</Link>
-												</div>
-											</div>
-										)}
+												</motion.div>
+											)}
+										</AnimatePresence>
 									</div>
 								</motion.div>
 							);
@@ -1291,121 +1221,166 @@ export default function HomePage() {
 						</p>
 					</motion.div>
 
-					<div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-						{/* Interactive Map */}
+					<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+						{/* Interactive Map Console */}
 						<motion.div
-							initial={{ opacity: 0, scale: 0.98, y: 20 }}
+							initial={{ opacity: 0, scale: 0.99, y: 16 }}
 							whileInView={{ opacity: 1, scale: 1, y: 0 }}
 							viewport={{ once: true }}
-							transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-							className="lg:col-span-8"
+							transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+							className="lg:col-span-8 bg-[#071521] border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between h-full"
 						>
-							<div className="bg-white/5 border border-white/10 rounded-[24px] p-6 sm:p-8 backdrop-blur-sm relative overflow-hidden shadow-2xl">
-								<div className="relative w-full" style={{ paddingBottom: "52%" }}>
-									<img
-										src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg"
-										alt="World Sourcing Map"
-										className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none"
-										style={{ filter: "invert(1) opacity(0.2)" }}
-										loading="lazy"
-										decoding="async"
-									/>
+							{/* Console Header Bar */}
+							<div className="flex items-center justify-between pb-3 border-b border-white/10 text-[10px] font-mono tracking-wider text-slate-400">
+								<span className="text-white font-bold uppercase tracking-[0.18em]">Global Distribution Corridors</span>
+								<div className="text-slate-400 hidden sm:block">
+									MUMBAI CENTRAL HUB · 18.9220° N, 72.8347° E
+								</div>
+							</div>
 
-									{/* World Pins */}
-									{WORLD_PINS.map((pin) => (
-										<div
-											key={pin.id}
-											className="absolute cursor-pointer z-20 group"
-											style={{
-												top: pin.top,
-												left: pin.left,
-												transform: "translate(-50%, -50%)",
-											}}
-											onMouseEnter={() => setHoveredPin(pin.id)}
-											onMouseLeave={() => setHoveredPin(null)}
-										>
-											{/* Tooltip */}
-											<div
-												className={`absolute -top-14 left-1/2 -translate-x-1/2 bg-[#071521] border border-[#C79A4B] text-white px-3.5 py-1.5 rounded-xl whitespace-nowrap shadow-2xl z-30 flex flex-col items-center pointer-events-none transition-[opacity,transform] duration-200 ${
-													hoveredPin === pin.id ? "opacity-100 scale-100 -translate-y-1" : "opacity-0 scale-95 pointer-events-none"
-												}`}
-											>
-												<span className="text-[#C79A4B] font-bold text-xs">{pin.label}</span>
-												{pin.desc && <span className="text-[10px] text-slate-300 font-normal">{pin.desc}</span>}
-												<div className="w-2 h-2 bg-[#071521] border-r border-b border-[#C79A4B] rotate-45 -mb-2 mt-0.5" />
-											</div>
+							{/* Map Visual Container */}
+							<div className="relative w-full my-auto" style={{ paddingBottom: "52%" }}>
+								{/* Map Base Graphic */}
+								<img
+									src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg"
+									alt="World Sourcing Map"
+									className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none opacity-25"
+									style={{ filter: "invert(1)" }}
+									loading="lazy"
+									decoding="async"
+								/>
 
-											{/* Pin Marker */}
-											<div className="relative flex items-center justify-center">
-												{pin.primary ? (
-													<>
-														<span className="absolute w-8 h-8 rounded-full bg-[#C79A4B]/35 animate-ping" />
-														<span className="absolute w-5 h-5 rounded-full bg-[#C79A4B]/60" />
-														<div className="w-4 h-4 rounded-full bg-[#C79A4B] border-2 border-white shadow-xl relative z-10 flex items-center justify-center">
-															<span className="w-1.5 h-1.5 rounded-full bg-white" />
-														</div>
-														<div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-[#C79A4B] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow whitespace-nowrap z-10">
-															HQ
-														</div>
-													</>
-												) : (
-													<>
-														<span className="absolute w-4 h-4 rounded-full bg-white/20 group-hover:scale-150 transition-transform duration-200" />
-														<div className="w-2.5 h-2.5 rounded-full bg-white group-hover:bg-[#C79A4B] border border-white shadow transition-colors duration-200 relative z-10" />
-													</>
-												)}
-											</div>
-										</div>
+								{/* Trade Corridors SVG Overlay */}
+								<svg
+									className="absolute inset-0 w-full h-full pointer-events-none select-none z-10"
+									viewBox="0 0 1000 520"
+									fill="none"
+								>
+									{TRADE_ROUTES.map((route) => (
+										<path
+											key={route.id}
+											d={route.d}
+											stroke="rgba(199, 154, 75, 0.32)"
+											strokeWidth="1.2"
+											strokeDasharray="4 4"
+											strokeLinecap="round"
+										/>
 									))}
-								</div>
+								</svg>
 
-								{/* Legend */}
-								<div className="flex items-center gap-6 mt-4 pt-4 border-t border-white/10">
-									<div className="flex items-center gap-2 text-xs text-slate-300">
-										<div className="w-3.5 h-3.5 rounded-full bg-[#C79A4B] border-2 border-white" />
-										<span className="font-semibold">Mumbai HQ</span>
+								{/* World Pins */}
+								{WORLD_PINS.map((pin) => (
+									<div
+										key={pin.id}
+										className="absolute cursor-pointer z-20 group"
+										style={{
+											top: pin.top,
+											left: pin.left,
+											transform: "translate(-50%, -50%)",
+										}}
+										onMouseEnter={() => setHoveredPin(pin.id)}
+										onMouseLeave={() => setHoveredPin(null)}
+									>
+										{/* Tooltip */}
+										<div
+											className={`absolute -top-12 left-1/2 -translate-x-1/2 bg-[#071521] border border-[#C79A4B]/60 text-white px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl z-30 flex flex-col items-center pointer-events-none transition-[opacity,transform] duration-200 ${
+												hoveredPin === pin.id ? "opacity-100 scale-100 -translate-y-1" : "opacity-0 scale-95 pointer-events-none"
+											}`}
+										>
+											<span className="text-[#C79A4B] font-bold text-xs leading-tight">{pin.label}</span>
+											{pin.desc && <span className="text-[10px] text-slate-300 font-normal leading-tight mt-0.5">{pin.desc}</span>}
+											<div className="w-2 h-2 bg-[#071521] border-r border-b border-[#C79A4B]/60 rotate-45 -mb-2 mt-0.5" />
+										</div>
+
+										{/* Pin Marker */}
+										{pin.primary ? (
+											<div className="relative flex items-center justify-center">
+												<div className="w-3.5 h-3.5 rounded-full bg-[#C79A4B] border-2 border-white shadow-lg relative z-10 ring-4 ring-[#C79A4B]/20" />
+												<span className="absolute -bottom-4.5 left-1/2 -translate-x-1/2 bg-[#C79A4B] text-[#071521] text-[8px] font-black tracking-wider px-1 py-0.5 rounded uppercase whitespace-nowrap shadow-xs">
+													HQ
+												</span>
+											</div>
+										) : (
+											<div className="relative flex items-center justify-center">
+												<span className="absolute w-3.5 h-3.5 rounded-full bg-white/20 group-hover:scale-150 transition-transform duration-200 pointer-events-none" />
+												<div className="w-2 h-2 rounded-full bg-white group-hover:bg-[#C79A4B] border border-white/80 shadow-xs transition-colors duration-200 relative z-10" />
+											</div>
+										)}
 									</div>
-									<div className="flex items-center gap-2 text-xs text-slate-300">
-										<div className="w-2.5 h-2.5 rounded-full bg-white/75 border-2 border-white" />
-										<span className="font-semibold">Partner Export Hubs</span>
+								))}
+							</div>
+
+							{/* Bottom Legend */}
+							<div className="flex flex-wrap items-center justify-between gap-4 pt-3 border-t border-white/10 text-xs">
+								<div className="flex items-center gap-5">
+									<div className="flex items-center gap-2 text-slate-300">
+										<div className="w-2.5 h-2.5 rounded-full bg-[#C79A4B] ring-2 ring-[#C79A4B]/40" />
+										<span className="font-semibold text-xs text-white">Mumbai HQ</span>
 									</div>
-									<span className="ml-auto text-xs font-extrabold text-[#C79A4B]">
-										30+ Countries Served
-									</span>
+									<div className="flex items-center gap-2 text-slate-400">
+										<div className="w-2 h-2 rounded-full bg-slate-300" />
+										<span className="text-xs">Partner Export Hubs</span>
+									</div>
 								</div>
+								<span className="text-xs font-bold text-[#C79A4B]">
+									30+ Countries Served
+								</span>
 							</div>
 						</motion.div>
 
-						{/* Infographic Stat Cards */}
-						<div className="lg:col-span-4 space-y-3.5">
-							{[
-								{ icon: Globe, label: "Export Destinations", value: "30+", color: "#C79A4B" },
-								{ icon: Building2, label: "Partner Facilities", value: "250+", color: "#FFFFFF" },
-								{ icon: FlaskConical, label: "DCGI Molecules", value: "46+", color: "#C79A4B" },
-								{ icon: Award, label: "Compliance Benchmark", value: "WHO-GMP", color: "#FFFFFF" },
-								{ icon: TrendingUp, label: "Annual Supply Volume", value: "500+ MT", color: "#C79A4B" },
-							].map((s, idx) => (
-								<motion.div
-									key={s.label}
-									initial={{ opacity: 0, x: 20 }}
-									whileInView={{ opacity: 1, x: 0 }}
-									viewport={{ once: true }}
-									transition={{ duration: 0.45, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-									whileHover={{ x: 6 }}
-									className="bg-white/5 border border-white/10 rounded-xl p-3.5 flex items-center gap-4 hover:border-[#C79A4B]/40 hover:bg-white/10 transition-[border-color,background-color] duration-200 text-left cursor-default"
-								>
-									<div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-xl bg-white/10 group-hover:scale-105 transition-transform">
-										<s.icon className="w-5 h-5" style={{ color: s.color }} />
-									</div>
-									<div>
-										<div className="text-[11px] text-slate-400 font-semibold">{s.label}</div>
-										<div className="stat-num text-xl font-bold" style={{ color: s.color }}>
+						{/* Unified Operational Metrics Console */}
+						<motion.div
+							initial={{ opacity: 0, x: 20 }}
+							whileInView={{ opacity: 1, x: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+							className="lg:col-span-4 bg-[#071521] border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between h-full"
+						>
+							{/* Top Console Header */}
+							<div className="flex items-center justify-between pb-3 border-b border-white/10">
+								<span className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-[#C79A4B]">
+									Operational Capacity
+								</span>
+								<span className="text-[10px] font-mono text-slate-400">
+									AUDITED 2026
+								</span>
+							</div>
+
+							{/* Unified Metrics List with Hairline Dividers */}
+							<div className="divide-y divide-white/10 my-auto">
+								{[
+									{ label: "Export Destinations", value: "30+", sub: "Verified Global Corridors" },
+									{ label: "Partner Facilities", value: "250+", sub: "Audited Synthesis Reactors" },
+									{ label: "DCGI Molecules", value: "46+", sub: "Form 41 & Form 10 Approved" },
+									{ label: "Compliance Benchmark", value: "WHO-GMP", sub: "cGMP, ISO 9001 & CEP" },
+									{ label: "Annual Supply Volume", value: "500+ MT", sub: "Bulk API & Intermediates" },
+								].map((s) => (
+									<div
+										key={s.label}
+										className="py-3.5 first:pt-2.5 last:pb-2.5 flex items-center justify-between gap-4 group"
+									>
+										<div className="min-w-0">
+											<div className="text-xs sm:text-sm font-semibold text-white tracking-tight">
+												{s.label}
+											</div>
+											<div className="text-[11px] text-slate-400">
+												{s.sub}
+											</div>
+										</div>
+
+										<div className="stat-num text-sm sm:text-base font-bold text-[#C79A4B] shrink-0 text-right">
 											{s.value}
 										</div>
 									</div>
-								</motion.div>
-							))}
-						</div>
+								))}
+							</div>
+
+							{/* Bottom Verification Note */}
+							<div className="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400">
+								<span>Standard Dispatch: Air &amp; Sea Cargo</span>
+								<span className="text-[#C79A4B] font-semibold text-[10px] font-mono">100% TRACEABLE</span>
+							</div>
+						</motion.div>
 					</div>
 				</div>
 

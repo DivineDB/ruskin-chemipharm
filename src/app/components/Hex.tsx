@@ -229,3 +229,58 @@ export function HexBadge({ num, active }: { num: number; active?: boolean }) {
 		</div>
 	);
 }
+
+/* ───────────────────────────────────────────────────────────────────────────
+   FloatingHex — delicate animated geometric floating hexagon
+   ─────────────────────────────────────────────────────────────────────────── */
+export function FloatingHex({
+	size = 24,
+	color = "#C79A4B",
+	strokeWidth = 1.25,
+	opacity = 0.2,
+	hasInner = false,
+	hasDot = false,
+	className = "",
+}: {
+	size?: number;
+	color?: string;
+	strokeWidth?: number;
+	opacity?: number;
+	hasInner?: boolean;
+	hasDot?: boolean;
+	className?: string;
+}) {
+	const cx = size / 2;
+	const cy = size / 2;
+	const r = (size - 4) / 2;
+	return (
+		<svg
+			width={size}
+			height={size}
+			viewBox={`0 0 ${size} ${size}`}
+			className={className}
+			style={{ opacity }}
+			fill="none"
+			aria-hidden="true"
+		>
+			<polygon
+				points={hexPoints(cx, cy, r)}
+				stroke={color}
+				strokeWidth={strokeWidth}
+				fill="none"
+				strokeLinejoin="round"
+			/>
+			{hasInner && (
+				<polygon
+					points={hexPoints(cx, cy, r * 0.52)}
+					stroke={color}
+					strokeWidth={strokeWidth * 0.8}
+					fill="none"
+					strokeLinejoin="round"
+					opacity="0.7"
+				/>
+			)}
+			{hasDot && <circle cx={cx} cy={cy} r="2" fill={color} opacity="0.8" />}
+		</svg>
+	);
+}

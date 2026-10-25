@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, useRef, useDeferredValue } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, ArrowUpRight } from "lucide-react";
@@ -124,13 +125,24 @@ export default function SearchModal() {
 					>
 						{/* Header */}
 						<div className="px-6 pt-6 pb-4 border-b border-[#12304A]/8 flex items-start justify-between shrink-0 bg-white">
-							<div>
-								<div className="text-[10px] font-bold text-[#C79A4B] uppercase tracking-widest mb-0.5">
-									TECHNICAL PRODUCT DIRECTORY
+							<div className="flex items-center gap-3.5">
+								<div className="w-10 h-10 rounded-xl bg-[#C79A4B]/10 border border-[#C79A4B]/25 flex items-center justify-center shrink-0">
+									<Image
+										src="/logoonly-gold.svg"
+										alt="Ruskin Emblem"
+										width={24}
+										height={24}
+										className="w-6 h-6 object-contain"
+									/>
 								</div>
-								<h3 className="text-lg sm:text-xl font-bold text-[#12304A] leading-snug">
-									Search Specifications &amp; Regulatory Status
-								</h3>
+								<div>
+									<div className="text-[10px] font-bold text-[#C79A4B] uppercase tracking-widest mb-0.5">
+										TECHNICAL PRODUCT DIRECTORY
+									</div>
+									<h3 className="text-lg sm:text-xl font-bold text-[#12304A] leading-snug">
+										Search Specifications &amp; Regulatory Status
+									</h3>
+								</div>
 							</div>
 							<button
 								onClick={() => setIsOpen(false)}

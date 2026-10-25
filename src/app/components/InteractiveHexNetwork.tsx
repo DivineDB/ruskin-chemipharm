@@ -11,6 +11,7 @@ interface HexCell {
 	y: number;
 	hasInnerAccent: boolean;
 	baseAlpha: number;
+	textDampen: number; // 0.12 (deep inside text) to 1.0 (free space / right side)
 	glow: number; // 0 to 1 smooth eased intensity
 }
 
@@ -151,22 +152,41 @@ export default function InteractiveHexNetwork({
 					const hash = Math.sin(q * 19.341 + r * 53.897) * 43758.5453;
 					const rand = hash - Math.floor(hash);
 
-					// Targeted softening specifically around and inside the left text zone
-					const dxText = (normX - 0.28) * 1.5;
-					const dyText = normY - 0.44;
+					const isExtremeLeft = normX < 0.14;
+
+					// Text zone is centered around the left headline & copy (normX ~ 0.33, normY ~ 0.46)
+					const textCenterX = 0.33;
+					const textCenterY = 0.46;
+					const dxText = (normX - textCenterX) * 2.2;
+					const dyText = (normY - textCenterY) * 1.5;
 					const distToText = Math.sqrt(dxText * dxText + dyText * dyText);
+
+					// Text zone dampening factor for mouse interaction
+					let textDampen = 1.0;
+					if (isExtremeLeft) {
+						// Extreme left flank outside text: clear and responsive interaction
+						textDampen = 0.75;
+					} else if (normX <= 0.56 && distToText < 0.55) {
+						const textProximity = Math.max(0, 1 - distToText / 0.55);
+						// Deep in text, dampen interaction to 12% so it's whisper-soft
+						textDampen = Math.max(0.12, 1 - textProximity * 0.88);
+					}
 
 					let isVisible = false;
 					let baseAlpha = 0.085;
 
-					if (distToText < 0.28) {
+					if (isExtremeLeft) {
+						// Extreme left of the page: boost visibility and population
+						isVisible = rand > 0.22;
+						baseAlpha = 0.075 + Math.max(0, 0.14 - normX) * 0.15; // 0.075 to ~0.096
+					} else if (distToText < 0.32) {
 						// Inside the main left text: soft, sparse, and minimal so text reads effortlessly
-						isVisible = rand > 0.60;
-						baseAlpha = 0.025;
-					} else if (distToText < 0.44) {
+						isVisible = rand > 0.65;
+						baseAlpha = 0.02;
+					} else if (distToText < 0.50) {
 						// Gentle transition boundary immediately surrounding the left text
 						isVisible = rand > 0.45;
-						baseAlpha = 0.055;
+						baseAlpha = 0.045;
 					} else {
 						// Rest of the screen (top, right, bottom, corners): crisp, lively, and prominent
 						isVisible = rand > 0.30;
@@ -174,7 +194,8 @@ export default function InteractiveHexNetwork({
 					}
 
 					if (isVisible) {
-						const hasInnerAccent = rand > 0.72;
+						// Inner accents on extreme left and open spaces, strictly excluded from text zone
+						const hasInnerAccent = rand > 0.70 && (isExtremeLeft || distToText >= 0.48);
 
 						cells.push({
 							q,
@@ -185,6 +206,7 @@ export default function InteractiveHexNetwork({
 							y: cy,
 							hasInnerAccent,
 							baseAlpha,
+							textDampen,
 							glow: 0.0,
 						});
 					}
@@ -387,7 +409,8 @@ export default function InteractiveHexNetwork({
 				const activeInfo = activeMap.get(cell);
 
 				if (activeInfo) {
-					const targetGlow = activeInfo.rank === 0 ? 1.0 : activeInfo.rank === 1 ? 0.75 : 0.5;
+					const baseGlow = activeInfo.rank === 0 ? 1.0 : activeInfo.rank === 1 ? 0.75 : 0.5;
+					const targetGlow = baseGlow * cell.textDampen;
 					cell.glow += (targetGlow - cell.glow) * 0.09;
 				} else if (cell.glow > 0.005) {
 					cell.glow += (0 - cell.glow) * 0.04;
@@ -406,46 +429,49 @@ export default function InteractiveHexNetwork({
 
 					const cx = cell.x;
 					const cy = cell.y;
+					const dampen = cell.textDampen;
 
 					ctx.save();
 
-					// Subtle tactile lift
-					const curScale = 0.98 + 0.035 * (1 - Math.pow(1 - Math.min(1, glow), 3));
+					// Subtle tactile lift (scaled down in text zone so text never feels jostled)
+					const curScale = 0.985 + 0.03 * (1 - Math.pow(1 - Math.min(1, glow), 3)) * dampen;
 					const curRadius = HEX_RADIUS * curScale;
 					const verts = getHexVertices(cx, cy, curRadius);
 
-					// Frosted glass tile fill
+					// Frosted glass tile fill (whisper-soft in text zone)
 					drawRoundedHexagonPath(ctx, verts, CORNER_RADIUS);
 					const glassFill = ctx.createLinearGradient(cx, cy - curRadius, cx, cy + curRadius);
-					glassFill.addColorStop(0, `rgba(255, 255, 255, ${glow * 0.35})`);
-					glassFill.addColorStop(0.5, `rgba(250, 247, 242, ${glow * 0.18})`);
-					glassFill.addColorStop(1, `rgba(199, 154, 75, ${glow * 0.05})`);
+					glassFill.addColorStop(0, `rgba(255, 255, 255, ${glow * 0.28 * dampen})`);
+					glassFill.addColorStop(0.5, `rgba(250, 247, 242, ${glow * 0.14 * dampen})`);
+					glassFill.addColorStop(1, `rgba(199, 154, 75, ${glow * 0.04 * dampen})`);
 					ctx.fillStyle = glassFill;
 					ctx.fill();
 
-					// Golden stroke outline
-					const strokeAlpha = Math.min(0.65, 0.20 + glow * 0.45);
+					// Golden stroke outline: whisper-soft behind text, rich outside
+					const strokeAlpha = Math.min(0.65, (0.10 + glow * 0.38) * dampen);
 					ctx.strokeStyle = `rgba(199, 154, 75, ${strokeAlpha})`;
-					ctx.lineWidth = 0.75 + glow * 0.25;
+					ctx.lineWidth = 0.65 + glow * 0.25 * dampen;
 					ctx.stroke();
 
 					// Reset shadow
 					ctx.shadowBlur = 0;
 					ctx.shadowOffsetY = 0;
 
-					// Inner subtle rim
-					const innerVerts = getHexVertices(cx, cy, curRadius - 3.2);
-					drawRoundedHexagonPath(ctx, innerVerts, Math.max(1, CORNER_RADIUS - 1.2));
-					ctx.strokeStyle = `rgba(255, 255, 255, ${glow * 0.4})`;
-					ctx.lineWidth = 0.55;
-					ctx.stroke();
+					// Inner subtle rim (only when outside text area)
+					if (dampen > 0.45) {
+						const innerVerts = getHexVertices(cx, cy, curRadius - 3.2);
+						drawRoundedHexagonPath(ctx, innerVerts, Math.max(1, CORNER_RADIUS - 1.2));
+						ctx.strokeStyle = `rgba(255, 255, 255, ${glow * 0.35 * dampen})`;
+						ctx.lineWidth = 0.5;
+						ctx.stroke();
+					}
 
-					// Inner Concentric Hex Accent (Soft gold)
-					if (cell.hasInnerAccent) {
+					// Inner Concentric Hex Accent (only outside text area)
+					if (cell.hasInnerAccent && dampen > 0.6) {
 						const microVerts = getHexVertices(cx, cy, curRadius * (0.50 + 0.015 * glow));
 						drawRoundedHexagonPath(ctx, microVerts, Math.max(1, CORNER_RADIUS * 0.5));
-						ctx.strokeStyle = `rgba(199, 154, 75, ${0.15 + glow * 0.25})`;
-						ctx.lineWidth = 0.5;
+						ctx.strokeStyle = `rgba(199, 154, 75, ${(0.12 + glow * 0.20) * dampen})`;
+						ctx.lineWidth = 0.45;
 						ctx.stroke();
 					}
 

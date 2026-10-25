@@ -36,6 +36,10 @@ export const metadata: Metadata = {
 		"USDMF",
 		"CEP",
 	],
+	icons: {
+		icon: "/logoonly-gold.svg",
+		apple: "/logoonly-gold.svg",
+	},
 };
 
 export default function RootLayout({

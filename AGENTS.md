@@ -66,6 +66,7 @@ Every major content section must adhere to the standardized 4-part header stack:
 - Ensure premium visual aesthetics with smooth gradients and glassmorphism.
 - **Brand History**: Founding year must always be **1984** (`Est. 1984`, `Founded in 1984`, `40+ Years Experience`).
 - **Brand Geometry**: Use `HexIcon` (`<HexIcon size={...} bg="#C79A4B">`) for checkmarks, badges, and icon containers.
+- **Browser Management**: If another chat or task is already actively using the browser (or an existing tab is active), always open a new tab for new navigations rather than overwriting or disrupting the existing session.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
