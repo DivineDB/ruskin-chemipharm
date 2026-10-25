@@ -64,31 +64,31 @@ const EASE_HEX = [0.16, 1, 0.3, 1] as const;
 
 /* ───────────────────────────────────────────────────────────────────────────
    Hex slot anchors (% of the 380 × 440 cluster container)
-   Slot 0 = Main enlarged hero hex
-   Slot 1 = Top-right accent hex (warm gold frame)
+   Slot 0 = Main enlarged hero hex with signature gold focus ring
+   Slot 1 = Top-right accent hex (crisp white frame)
    Slot 2 = Bottom-right accent hex (crisp white frame)
    ─────────────────────────────────────────────────────────────────────────── */
 const HEX_SLOTS = [
 	{
-		left: "4%",
-		top: "6%",
-		width: "86%",
-		frame: "#FFFFFF",
+		left: "1%",
+		top: "2%",
+		width: "94%",
+		frame: "#C79A4B",
 		frameWidth: 5,
-		glow: false,
+		glow: true,
 	},
 	{
-		left: "64%",
+		left: "68%",
 		top: "-3%",
-		width: "37%",
-		frame: "#C79A4B",
+		width: "34%",
+		frame: "#FFFFFF",
 		frameWidth: 3,
 		glow: false,
 	},
 	{
-		left: "65%",
-		top: "62%",
-		width: "35%",
+		left: "69%",
+		top: "63%",
+		width: "33%",
 		frame: "#FFFFFF",
 		frameWidth: 3,
 		glow: false,
@@ -503,7 +503,7 @@ export default function HeroCarousel({
 									willChange: "left, top, width, opacity",
 									transform: "translateZ(0)",
 								}}
-								className={`absolute block outline-none focus-visible:ring-2 focus-visible:ring-[#C79A4B] rounded-3xl will-change-transform ${
+								className={`absolute block outline-none focus:outline-none focus-visible:outline-none rounded-3xl will-change-transform ${
 									isMain
 										? "cursor-default"
 										: "cursor-pointer group"
@@ -524,17 +524,6 @@ export default function HeroCarousel({
 							</motion.button>
 						);
 					})}
-
-					{/* Floating Dynamic Chip: DCGI Molecules */}
-					<motion.div
-						whileHover={{ scale: 1.04 }}
-						className="animate-float-soft absolute -left-3 sm:-left-5 lg:-left-6 top-[32%] bg-white/95 backdrop-blur-md rounded-2xl p-3 shadow-[0_12px_28px_rgba(18,48,74,0.12)] border border-[#12304A]/10 text-left cursor-default transition-shadow hover:shadow-[0_16px_32px_rgba(18,48,74,0.18)] z-30 pointer-events-auto"
-					>
-						<div className="stat-num text-xl sm:text-2xl font-black text-[#12304A]">46+</div>
-						<div className="text-[10px] text-[#C79A4B] font-bold tracking-wider uppercase">
-							DCGI Approved APIs
-						</div>
-					</motion.div>
 				</motion.div>
 			</motion.div>
 		</div>
