@@ -128,7 +128,7 @@ const SERVICES = [
 			"Physical site quality inspections & vendor qualification",
 			"Transparent volume pricing & direct manufacturer contracts",
 		],
-		specs: ["WHO-GMP Audited", "250+ Facilities", "Direct Factory Price", "Batch Traceability"],
+		specs: ["cGMP Qualified", "250+ Facilities", "Direct Factory Price", "Batch Traceability"],
 		metric: { val: "250+", label: "Audited Facilities" },
 		icon: Globe,
 		img: "/images/sourcing.webp",
@@ -1211,7 +1211,7 @@ export default function HomePage() {
 									{ label: "Export Destinations", value: "30+", sub: "Verified Global Corridors" },
 									{ label: "Partner Facilities", value: "250+", sub: "Audited Synthesis Reactors" },
 									{ label: "DCGI Molecules", value: "46+", sub: "Form 41 & Form 10 Approved" },
-									{ label: "Compliance Benchmark", value: "WHO-GMP", sub: "cGMP, ISO 9001 & CEP" },
+									{ label: "Quality Standard", value: "cGMP", sub: "COA & Batch Verification" },
 									{ label: "Annual Supply Volume", value: "500+ MT", sub: "Bulk API & Intermediates" },
 								].map((s) => (
 									<div

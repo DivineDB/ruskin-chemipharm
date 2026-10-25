@@ -190,19 +190,6 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
                 </div>
               </div>
             </div>
-
-            {/* Cert logos without box containers */}
-            <div className="flex items-center gap-4 flex-wrap pt-2 opacity-85 hover:opacity-100 transition-opacity">
-              <motion.div whileHover={{ scale: 1.08 }} className="transition-transform cursor-pointer">
-                <Image src="/images/cert (1).svg" alt="ISO 9001:2015" width={48} height={48} style={{ width: "auto", height: "auto" }} className="h-11 w-auto object-contain" />
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.08 }} className="transition-transform cursor-pointer">
-                <Image src="/images/cert (2).svg" alt="WHO-GMP" width={48} height={48} style={{ width: "auto", height: "auto" }} className="h-11 w-auto object-contain" />
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.08 }} className="transition-transform cursor-pointer">
-                <Image src="/images/cert (3).svg" alt="ISO 14001" width={48} height={48} style={{ width: "auto", height: "auto" }} className="h-11 w-auto object-contain" />
-              </motion.div>
-            </div>
           </motion.div>
 
           {/* Nav Columns: 4 well-balanced columns filling the full width */}
@@ -267,8 +254,8 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
                 <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
               </div>
               <ul className="space-y-2.5 text-xs text-slate-300">
-                <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">WHO-GMP Standard</span></li>
-                <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">ISO 9001:2015 Audit</span></li>
+                <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">cGMP Regulatory Liaison</span></li>
+                <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">Batch Traceability Standards</span></li>
                 <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">CoA &amp; TDS Verification</span></li>
                 <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">Safety Data Sheets (SDS)</span></li>
                 <li><span className="hover:text-[#C79A4B] hover:translate-x-0.5 transition-all duration-200 cursor-pointer inline-block">US-DMF / CEP Dossiers</span></li>

@@ -24,13 +24,11 @@ const inter = Inter({
 export const metadata: Metadata = {
 	title: "Ruskin Chemipharm | Precision Chemistry. Global Standards.",
 	description:
-		"WHO-GMP & ISO 9001:2015 Certified Manufacturing Partner for High-Yield Synthesis, APIs, Intermediates, Dossiers & Fine Chemicals Sourcing.",
+		"Specialized Global Sourcing Partner for High-Yield Synthesis, APIs, Intermediates, Regulatory Dossiers & Fine Chemicals Distribution.",
 	keywords: [
 		"Pharma Sourcing",
 		"APIs",
 		"Chemical Synthesis",
-		"WHO-GMP",
-		"ISO 9001:2015",
 		"Ruskin Chemipharm",
 		"Regulatory Dossiers",
 		"USDMF",
