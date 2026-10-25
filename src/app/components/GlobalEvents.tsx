@@ -17,16 +17,16 @@ import { MolecularDecoration, HexIcon } from "./Hex";
 
 const EVENT_SLIDES: Record<string, string[]> = {
   cphi: [
-    "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&q=80",
-    "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80",
-    "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80",
-    "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&q=80",
+    "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=640&q=75",
+    "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=640&q=75",
+    "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=640&q=75",
+    "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=640&q=75",
   ],
   pharmapack: [
-    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80",
-    "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&q=80",
-    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800&q=80",
-    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80",
+    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=640&q=75",
+    "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=640&q=75",
+    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=640&q=75",
+    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=640&q=75",
   ],
 };
 
@@ -157,8 +157,8 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
                 {/* Image carousel (7 cols on large) */}
                 <div className="lg:col-span-7 h-[280px] sm:h-[340px] lg:h-full min-h-[300px] overflow-hidden relative group/slider">
                   <div
-                    className="flex w-full h-full transition-transform duration-700 ease-out"
-                    style={{ transform: `translateX(-${event.slide * 100}%)` }}
+                    className="flex w-full h-full transition-transform duration-700 ease-out will-change-transform"
+                    style={{ transform: `translate3d(-${event.slide * 100}%, 0, 0)` }}
                   >
                     {EVENT_SLIDES[event.key].map((src, i) => (
                       <div key={i} className="w-full h-full shrink-0 relative">

@@ -131,7 +131,7 @@ const SERVICES = [
 		specs: ["WHO-GMP Audited", "250+ Facilities", "Direct Factory Price", "Batch Traceability"],
 		metric: { val: "250+", label: "Audited Facilities" },
 		icon: Globe,
-		img: "/images/sourcing.jpg",
+		img: "/images/sourcing.webp",
 	},
 	{
 		num: 2,
@@ -155,7 +155,7 @@ const SERVICES = [
 		specs: ["Form 41 & Form 10", "50+ Registrations", "SEC Presentations", "Official Local Agent"],
 		metric: { val: "50+", label: "Active Registrations" },
 		icon: FileCheck,
-		img: "/images/registration.jpg",
+		img: "/images/registration.webp",
 	},
 	{
 		num: 3,
@@ -179,7 +179,7 @@ const SERVICES = [
 		specs: ["USDMF / EDQM CEP", "99.8% Avg Purity", "Nitrosamine Profiling", "ICH Q3D Elemental"],
 		metric: { val: "99.8%", label: "Average Purity" },
 		icon: ShieldCheck,
-		img: "/images/quality.jpg",
+		img: "/images/quality.webp",
 	},
 	{
 		num: 4,
@@ -203,7 +203,7 @@ const SERVICES = [
 		specs: ["200+ Formulators", "40+ Years in Market", "Dedicated Sales Force", "Strategic Safety Stocks"],
 		metric: { val: "40+", label: "Years in Market" },
 		icon: TrendingUp,
-		img: "/images/strategic.jpg",
+		img: "/images/strategic.webp",
 	},
 	{
 		num: 5,
@@ -227,7 +227,7 @@ const SERVICES = [
 		specs: ["Validated Cold Chain (2–8°C)", "30+ Export Nations", "SEZ & Advance Licence", "Real-Time GPS Tracking"],
 		metric: { val: "30+", label: "Export Nations" },
 		icon: Truck,
-		img: "/images/export.jpg",
+		img: "/images/export.webp",
 	},
 ];
 
@@ -305,6 +305,25 @@ export default function HomePage() {
 	};
 
 
+	const isScrollingRef = useRef(false);
+	const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			isScrollingRef.current = true;
+			if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+			scrollTimeoutRef.current = setTimeout(() => {
+				isScrollingRef.current = false;
+				heroBoundsRef.current = null;
+			}, 100);
+		};
+		window.addEventListener("scroll", handleScroll, { passive: true });
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+			if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+		};
+	}, []);
+
 	const handleOpenCatalog = () => {
 		window.dispatchEvent(new CustomEvent("ruskin:open-search"));
 	};
@@ -379,8 +398,12 @@ export default function HomePage() {
           ══════════════════════════════════════════════════════════ */}
 			<section
 				id="hero"
-				onMouseEnter={(e) => updateHeroBounds(e.currentTarget)}
+				onMouseEnter={(e) => {
+					if (isScrollingRef.current) return;
+					updateHeroBounds(e.currentTarget);
+				}}
 				onMouseMove={(e) => {
+					if (isScrollingRef.current) return;
 					if (!heroBoundsRef.current) updateHeroBounds(e.currentTarget);
 					const r = heroBoundsRef.current;
 					if (r && r.width > 0 && r.height > 0) {
@@ -561,7 +584,6 @@ export default function HomePage() {
 							return (
 								<motion.div
 									key={svc.num}
-									layout="position"
 									initial={{ opacity: 0, y: 18 }}
 									whileInView={{ opacity: 1, y: 0 }}
 									viewport={{ once: true, margin: "-40px" }}
@@ -943,7 +965,7 @@ export default function HomePage() {
 						>
 							<div className="relative rounded-[28px] overflow-hidden h-[380px] sm:h-[460px] lg:h-[500px] w-full shadow-2xl border border-[#12304A]/8">
 								<Image
-									src="/images/building.jpg"
+									src="/images/building.webp"
 									alt="Ruskin Chemipharm Headquarters"
 									fill
 									className="object-cover"
@@ -1240,12 +1262,11 @@ export default function HomePage() {
 
 							{/* Map Visual Container */}
 							<div className="relative w-full my-auto" style={{ paddingBottom: "52%" }}>
-								{/* Map Base Graphic */}
+								{/* Map Base Graphic (Local SVG, White fill, zero filter computation) */}
 								<img
-									src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg"
+									src="/images/world-map.svg"
 									alt="World Sourcing Map"
 									className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none opacity-25"
-									style={{ filter: "invert(1)" }}
 									loading="lazy"
 									decoding="async"
 								/>
@@ -1433,28 +1454,28 @@ export default function HomePage() {
 					<div className="grid grid-cols-1 md:grid-cols-12 gap-5 lg:gap-6">
 						{[
 							{
-								img: "/images/sourcing.jpg",
+								img: "/images/sourcing.webp",
 								title: "Sourcing Network",
 								desc: "Direct procurement from 250+ audited API synthesizers across Europe, Japan, China & India with full supply traceability.",
 								span: "md:col-span-12 lg:col-span-6",
 								h: "min-h-[270px] sm:min-h-[290px] lg:h-[310px]",
 							},
 							{
-								img: "/images/quality.jpg",
+								img: "/images/quality.webp",
 								title: "Compliance Process",
 								desc: "WHO-GMP, ISO 9001:2015 & USFDA compliant facilities with 100% HPLC & GC batch analytical purity verification.",
 								span: "md:col-span-12 lg:col-span-6",
 								h: "min-h-[270px] sm:min-h-[290px] lg:h-[310px]",
 							},
 							{
-								img: "/images/strategic.jpg",
+								img: "/images/strategic.webp",
 								title: "Supply Flexibility",
 								desc: "Low MOQ flexibility, custom chemical formulation, pilot-to-commercial batch scaling, and private labeling.",
 								span: "md:col-span-12 lg:col-span-4",
 								h: "min-h-[250px] sm:min-h-[270px] lg:h-[285px]",
 							},
 							{
-								img: "/images/supply.jpg",
+								img: "/images/supply.webp",
 								title: "Turnaround & Dispatch",
 								desc: "Under 4-hour quote response with strategic Mumbai warehousing and express cold-chain dispatch.",
 								span: "md:col-span-12 lg:col-span-4",

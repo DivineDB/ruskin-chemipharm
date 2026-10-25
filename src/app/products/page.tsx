@@ -155,16 +155,38 @@ function ProductsContent() {
 	const layerForeX = useTransform(smoothBannerX, [-0.5, 0.5], [-14, 14]);
 	const layerForeY = useTransform(smoothBannerY, [-0.5, 0.5], [-10, 10]);
 
+	const bannerRectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
+	const bannerRafRef = useRef<number | null>(null);
+
+	const updateBannerRect = () => {
+		if (bannerRef.current) {
+			const r = bannerRef.current.getBoundingClientRect();
+			bannerRectRef.current = { left: r.left, top: r.top, width: r.width, height: r.height };
+		}
+	};
+
 	const handleBannerMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-		if (!bannerRef.current) return;
-		const rect = bannerRef.current.getBoundingClientRect();
-		const normX = (e.clientX - rect.left) / rect.width - 0.5;
-		const normY = (e.clientY - rect.top) / rect.height - 0.5;
-		bannerMouseX.set(normX);
-		bannerMouseY.set(normY);
+		if (!bannerRectRef.current) updateBannerRect();
+		const rect = bannerRectRef.current;
+		if (!rect || rect.width === 0 || rect.height === 0) return;
+		const clientX = e.clientX;
+		const clientY = e.clientY;
+		if (!bannerRafRef.current) {
+			bannerRafRef.current = requestAnimationFrame(() => {
+				const normX = (clientX - rect.left) / rect.width - 0.5;
+				const normY = (clientY - rect.top) / rect.height - 0.5;
+				bannerMouseX.set(normX);
+				bannerMouseY.set(normY);
+				bannerRafRef.current = null;
+			});
+		}
 	};
 
 	const handleBannerMouseLeave = () => {
+		if (bannerRafRef.current) {
+			cancelAnimationFrame(bannerRafRef.current);
+			bannerRafRef.current = null;
+		}
 		bannerMouseX.set(0);
 		bannerMouseY.set(0);
 	};

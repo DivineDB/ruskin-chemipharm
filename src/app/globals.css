@@ -709,9 +709,19 @@ img {
 	content-visibility: auto;
 }
 
-.contain-layout,
+.gpu-smooth {
+	transform: translateZ(0);
+	backface-visibility: hidden;
+}
+
+.contain-layout {
+	contain: layout style;
+}
+
 .contain-section {
 	contain: layout style;
+	content-visibility: auto;
+	contain-intrinsic-size: 1px 700px;
 }
 
 /* =====================================================

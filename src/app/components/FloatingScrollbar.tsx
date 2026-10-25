@@ -58,6 +58,8 @@ export default function FloatingScrollbar() {
 		}
 	}, []);
 
+	const isScrollingActive = useRef(false);
+
 	useEffect(() => {
 		setMounted(true);
 		recalculateMetrics();
@@ -83,15 +85,19 @@ export default function FloatingScrollbar() {
 
 				if (thumbRef.current) {
 					thumbRef.current.style.transform = `translate3d(0, ${thumbTop}px, 0)`;
-					thumbRef.current.dataset.scrolling = "true";
+					if (!isScrollingActive.current) {
+						isScrollingActive.current = true;
+						thumbRef.current.style.opacity = "0.9";
+					}
 				}
 
 				if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
 				hideTimeoutRef.current = setTimeout(() => {
+					isScrollingActive.current = false;
 					if (thumbRef.current) {
-						thumbRef.current.dataset.scrolling = "false";
+						thumbRef.current.style.opacity = "0.4";
 					}
-				}, 1200);
+				}, 1000);
 			});
 		};
 
@@ -103,9 +109,13 @@ export default function FloatingScrollbar() {
 		window.addEventListener("resize", handleResize, { passive: true });
 
 		let resizeObserver: ResizeObserver | null = null;
+		let resizeTimer: NodeJS.Timeout | null = null;
 		if (typeof ResizeObserver !== "undefined") {
 			resizeObserver = new ResizeObserver(() => {
-				recalculateMetrics();
+				if (resizeTimer) clearTimeout(resizeTimer);
+				resizeTimer = setTimeout(() => {
+					recalculateMetrics();
+				}, 250);
 			});
 			resizeObserver.observe(document.body);
 		}
@@ -114,6 +124,7 @@ export default function FloatingScrollbar() {
 			window.removeEventListener("scroll", handleScroll);
 			window.removeEventListener("resize", handleResize);
 			if (resizeObserver) resizeObserver.disconnect();
+			if (resizeTimer) clearTimeout(resizeTimer);
 			if (rafScrollId.current) cancelAnimationFrame(rafScrollId.current);
 			if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
 		};
@@ -185,7 +196,7 @@ export default function FloatingScrollbar() {
 					height: `${thumbHeight}px`,
 					willChange: "transform, opacity",
 				}}
-				className={`absolute right-1 w-[4px] rounded-full bg-[#C79A4B] hover:bg-[#B58A3E] transition-opacity duration-300 pointer-events-auto cursor-grab active:cursor-grabbing shadow-sm data-[scrolling=true]:opacity-90 ${
+				className={`absolute right-1 w-[4px] rounded-full bg-[#C79A4B] hover:bg-[#B58A3E] transition-opacity duration-300 pointer-events-auto cursor-grab active:cursor-grabbing shadow-sm ${
 					isDragging ? "opacity-90" : "opacity-40 hover:opacity-90"
 				}`}
 			/>

@@ -58,11 +58,21 @@ export default function InteractiveHexNetwork({
 		const PARALLAX_PADDING = 30;
 
 		// Cached container rect to eliminate layout thrashing (getBoundingClientRect) on every mousemove
-		let cachedRect: { left: number; top: number; width: number; height: number } | null = null;
+		let cachedRect: {
+			left: number;
+			top: number;
+			width: number;
+			height: number;
+		} | null = null;
 		const updateCachedRect = () => {
 			if (!container) return;
 			const r = container.getBoundingClientRect();
-			cachedRect = { left: r.left, top: r.top, width: r.width, height: r.height };
+			cachedRect = {
+				left: r.left,
+				top: r.top,
+				width: r.width,
+				height: r.height,
+			};
 		};
 
 		// Hexagon Lattice Geometry (Pointy-topped)
@@ -93,7 +103,7 @@ export default function InteractiveHexNetwork({
 		const drawRoundedHexagonPath = (
 			c: CanvasRenderingContext2D,
 			verts: { x: number; y: number }[],
-			rCorner: number
+			rCorner: number,
 		) => {
 			c.beginPath();
 			const midX = (verts[5].x + verts[0].x) / 2;
@@ -140,7 +150,7 @@ export default function InteractiveHexNetwork({
 			const rows = Math.ceil(height / VERT_DIST) + 3;
 
 			for (let r = -1; r < rows; r++) {
-				const rOffset = ((r % 2 + 2) % 2) * (HEX_WIDTH / 2);
+				const rOffset = (((r % 2) + 2) % 2) * (HEX_WIDTH / 2);
 				for (let q = -1; q < cols; q++) {
 					const cx = q * HEX_WIDTH + rOffset;
 					const cy = r * VERT_DIST;
@@ -183,19 +193,20 @@ export default function InteractiveHexNetwork({
 						// Inside the main left text: soft, sparse, and minimal so text reads effortlessly
 						isVisible = rand > 0.65;
 						baseAlpha = 0.02;
-					} else if (distToText < 0.50) {
+					} else if (distToText < 0.5) {
 						// Gentle transition boundary immediately surrounding the left text
 						isVisible = rand > 0.45;
 						baseAlpha = 0.045;
 					} else {
 						// Rest of the screen (top, right, bottom, corners): crisp, lively, and prominent
-						isVisible = rand > 0.30;
+						isVisible = rand > 0.3;
 						baseAlpha = 0.09;
 					}
 
 					if (isVisible) {
 						// Inner accents on extreme left and open spaces, strictly excluded from text zone
-						const hasInnerAccent = rand > 0.70 && (isExtremeLeft || distToText >= 0.48);
+						const hasInnerAccent =
+							rand > 0.7 && (isExtremeLeft || distToText >= 0.48);
 
 						cells.push({
 							q,
@@ -279,11 +290,25 @@ export default function InteractiveHexNetwork({
 
 		window.addEventListener("resize", handleResize, { passive: true });
 
+		// Suppress mouse tracking and layout calls during active page scrolling
+		let isScrolling = false;
+		let scrollTimeout: NodeJS.Timeout | null = null;
+		const handleScroll = () => {
+			isScrolling = true;
+			if (scrollTimeout) clearTimeout(scrollTimeout);
+			scrollTimeout = setTimeout(() => {
+				isScrolling = false;
+				cachedRect = null;
+			}, 100);
+		};
+		window.addEventListener("scroll", handleScroll, { passive: true });
+
 		// Mouse tracking scoped to heroSection to completely eliminate global window mousemove overhead
-		const heroSection = (container.closest("section") as HTMLElement) || container;
+		const heroSection =
+			(container.closest("section") as HTMLElement) || container;
 
 		const handleMouseMove = (e: MouseEvent) => {
-			if (!interactive || !isInView) return;
+			if (!interactive || !isInView || isScrolling) return;
 			if (!cachedRect) updateCachedRect();
 			if (!cachedRect) return;
 
@@ -306,6 +331,7 @@ export default function InteractiveHexNetwork({
 		};
 
 		const handleMouseEnter = () => {
+			if (isScrolling) return;
 			updateCachedRect();
 			startLoop();
 		};
@@ -316,9 +342,15 @@ export default function InteractiveHexNetwork({
 			mouseRef.current.parallaxTargetY = 0;
 		};
 
-		heroSection.addEventListener("mousemove", handleMouseMove, { passive: true });
-		heroSection.addEventListener("mouseenter", handleMouseEnter, { passive: true });
-		heroSection.addEventListener("mouseleave", handleMouseLeave, { passive: true });
+		heroSection.addEventListener("mousemove", handleMouseMove, {
+			passive: true,
+		});
+		heroSection.addEventListener("mouseenter", handleMouseEnter, {
+			passive: true,
+		});
+		heroSection.addEventListener("mouseleave", handleMouseLeave, {
+			passive: true,
+		});
 
 		// IntersectionObserver: automatically pauses rendering when scrolled offscreen
 		const observer = new IntersectionObserver(
@@ -333,7 +365,7 @@ export default function InteractiveHexNetwork({
 					}
 				}
 			},
-			{ threshold: 0.05 }
+			{ threshold: 0.05 },
 		);
 		observer.observe(container);
 
@@ -375,7 +407,7 @@ export default function InteractiveHexNetwork({
 				-PARALLAX_PADDING + px * 6,
 				-PARALLAX_PADDING + py * 4,
 				width + PARALLAX_PADDING * 2,
-				height + PARALLAX_PADDING * 2
+				height + PARALLAX_PADDING * 2,
 			);
 
 			// ─── 2. Update Cell Positions & Identify Closest Active Hexagons ───
@@ -409,7 +441,8 @@ export default function InteractiveHexNetwork({
 				const activeInfo = activeMap.get(cell);
 
 				if (activeInfo) {
-					const baseGlow = activeInfo.rank === 0 ? 1.0 : activeInfo.rank === 1 ? 0.75 : 0.5;
+					const baseGlow =
+						activeInfo.rank === 0 ? 1.0 : activeInfo.rank === 1 ? 0.75 : 0.5;
 					const targetGlow = baseGlow * cell.textDampen;
 					cell.glow += (targetGlow - cell.glow) * 0.09;
 				} else if (cell.glow > 0.005) {
@@ -434,21 +467,36 @@ export default function InteractiveHexNetwork({
 					ctx.save();
 
 					// Subtle tactile lift (scaled down in text zone so text never feels jostled)
-					const curScale = 0.985 + 0.03 * (1 - Math.pow(1 - Math.min(1, glow), 3)) * dampen;
+					const curScale =
+						0.985 + 0.03 * (1 - Math.pow(1 - Math.min(1, glow), 3)) * dampen;
 					const curRadius = HEX_RADIUS * curScale;
 					const verts = getHexVertices(cx, cy, curRadius);
 
 					// Frosted glass tile fill (whisper-soft in text zone)
 					drawRoundedHexagonPath(ctx, verts, CORNER_RADIUS);
-					const glassFill = ctx.createLinearGradient(cx, cy - curRadius, cx, cy + curRadius);
-					glassFill.addColorStop(0, `rgba(255, 255, 255, ${glow * 0.28 * dampen})`);
-					glassFill.addColorStop(0.5, `rgba(250, 247, 242, ${glow * 0.14 * dampen})`);
-					glassFill.addColorStop(1, `rgba(199, 154, 75, ${glow * 0.04 * dampen})`);
+					const glassFill = ctx.createLinearGradient(
+						cx,
+						cy - curRadius,
+						cx,
+						cy + curRadius,
+					);
+					glassFill.addColorStop(
+						0,
+						`rgba(255, 255, 255, ${glow * 0.28 * dampen})`,
+					);
+					glassFill.addColorStop(
+						0.5,
+						`rgba(250, 247, 242, ${glow * 0.14 * dampen})`,
+					);
+					glassFill.addColorStop(
+						1,
+						`rgba(199, 154, 75, ${glow * 0.04 * dampen})`,
+					);
 					ctx.fillStyle = glassFill;
 					ctx.fill();
 
 					// Golden stroke outline: whisper-soft behind text, rich outside
-					const strokeAlpha = Math.min(0.65, (0.10 + glow * 0.38) * dampen);
+					const strokeAlpha = Math.min(0.65, (0.1 + glow * 0.38) * dampen);
 					ctx.strokeStyle = `rgba(199, 154, 75, ${strokeAlpha})`;
 					ctx.lineWidth = 0.65 + glow * 0.25 * dampen;
 					ctx.stroke();
@@ -460,7 +508,11 @@ export default function InteractiveHexNetwork({
 					// Inner subtle rim (only when outside text area)
 					if (dampen > 0.45) {
 						const innerVerts = getHexVertices(cx, cy, curRadius - 3.2);
-						drawRoundedHexagonPath(ctx, innerVerts, Math.max(1, CORNER_RADIUS - 1.2));
+						drawRoundedHexagonPath(
+							ctx,
+							innerVerts,
+							Math.max(1, CORNER_RADIUS - 1.2),
+						);
 						ctx.strokeStyle = `rgba(255, 255, 255, ${glow * 0.35 * dampen})`;
 						ctx.lineWidth = 0.5;
 						ctx.stroke();
@@ -468,9 +520,17 @@ export default function InteractiveHexNetwork({
 
 					// Inner Concentric Hex Accent (only outside text area)
 					if (cell.hasInnerAccent && dampen > 0.6) {
-						const microVerts = getHexVertices(cx, cy, curRadius * (0.50 + 0.015 * glow));
-						drawRoundedHexagonPath(ctx, microVerts, Math.max(1, CORNER_RADIUS * 0.5));
-						ctx.strokeStyle = `rgba(199, 154, 75, ${(0.12 + glow * 0.20) * dampen})`;
+						const microVerts = getHexVertices(
+							cx,
+							cy,
+							curRadius * (0.5 + 0.015 * glow),
+						);
+						drawRoundedHexagonPath(
+							ctx,
+							microVerts,
+							Math.max(1, CORNER_RADIUS * 0.5),
+						);
+						ctx.strokeStyle = `rgba(199, 154, 75, ${(0.12 + glow * 0.2) * dampen})`;
 						ctx.lineWidth = 0.45;
 						ctx.stroke();
 					}
@@ -498,6 +558,8 @@ export default function InteractiveHexNetwork({
 		return () => {
 			stopLoop();
 			observer.disconnect();
+			if (scrollTimeout) clearTimeout(scrollTimeout);
+			window.removeEventListener("scroll", handleScroll);
 			window.removeEventListener("resize", handleResize);
 			heroSection.removeEventListener("mousemove", handleMouseMove);
 			heroSection.removeEventListener("mouseenter", handleMouseEnter);

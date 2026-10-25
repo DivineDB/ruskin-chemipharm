@@ -200,7 +200,8 @@ export default function SupplierBand() {
 				className="w-full overflow-hidden"
 				style={{
 					maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-					WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)"
+					WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+					transform: "translateZ(0)",
 				}}
 			>
 				<div className="flex w-max animate-marquee hover:[animation-play-state:paused] items-center gap-14 sm:gap-20 py-1">

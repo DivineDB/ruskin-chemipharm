@@ -90,30 +90,32 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
 
   return (
     <header
-      className={`sticky top-0 z-50 h-[72px] sm:h-[76px] flex items-center transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      className={`sticky top-0 z-50 h-[72px] sm:h-[76px] flex items-center backdrop-blur-md will-change-[background-color,border-color,box-shadow] transition-[background-color,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         scrolled
-          ? "bg-white/95 backdrop-blur-md shadow-[0_4px_25px_-5px_rgba(18,48,74,0.08)] border-b border-[#12304A]/10"
+          ? "bg-white/95 shadow-[0_4px_25px_-5px_rgba(18,48,74,0.08)] border-b border-[#12304A]/10"
           : isHome
-          ? "bg-[#FAF7F2]/90 backdrop-blur-sm border-b border-[#12304A]/6"
-          : "bg-white/90 backdrop-blur-sm border-b border-[#12304A]/6"
+          ? "bg-[#FAF7F2]/90 border-b border-[#12304A]/6"
+          : "bg-white/90 border-b border-[#12304A]/6"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex items-center justify-between">
 
         {/* Logo */}
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Link href="/" className="flex items-center" aria-label="Ruskin Chemipharm Home">
-            <Image
-              src="/logoline.svg"
-              alt="Ruskin Chemipharm Logo"
-              width={240}
-              height={42}
-              priority
-              loading="eager"
-              className="h-[32px] sm:h-[36px] lg:h-[40px] w-auto object-contain"
-            />
-          </Link>
-        </motion.div>
+        <Link
+          href="/"
+          className="flex items-center hover:opacity-90 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#C79A4B] rounded-lg"
+          aria-label="Ruskin Chemipharm Home"
+        >
+          <Image
+            src="/logoline.svg"
+            alt="Ruskin Chemipharm Logo"
+            width={240}
+            height={42}
+            priority
+            loading="eager"
+            className="h-[32px] sm:h-[36px] lg:h-[40px] w-auto object-contain"
+          />
+        </Link>
 
         {/* Desktop nav with layoutId spring-physics continuous active underline */}
         <nav className="hidden md:flex items-center space-x-1 sm:space-x-2 relative py-2">

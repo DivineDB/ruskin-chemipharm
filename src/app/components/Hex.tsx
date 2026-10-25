@@ -143,7 +143,7 @@ export function HexImage({
 	const height = customHeight ?? (width ? Math.round(width / HEX_RATIO) : undefined);
 	return (
 		<div
-			className={`relative transition-[filter,transform] duration-300 ${
+			className={`relative transition-[filter,transform] duration-300 gpu-smooth ${
 				glow
 					? "drop-shadow-[0_24px_45px_rgba(199,154,75,0.3)]"
 					: "drop-shadow-[0_22px_40px_rgba(11,30,46,0.18)]"
@@ -152,6 +152,7 @@ export function HexImage({
 				width: width ? `${width}px` : undefined,
 				height: height ? `${height}px` : undefined,
 				aspectRatio: !width && !height ? `${HEX_RATIO} / 1` : undefined,
+				transform: "translateZ(0)",
 			}}
 		>
 			<div className="absolute inset-0 transition-colors duration-300" style={{ clipPath: HEX_CLIP, background: frame }} />

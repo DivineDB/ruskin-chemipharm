@@ -35,7 +35,7 @@ const SLIDES: HeroSlide[] = [
 		highlight: "pharmaceutical raw materials",
 		copy: "Sourcing and supplying high-quality active ingredients and raw materials for leading manufacturers in India and worldwide since 1984.",
 		cta: { label: "Explore APIs & Ingredients", href: "/products" },
-		image: { src: "/images/hero-image.jpg", alt: "Pharmaceutical Synthesis Laboratory" },
+		image: { src: "/images/hero-image.webp", alt: "Pharmaceutical Synthesis Laboratory" },
 	},
 	{
 		id: "sourcing-supply",
@@ -44,7 +44,7 @@ const SLIDES: HeroSlide[] = [
 		highlight: "tailored to production demands",
 		copy: "Over four decades of expertise delivering high-grade APIs, Intermediates, and Raw Materials across global and domestic markets.",
 		cta: { label: "View Our Products", href: "/products" },
-		image: { src: "/images/export.jpg", alt: "Global Export Logistics" },
+		image: { src: "/images/export.webp", alt: "Global Export Logistics" },
 	},
 	{
 		id: "compliance-quality",
@@ -53,7 +53,7 @@ const SLIDES: HeroSlide[] = [
 		highlight: "& regulatory confidence",
 		copy: "Complete DCGI registration support, technical dossiers, and strict batch-wise COA validation for every shipment.",
 		cta: { label: "Learn About Compliance", href: "/services" },
-		image: { src: "/images/quality.jpg", alt: "GMP Purity Testing" },
+		image: { src: "/images/quality.webp", alt: "GMP Purity Testing" },
 	},
 ];
 
@@ -185,9 +185,25 @@ export default function HeroCarousel({
 		return () => document.removeEventListener("visibilitychange", onVis);
 	}, []);
 
-	// Drives autoplay + indicator fill
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [inView, setInView] = useState(true);
+
+	useEffect(() => {
+		const node = containerRef.current;
+		if (!node) return;
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				setInView(entry.isIntersecting);
+			},
+			{ threshold: 0.05 }
+		);
+		observer.observe(node);
+		return () => observer.disconnect();
+	}, []);
+
+	// Drives autoplay + indicator fill - strictly pauses when offscreen
 	useAnimationFrame((_, delta) => {
-		if (paused || tabHidden || reduceMotion) return;
+		if (paused || tabHidden || reduceMotion || !inView) return;
 		elapsedRef.current += delta;
 		const p = Math.min(elapsedRef.current / SLIDE_DURATION_MS, 1);
 		progress.set(p);
@@ -199,9 +215,23 @@ export default function HeroCarousel({
 	const slide = SLIDES[active];
 
 	return (
-		<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
-			{/* ── Left: Headline & Actions ───────────────────────────── */}
-			<div
+		<div
+			ref={containerRef}
+			className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8"
+		>
+			{/* ── Left: Headline & Actions (Staggered Luxury Intro Animation) ── */}
+			<motion.div
+				initial="hidden"
+				animate="visible"
+				variants={{
+					hidden: {},
+					visible: {
+						transition: {
+							staggerChildren: 0.1,
+							delayChildren: 0.04,
+						},
+					},
+				}}
 				className="lg:col-span-7 space-y-6 text-left"
 				onMouseEnter={() => setPaused(true)}
 				onMouseLeave={() => setPaused(false)}
@@ -212,9 +242,15 @@ export default function HeroCarousel({
 			>
 				{/* Certification Pill Badge */}
 				<motion.div
-					initial={{ opacity: 0, y: 14, scale: 0.96 }}
-					animate={{ opacity: 1, y: 0, scale: 1 }}
-					transition={{ duration: 0.5, ease: EASE_PREMIUM }}
+					variants={{
+						hidden: { opacity: 0, y: 14, scale: 0.95 },
+						visible: {
+							opacity: 1,
+							y: 0,
+							scale: 1,
+							transition: { duration: 0.55, ease: EASE_PREMIUM },
+						},
+					}}
 				>
 					<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-sm border border-[#12304A]/10 text-[10px] font-semibold tracking-wider uppercase text-[#12304A]/80 hover:border-[#C79A4B]/40 transition-colors shadow-sm">
 						<ShieldCheck className="w-3.5 h-3.5 text-[#C79A4B] shrink-0" />
@@ -223,7 +259,17 @@ export default function HeroCarousel({
 				</motion.div>
 
 				{/* Slide Eyebrow */}
-				<div className="h-5 relative overflow-hidden">
+				<motion.div
+					variants={{
+						hidden: { opacity: 0, x: -16 },
+						visible: {
+							opacity: 1,
+							x: 0,
+							transition: { duration: 0.6, ease: EASE_PREMIUM },
+						},
+					}}
+					className="h-5 relative overflow-hidden"
+				>
 					<AnimatePresence mode="wait" initial={false}>
 						<motion.span
 							key={slide.id}
@@ -237,10 +283,20 @@ export default function HeroCarousel({
 							{slide.eyebrow}
 						</motion.span>
 					</AnimatePresence>
-				</div>
+				</motion.div>
 
 				{/* Unified Headline & Sub-copy Grid Overlay — perfectly stable height, zero CTA jitter */}
-				<div className="relative min-h-[200px] sm:min-h-[190px] lg:min-h-[200px] grid grid-cols-1 grid-rows-1 items-start">
+				<motion.div
+					variants={{
+						hidden: { opacity: 0, y: 22 },
+						visible: {
+							opacity: 1,
+							y: 0,
+							transition: { duration: 0.7, ease: EASE_PREMIUM },
+						},
+					}}
+					className="relative min-h-[200px] sm:min-h-[190px] lg:min-h-[200px] grid grid-cols-1 grid-rows-1 items-start"
+				>
 					<AnimatePresence initial={false}>
 						<motion.div
 							key={slide.id}
@@ -298,10 +354,20 @@ export default function HeroCarousel({
 							</motion.p>
 						</motion.div>
 					</AnimatePresence>
-				</div>
+				</motion.div>
 
 				{/* CTA Buttons */}
-				<div className="flex flex-col sm:flex-row gap-4 pt-1 w-full sm:w-auto">
+				<motion.div
+					variants={{
+						hidden: { opacity: 0, y: 18 },
+						visible: {
+							opacity: 1,
+							y: 0,
+							transition: { duration: 0.65, ease: EASE_PREMIUM },
+						},
+					}}
+					className="flex flex-col sm:flex-row gap-4 pt-1 w-full sm:w-auto"
+				>
 					<motion.button
 						id="hero-primary-cta"
 						whileHover={{ scale: 1.025, y: -2 }}
@@ -333,10 +399,20 @@ export default function HeroCarousel({
 					>
 						<span>Request Quote &amp; COA</span>
 					</motion.button>
-				</div>
+				</motion.div>
 
 				{/* Slide controls + COA download */}
-				<div className="flex flex-col-reverse sm:flex-row sm:items-center gap-3 sm:gap-6 pt-1">
+				<motion.div
+					variants={{
+						hidden: { opacity: 0, y: 14 },
+						visible: {
+							opacity: 1,
+							y: 0,
+							transition: { duration: 0.6, ease: EASE_PREMIUM },
+						},
+					}}
+					className="flex flex-col-reverse sm:flex-row sm:items-center gap-3 sm:gap-6 pt-1"
+				>
 					<div className="flex items-center gap-3">
 						<span className="stat-num text-xs font-bold text-[#12304A] tabular-nums w-5">
 							{String(active + 1).padStart(2, "0")}
@@ -371,8 +447,8 @@ export default function HeroCarousel({
 						<span>Instant COA &amp; TDS Downloads</span>
 						<Download className="w-3.5 h-3.5 text-[#C79A4B] group-hover:translate-y-0.5 transition-transform duration-200" />
 					</button>
-				</div>
-			</div>
+				</motion.div>
+			</motion.div>
 
 			{/* ── Right: Rotating Hex Cluster ────────────────────────── */}
 			<motion.div
@@ -440,6 +516,8 @@ export default function HeroCarousel({
 								style={{
 									zIndex,
 									aspectRatio: "0.866025 / 1",
+									willChange: "left, top, width, opacity",
+									transform: "translateZ(0)",
 								}}
 								className={`absolute block outline-none focus-visible:ring-2 focus-visible:ring-[#C79A4B] rounded-3xl will-change-transform ${
 									isMain
