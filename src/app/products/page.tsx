@@ -4,12 +4,14 @@ import React, { useState, useMemo, useEffect, useRef, useDeferredValue, Suspense
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
+import gsap from "gsap";
 import Footer from "../components/Footer";
 import CtaBanner from "../components/CtaBanner";
 import CustomSelect from "../components/CustomSelect";
-import Navbar from "../components/Navbar";
 import { MolecularDecoration, hexPoints } from "../components/Hex";
+import SectionHeader from "../components/SectionHeader";
 import { ALL_PRODUCTS, PRODUCT_CATEGORIES, ApiProduct } from "@/lib/products";
+import { useScrollLock } from "@/lib/scrollLock";
 import { useProductTransition } from "../context/ProductTransitionContext";
 import {
 	Search,
@@ -26,11 +28,11 @@ import {
 	Globe2,
 } from "lucide-react";
 
-// ─── Animated counter (Optimized zero-rerender direct DOM animation) ─────────
+// ─── Animated counter (Optimized zero-rerender direct DOM animation via GSAP) ─────────
 function CountUp({
 	end,
 	suffix = "",
-	duration = 1.6,
+	duration = 1.8,
 }: {
 	end: number;
 	suffix?: string;
@@ -42,26 +44,24 @@ function CountUp({
 	useEffect(() => {
 		if (!inView || !ref.current) return;
 		const node = ref.current;
-		let startTimestamp: number | null = null;
-		let rafId: number;
+		const obj = { val: 0 };
 
-		const step = (timestamp: number) => {
-			if (!startTimestamp) startTimestamp = timestamp;
-			const progress = Math.min((timestamp - startTimestamp) / (duration * 1000), 1);
-			const easeProgress = 1 - (1 - progress) * (1 - progress);
-			const currentVal = Math.round(easeProgress * end);
-			node.textContent = `${currentVal}${suffix}`;
-			if (progress < 1) {
-				rafId = requestAnimationFrame(step);
-			}
+		const tween = gsap.to(obj, {
+			val: end,
+			duration,
+			ease: "power2.out",
+			onUpdate: () => {
+				node.textContent = `${Math.round(obj.val)}${suffix}`;
+			},
+		});
+
+		return () => {
+			tween.kill();
 		};
-
-		rafId = requestAnimationFrame(step);
-		return () => cancelAnimationFrame(rafId);
 	}, [inView, end, suffix, duration]);
 
 	return (
-		<span ref={ref} className="stat-num">
+		<span ref={ref} className="stat-num tabular-nums">
 			0{suffix}
 		</span>
 	);
@@ -191,7 +191,8 @@ function ProductsContent() {
 		bannerMouseY.set(0);
 	};
 
-	const [searchQuery, setSearchQuery] = useState("");
+	const initialSearch = searchParams.get("search") || searchParams.get("q") || "";
+	const [searchQuery, setSearchQuery] = useState(initialSearch);
 	const [selectedCategory, setSelectedCategory] = useState<string>("All");
 	const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -202,6 +203,13 @@ function ProductsContent() {
 			setSelectedCategory(initialCategory);
 		}
 	}, [initialCategory]);
+
+	useEffect(() => {
+		const s = searchParams.get("search") || searchParams.get("q");
+		if (s) {
+			setSearchQuery(s);
+		}
+	}, [searchParams]);
 
 	useEffect(() => {
 		if (
@@ -277,6 +285,85 @@ function ProductsContent() {
 	};
 
 	const [copiedCas, setCopiedCas] = useState<string | null>(null);
+	const gridRef = useRef<HTMLDivElement>(null);
+
+	// Ambient biochemical molecular floating drift
+	useEffect(() => {
+		const prefersReducedMotion =
+			typeof window !== "undefined" &&
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		if (prefersReducedMotion) return;
+
+		const ctx = gsap.context(() => {
+			gsap.to(".ambient-float-1", {
+				y: -14,
+				rotation: 3,
+				duration: 5.5,
+				repeat: -1,
+				yoyo: true,
+				ease: "sine.inOut",
+			});
+			gsap.to(".ambient-float-2", {
+				y: 12,
+				rotation: -3.5,
+				duration: 6.2,
+				repeat: -1,
+				yoyo: true,
+				ease: "sine.inOut",
+			});
+			gsap.to(".ambient-float-hex-1", {
+				y: -10,
+				x: 6,
+				rotation: 6,
+				duration: 4.8,
+				repeat: -1,
+				yoyo: true,
+				ease: "sine.inOut",
+			});
+			gsap.to(".ambient-float-hex-2", {
+				y: 8,
+				x: -5,
+				rotation: -5,
+				duration: 5.2,
+				repeat: -1,
+				yoyo: true,
+				ease: "sine.inOut",
+			});
+		});
+
+		return () => ctx.revert();
+	}, []);
+
+	// Zero-lag GPU batch card stagger on category & search filter changes
+	useEffect(() => {
+		const grid = gridRef.current;
+		if (!grid) return;
+
+		const cards = grid.querySelectorAll(".product-catalog-card");
+		if (!cards.length) return;
+
+		const prefersReducedMotion =
+			typeof window !== "undefined" &&
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		if (prefersReducedMotion) return;
+
+		gsap.fromTo(
+			cards,
+			{ opacity: 0, y: 16, scale: 0.98 },
+			{
+				opacity: 1,
+				y: 0,
+				scale: 1,
+				duration: 0.35,
+				stagger: {
+					amount: 0.16,
+					from: "start",
+				},
+				ease: "power2.out",
+				overwrite: "auto",
+			}
+		);
+	}, [selectedCategory, selectedLetter, currentPage, deferredSearchQuery]);
 
 	const handleCopyCas = (e: React.MouseEvent, cas: string) => {
 		e.preventDefault();
@@ -286,14 +373,13 @@ function ProductsContent() {
 		setTimeout(() => setCopiedCas(null), 2000);
 	};
 
-	// Body scroll lock & Escape key handling for open modals
+	// Freeze background scroll & Lenis when any modal is open
+	useScrollLock(quoteModalOpen || selectedProduct !== null);
+
+	// Escape key handling for open modals
 	useEffect(() => {
 		const isModalOpen = quoteModalOpen || selectedProduct !== null;
-		if (isModalOpen) {
-			document.body.style.overflow = "hidden";
-		} else {
-			document.body.style.overflow = "";
-		}
+		if (!isModalOpen) return;
 
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
@@ -303,7 +389,6 @@ function ProductsContent() {
 		};
 		window.addEventListener("keydown", handleKeyDown);
 		return () => {
-			document.body.style.overflow = "";
 			window.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [quoteModalOpen, selectedProduct]);
@@ -312,10 +397,14 @@ function ProductsContent() {
 		const handleQuote = () => handleOpenQuote();
 		const handleSearch = () => {
 			searchInputRef.current?.focus();
-			searchInputRef.current?.scrollIntoView({
-				behavior: "smooth",
-				block: "center",
-			});
+			if (typeof window !== "undefined" && (window as any).__lenis && searchInputRef.current) {
+				(window as any).__lenis.scrollTo(searchInputRef.current, { offset: -120 });
+			} else {
+				searchInputRef.current?.scrollIntoView({
+					behavior: "smooth",
+					block: "center",
+				});
+			}
 		};
 		window.addEventListener("ruskin:open-quote", handleQuote);
 		window.addEventListener("ruskin:open-search", handleSearch);
@@ -343,7 +432,7 @@ function ProductsContent() {
 						style={{ x: layerDeepX, y: layerDeepY }}
 						className="absolute -right-6 sm:right-0 bottom-2 sm:bottom-4 lg:bottom-6 w-[200px] sm:w-[240px] lg:w-[270px] hidden md:block will-change-transform"
 					>
-						<div className="animate-float-tilt-1">
+						<div className="ambient-float-1 will-change-transform">
 							<MolecularDecoration
 								color="#C79A4B"
 								opacity={0.16}
@@ -357,7 +446,7 @@ function ProductsContent() {
 						style={{ x: layerMidX, y: layerMidY }}
 						className="absolute left-2 sm:left-6 -top-4 sm:top-2 w-[140px] sm:w-[170px] hidden sm:block will-change-transform"
 					>
-						<div className="animate-float-tilt-2">
+						<div className="ambient-float-2 will-change-transform">
 							<MolecularDecoration
 								color="#FFFFFF"
 								opacity={0.12}
@@ -372,7 +461,7 @@ function ProductsContent() {
 						style={{ x: layerForeX, y: layerForeY }}
 						className="absolute top-14 right-[16%] hidden lg:block will-change-transform"
 					>
-						<div className="animate-float-hex-1">
+						<div className="ambient-float-hex-1 will-change-transform">
 							<FloatingHex size={26} color="#C79A4B" opacity={0.25} strokeWidth={1.2} hasDot />
 						</div>
 					</motion.div>
@@ -382,7 +471,7 @@ function ProductsContent() {
 						style={{ x: layerMidX, y: layerMidY }}
 						className="absolute bottom-12 left-[12%] hidden sm:block will-change-transform"
 					>
-						<div className="animate-float-hex-2" style={{ animationDelay: "-4s" }}>
+						<div className="ambient-float-hex-2 will-change-transform">
 							<FloatingHex size={22} color="#FFFFFF" opacity={0.18} strokeWidth={1} />
 						</div>
 					</motion.div>
@@ -398,27 +487,14 @@ function ProductsContent() {
 							style={{ transform: "translateZ(0)" }}
 							className="lg:col-span-7 space-y-5 text-left gpu-smooth"
 						>
-							<div>
-								<span className="inline-flex items-center gap-2.5 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
-									<div className="w-8 h-[2px] bg-[#C79A4B] rounded-full shrink-0" />
-									Product Directory
-								</span>
-							</div>
-
-							<h1 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-white leading-tight tracking-tight">
-								DCGI-Approved &amp; <br />
-								<span className="text-[#C79A4B]">Registered API Directory</span>
-							</h1>
-
-							{/* Mandatory Signature Gold Accent Bar */}
-							<div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
-
-							<p className="text-base text-slate-300 font-normal leading-relaxed max-w-2xl">
-								Explore our catalog of {ALL_PRODUCTS.length}+ high-purity APIs,
-								veterinary actives, excipients, dietary nutrients, and
-								nootropics sourced directly from audited global manufacturing
-								partners.
-							</p>
+							<SectionHeader
+								as="h1"
+								dark
+								eyebrow="Product Directory"
+								lead="DCGI-Approved &"
+								highlight="Registered API Directory"
+								description={`Explore our catalog of ${ALL_PRODUCTS.length}+ high-purity APIs, veterinary actives, excipients, dietary nutrients, and nootropics sourced directly from audited global manufacturing partners.`}
+							/>
 
 							{/* Hero CTA Buttons matching Services Page */}
 							<div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
@@ -427,10 +503,14 @@ function ProductsContent() {
 									whileTap={{ scale: 0.98 }}
 									onClick={() => {
 										searchInputRef.current?.focus();
-										searchInputRef.current?.scrollIntoView({
-											behavior: "smooth",
-											block: "center",
-										});
+										if (typeof window !== "undefined" && (window as any).__lenis && searchInputRef.current) {
+											(window as any).__lenis.scrollTo(searchInputRef.current, { offset: -120 });
+										} else {
+											searchInputRef.current?.scrollIntoView({
+												behavior: "smooth",
+												block: "center",
+											});
+										}
 									}}
 									className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-[#C79A4B] text-white font-bold text-sm shadow-xl hover:bg-[#B58A3E] transition-all cursor-pointer"
 								>
@@ -778,26 +858,18 @@ function ProductsContent() {
 							exit={{ opacity: 0 }}
 							transition={{ duration: 0.12, ease: "easeOut" }}
 							className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+							ref={gridRef}
 						>
-							{paginatedProducts.map((product, index) => {
+							{paginatedProducts.map((product) => {
 								const isTransitioning = isTransitioningFor(product.name);
 								return (
 								<motion.div
 									key={product.id}
-									initial={{ opacity: 0, y: 14, scale: 0.98 }}
-									animate={{ opacity: 1, y: 0, scale: 1 }}
-									transition={{
-										type: "spring",
-										stiffness: 380,
-										damping: 28,
-										mass: 0.65,
-										delay: Math.min(index * 0.02, 0.14),
-									}}
 									whileHover={{
 										y: -4,
 										transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
 									}}
-									className="relative bg-[#0B1E2E] border border-white/[0.08] hover:border-[#C79A4B]/35 rounded-[22px] overflow-hidden shadow-sm hover:shadow-[0_16px_36px_-8px_rgba(7,21,33,0.5)] transition-[border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group cursor-pointer flex flex-col gpu-smooth"
+									className="product-catalog-card relative bg-[#0B1E2E] border border-white/[0.08] hover:border-[#C79A4B]/35 rounded-[22px] overflow-hidden shadow-sm hover:shadow-[0_16px_36px_-8px_rgba(7,21,33,0.5)] transition-[border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group cursor-pointer flex flex-col gpu-smooth"
 								>
 									<Link
 										href={`/products/${product.slug}`}
@@ -1209,6 +1281,8 @@ function ProductsContent() {
 					<div
 						className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12304A]/30 backdrop-blur-[2px]"
 						onClick={() => setSelectedProduct(null)}
+						onTouchMove={(e) => e.stopPropagation()}
+						onWheel={(e) => e.stopPropagation()}
 					>
 						<motion.div
 							onClick={(e) => e.stopPropagation()}
@@ -1216,6 +1290,7 @@ function ProductsContent() {
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.95, y: 10 }}
 							transition={{ duration: 0.2 }}
+							data-lenis-prevent="true"
 							className="bg-white border border-[#C79A4B]/30 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl text-left space-y-6 max-h-[90vh] overflow-y-auto custom-scrollbar"
 						>
 							<button
@@ -1298,6 +1373,8 @@ function ProductsContent() {
 					<div
 						className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12304A]/30 backdrop-blur-[2px]"
 						onClick={() => setQuoteModalOpen(false)}
+						onTouchMove={(e) => e.stopPropagation()}
+						onWheel={(e) => e.stopPropagation()}
 					>
 						<motion.div
 							onClick={(e) => e.stopPropagation()}
@@ -1305,6 +1382,7 @@ function ProductsContent() {
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.94, y: 12 }}
 							transition={{ type: "spring", damping: 26, stiffness: 380 }}
+							data-lenis-prevent="true"
 							className="bg-white border border-[#C79A4B]/25 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-[0_25px_70px_rgba(18,48,74,0.35)] text-left space-y-5 max-h-[90vh] overflow-y-auto custom-scrollbar"
 						>
 							<button
@@ -1450,7 +1528,13 @@ function ProductsContent() {
 			<CtaBanner onRequestQuote={() => handleOpenQuote()} />
 
 			<Footer
-				onOpenCatalog={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+				onOpenCatalog={() => {
+					if (typeof window !== "undefined" && (window as any).__lenis) {
+						(window as any).__lenis.scrollTo(0, { duration: 1.2 });
+					} else {
+						window.scrollTo({ top: 0, behavior: "smooth" });
+					}
+				}}
 			/>
 		</div>
 	);

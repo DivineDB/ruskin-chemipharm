@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../components/Footer";
 import { HexIcon } from "../components/Hex";
+import SectionHeader from "../components/SectionHeader";
 import {
   MapPin,
   Phone,
@@ -73,62 +74,24 @@ export default function ContactPage() {
       <main className="flex-grow py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12 lg:space-y-14">
           
-          {/* ─── 1. SECTION HEADER (MANDATORY 4-PART RULE, NO BREADCRUMB) ─── */}
-          <div className="space-y-3.5 sm:space-y-4 text-left max-w-3xl">
-            {/* 1. Category Eyebrow with Gold Prefix Line */}
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <span className="inline-flex items-center gap-2.5 text-[#C79A4B] text-xs sm:text-sm font-bold tracking-widest uppercase">
-                <motion.div
-                  initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: "2rem", opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-                  className="h-[2px] bg-[#C79A4B] rounded-full shrink-0"
-                />
-                Get In Touch
-              </span>
-            </motion.div>
-
-            {/* 2. Main Heading with Gold Span Highlight */}
-            <motion.h1
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#12304A] leading-tight tracking-tight"
-            >
-              Connect with Our <span className="text-[#C79A4B]">Commercial Desk</span>
-            </motion.h1>
-
-            {/* 3. SIGNATURE GOLD ACCENT BAR (CRITICAL: NEVER OMIT) */}
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: "4rem", opacity: 1 }}
-              transition={{ duration: 0.55, delay: 0.14, ease: [0.16, 1, 0.3, 1] }}
-              className="h-[3px] rounded-full bg-[#C79A4B]"
-            />
-
-            {/* 4. Descriptive Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-sm sm:text-base text-[#5A7A8E] font-normal leading-relaxed max-w-2xl"
-            >
-              Direct access to Ruskin Chemipharm&apos;s Mumbai headquarters. Send your API requirements, regulatory dossier inquiries, or custom synthesis specifications below.
-            </motion.p>
-          </div>
+          {/* ─── 1. SECTION HEADER (MANDATORY 4-PART RULE WITH LUXURY SCROLL-REVEAL) ─── */}
+          <SectionHeader
+            as="h1"
+            eyebrow="Get In Touch"
+            lead="Connect with Our"
+            highlight="Commercial Desk"
+            description="Direct access to Ruskin Chemipharm's Mumbai headquarters. Send your API requirements, regulatory dossier inquiries, or custom synthesis specifications below."
+          />
 
           {/* ─── 2. BALANCED 2-COLUMN MAIN MODULE (EQUAL HEIGHT, CLEAN ARCHITECTURE) ─── */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
 
             {/* ── LEFT COLUMN: MUMBAI HEADQUARTERS & MAP (LOCKED TO LIGHT THEME) ── */}
             <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="lg:col-span-5 bg-white text-[#12304A] rounded-[24px] sm:rounded-[28px] border border-[#12304A]/10 p-7 sm:p-8 lg:p-9 shadow-[0_12px_45px_rgb(18,48,74,0.06)] flex flex-col justify-between"
             >
               <div className="space-y-5 sm:space-y-6">
@@ -232,9 +195,10 @@ export default function ContactPage() {
             {/* ── RIGHT COLUMN: INQUIRY FORM (LOCKED TO NAVY THEME) ── */}
             <motion.div
               id="contact-form"
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.55, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="lg:col-span-7 bg-[#0B1E2E] text-white rounded-[24px] sm:rounded-[28px] border border-white/10 p-7 sm:p-9 lg:p-10 shadow-xl flex flex-col justify-between"
             >
               <div>

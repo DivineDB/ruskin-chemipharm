@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Search, Menu, X } from "lucide-react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { useScrollLock } from "@/lib/scrollLock";
 
 interface NavbarProps {
   onOpenSearch?: () => void;
@@ -16,6 +17,9 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Freeze background scroll when mobile menu is open
+  useScrollLock(mobileOpen);
 
   const isHome = pathname === "/";
   const isProducts = pathname.startsWith("/products");
@@ -74,7 +78,14 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
     }
     window.dispatchEvent(new CustomEvent("ruskin:open-quote"));
     if (pathname === "/contact") {
-      document.getElementById("contact-form")?.scrollIntoView({ behavior: "smooth" });
+      const formEl = document.getElementById("contact-form");
+      if (formEl) {
+        if (typeof window !== "undefined" && (window as any).__lenis) {
+          (window as any).__lenis.scrollTo(formEl, { offset: -90 });
+        } else {
+          formEl.scrollIntoView({ behavior: "smooth" });
+        }
+      }
     }
   }, [onOpenQuote, pathname]);
 
@@ -89,22 +100,39 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
   useEffect(() => {
     let ticking = false;
     let lastScrolled = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const next = window.scrollY > 15;
-          if (next !== lastScrolled) {
-            lastScrolled = next;
-            setScrolled(next);
-          }
-          ticking = false;
-        });
-        ticking = true;
+
+    const onScrollPosition = (currentY: number) => {
+      const next = currentY > 15;
+      if (next !== lastScrolled) {
+        lastScrolled = next;
+        setScrolled(next);
       }
     };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // Synchronize with Lenis if active, otherwise native scroll
+    const lenis = (window as any).__lenis;
+    if (lenis) {
+      const handleLenisScroll = (e: any) => {
+        onScrollPosition(e.scroll);
+      };
+      lenis.on("scroll", handleLenisScroll);
+      return () => {
+        lenis.off("scroll", handleLenisScroll);
+      };
+    } else {
+      const handleNativeScroll = () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            onScrollPosition(window.scrollY);
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+      handleNativeScroll();
+      window.addEventListener("scroll", handleNativeScroll, { passive: true });
+      return () => window.removeEventListener("scroll", handleNativeScroll);
+    }
   }, []);
 
   // Close mobile menu on route change

@@ -178,13 +178,14 @@ export default function HeroCarousel({
 		[progress],
 	);
 
-	// Pause autoplay while the tab is in the background
+	// Pause autoplay while tab is in the background
 	useEffect(() => {
 		const onVis = () => setTabHidden(document.visibilityState === "hidden");
 		document.addEventListener("visibilitychange", onVis);
 		return () => document.removeEventListener("visibilitychange", onVis);
 	}, []);
 
+	// Pause autoplay when scrolled offscreen (saves CPU & maintains buttery scrolling)
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [inView, setInView] = useState(true);
 
@@ -201,7 +202,7 @@ export default function HeroCarousel({
 		return () => observer.disconnect();
 	}, []);
 
-	// Drives autoplay + indicator fill - strictly pauses when offscreen
+	// Drives 3-second autoplay + indicator fill
 	useAnimationFrame((_, delta) => {
 		if (paused || tabHidden || reduceMotion || !inView) return;
 		elapsedRef.current += delta;
@@ -219,7 +220,7 @@ export default function HeroCarousel({
 			ref={containerRef}
 			className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8"
 		>
-			{/* ── Left: Headline & Actions (Staggered Luxury Intro Animation) ── */}
+			{/* ── Left: Headline & Actions ── */}
 			<motion.div
 				initial="hidden"
 				animate="visible"
@@ -240,9 +241,7 @@ export default function HeroCarousel({
 				aria-roledescription="carousel"
 				aria-label="Ruskin Chemipharm highlights"
 			>
-
-
-				{/* Slide Eyebrow */}
+				{/* Slide Eyebrow with Cinematic Soft Blur Transition */}
 				<motion.div
 					variants={{
 						hidden: { opacity: 0, x: -16 },
@@ -257,9 +256,9 @@ export default function HeroCarousel({
 					<AnimatePresence mode="wait" initial={false}>
 						<motion.span
 							key={slide.id}
-							initial={{ opacity: 0, x: -10 }}
-							animate={{ opacity: 1, x: 0 }}
-							exit={{ opacity: 0, x: 10 }}
+							initial={{ opacity: 0, x: -10, filter: "blur(4px)" }}
+							animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+							exit={{ opacity: 0, x: 10, filter: "blur(4px)" }}
 							transition={{ duration: 0.35, ease: EASE_PREMIUM }}
 							className="absolute inset-0 inline-flex items-center gap-2 text-[#C79A4B] text-xs sm:text-sm font-bold tracking-widest uppercase"
 						>
@@ -269,7 +268,7 @@ export default function HeroCarousel({
 					</AnimatePresence>
 				</motion.div>
 
-				{/* Unified Headline & Sub-copy Grid Overlay — perfectly stable height, zero CTA jitter */}
+				{/* Unified Headline & Sub-copy with Cinematic Blur & Smooth Easing */}
 				<motion.div
 					variants={{
 						hidden: { opacity: 0, y: 22 },
@@ -279,63 +278,24 @@ export default function HeroCarousel({
 							transition: { duration: 0.7, ease: EASE_PREMIUM },
 						},
 					}}
-					className="relative min-h-[200px] sm:min-h-[190px] lg:min-h-[200px] grid grid-cols-1 grid-rows-1 items-start"
+					className="relative min-h-[190px] sm:min-h-[185px] lg:min-h-[195px] grid grid-cols-1 grid-rows-1 items-start"
 				>
 					<AnimatePresence initial={false}>
 						<motion.div
 							key={slide.id}
-							initial="initial"
-							animate="animate"
-							exit="exit"
-							variants={{
-								initial: {},
-								animate: {
-									transition: {
-										staggerChildren: 0.05,
-										delayChildren: 0.02,
-									},
-								},
-								exit: {
-									transition: {
-										staggerChildren: 0.02,
-										staggerDirection: -1,
-									},
-								},
-							}}
+							initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+							animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+							exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+							transition={{ duration: 0.45, ease: EASE_PREMIUM }}
 							className="col-start-1 row-start-1 space-y-3"
 						>
 							<h1 className="text-3xl sm:text-4xl lg:text-[42px] xl:text-[45px] font-extrabold text-[#12304A] leading-[1.16] tracking-tight pb-1">
-								<motion.span
-									variants={{
-										initial: { opacity: 0, y: 10 },
-										animate: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE_PREMIUM } },
-										exit: { opacity: 0, y: -6, transition: { duration: 0.2 } },
-									}}
-									className="block"
-								>
-									{slide.lead}
-								</motion.span>
-								<motion.span
-									variants={{
-										initial: { opacity: 0, y: 10 },
-										animate: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE_PREMIUM } },
-										exit: { opacity: 0, y: -6, transition: { duration: 0.2 } },
-									}}
-									className="text-[#C79A4B] block"
-								>
-									{slide.highlight}
-								</motion.span>
+								<span className="block">{slide.lead}</span>
+								<span className="text-[#C79A4B] block">{slide.highlight}</span>
 							</h1>
-							<motion.p
-								variants={{
-									initial: { opacity: 0, y: 8 },
-									animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE_PREMIUM } },
-									exit: { opacity: 0, y: -5, transition: { duration: 0.2 } },
-								}}
-								className="text-base sm:text-lg text-[#5A7A8E] leading-relaxed max-w-xl font-normal pb-1"
-							>
+							<p className="text-base sm:text-lg text-[#5A7A8E] leading-relaxed max-w-xl font-normal pb-1">
 								{slide.copy}
-							</motion.p>
+							</p>
 						</motion.div>
 					</AnimatePresence>
 				</motion.div>
@@ -362,9 +322,9 @@ export default function HeroCarousel({
 						<AnimatePresence mode="wait" initial={false}>
 							<motion.span
 								key={slide.id}
-								initial={{ opacity: 0, y: 8 }}
-								animate={{ opacity: 1, y: 0 }}
-								exit={{ opacity: 0, y: -8 }}
+								initial={{ opacity: 0, y: 8, filter: "blur(3px)" }}
+								animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+								exit={{ opacity: 0, y: -8, filter: "blur(3px)" }}
 								transition={{ duration: 0.25, ease: EASE_PREMIUM }}
 								className="inline-flex items-center gap-2.5"
 							>
@@ -434,7 +394,7 @@ export default function HeroCarousel({
 				</motion.div>
 			</motion.div>
 
-			{/* ── Right: Rotating Hex Cluster ────────────────────────── */}
+			{/* ── Right: Rotating Hex Cluster (Original Fluid Motion) ── */}
 			<motion.div
 				initial={{ opacity: 0, x: 25, scale: 0.96 }}
 				animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -503,7 +463,7 @@ export default function HeroCarousel({
 									willChange: "left, top, width, opacity",
 									transform: "translateZ(0)",
 								}}
-								className={`absolute block outline-none focus:outline-none focus-visible:outline-none rounded-3xl will-change-transform ${
+								className={`absolute block outline-none focus-visible:ring-2 focus-visible:ring-[#C79A4B] rounded-3xl will-change-transform ${
 									isMain
 										? "cursor-default"
 										: "cursor-pointer group"

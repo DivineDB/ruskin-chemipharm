@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { MolecularDecoration, HexIcon } from "./Hex";
+import SectionHeader from "./SectionHeader";
 
 const EVENT_SLIDES: Record<string, string[]> = {
   cphi: [
@@ -109,7 +110,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
   ];
 
   return (
-    <section ref={sectionRef} className="py-20 sm:py-28 bg-[#FAF7F2] relative overflow-hidden border-t border-[#12304A]/8 contain-section">
+    <section ref={sectionRef} className="py-20 sm:py-28 bg-[#FAF7F2] relative overflow-hidden border-t border-[#12304A]/8">
       {/* Top subtle gold accent line */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#C79A4B]/35 to-transparent" />
 
@@ -123,23 +124,13 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
 
-        {/* Section Header */}
-        <div className="space-y-3 text-left">
-          <span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
-            <div className="w-8 h-[2px] bg-[#C79A4B]" />
-            Global Exhibitions &amp; Industry Summits
-          </span>
-          <h2
-            style={{ fontWeight: 800 }}
-            className="text-3xl sm:text-4xl lg:text-[44px] text-[#12304A] leading-tight tracking-tight"
-          >
-            Meet Our Leadership &amp; Technical Team <span className="text-[#C79A4B]">Worldwide</span>
-          </h2>
-          <div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
-          <p className="text-base text-[#5A7A8E] font-normal max-w-2xl leading-relaxed">
-            Ruskin Chemipharm regularly anchors official delegations at the world&apos;s leading pharmaceutical expos. Pre-book a dedicated technical session with our regulatory and commercial leadership.
-          </p>
-        </div>
+        {/* Section Header with luxury scroll-reveal */}
+        <SectionHeader
+          eyebrow="Global Exhibitions & Industry Summits"
+          lead="Meet Our Leadership & Technical Team"
+          highlight="Worldwide"
+          description="Ruskin Chemipharm regularly anchors official delegations at the world's leading pharmaceutical expos. Pre-book a dedicated technical session with our regulatory and commercial leadership."
+        />
 
         {/* Event Cards (Matte Luxury Navy Surfaces) */}
         <div className="space-y-8">
@@ -186,7 +177,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
                       <span>{event.badge}</span>
                     </div>
 
-                    <div className="px-3 py-1.5 rounded-full bg-[#071521]/80 backdrop-blur-md border border-white/15 text-slate-200 text-xs font-semibold flex items-center gap-1.5 shadow-sm">
+                    <div className="px-3 py-1.5 rounded-full bg-[#071521]/95 border border-white/15 text-slate-200 text-xs font-semibold flex items-center gap-1.5 shadow-sm">
                       <MapPin className="w-3.5 h-3.5 text-[#C79A4B]" />
                       <span>{event.location.split(",")[0]}</span>
                     </div>
@@ -194,7 +185,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
 
                   {/* Bottom Stand Info on Image */}
                   <div className="absolute bottom-4 left-4 z-10 hidden sm:block">
-                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#071521]/85 backdrop-blur-md border border-white/15 text-white text-xs font-mono">
+                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#071521]/95 border border-white/15 text-white text-xs font-mono">
                       <Building2 className="w-3.5 h-3.5 text-[#C79A4B]" />
                       {event.hall}
                     </span>
@@ -205,7 +196,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => prevSlide(event.key)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#071521]/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center opacity-90 sm:opacity-0 sm:group-hover/slider:opacity-100 transition-opacity hover:bg-[#071521] z-10 shadow-md cursor-pointer"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#071521]/90 border border-white/20 text-white flex items-center justify-center opacity-90 sm:opacity-0 sm:group-hover/slider:opacity-100 transition-opacity hover:bg-[#071521] z-10 shadow-md cursor-pointer"
                     aria-label="Previous exhibition photo"
                   >
                     <ChevronLeft className="w-4 h-4" />
@@ -214,7 +205,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => nextSlide(event.key)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#071521]/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center opacity-90 sm:opacity-0 sm:group-hover/slider:opacity-100 transition-opacity hover:bg-[#071521] z-10 shadow-md cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#071521]/90 border border-white/20 text-white flex items-center justify-center opacity-90 sm:opacity-0 sm:group-hover/slider:opacity-100 transition-opacity hover:bg-[#071521] z-10 shadow-md cursor-pointer"
                     aria-label="Next exhibition photo"
                   >
                     <ChevronRight className="w-4 h-4" />

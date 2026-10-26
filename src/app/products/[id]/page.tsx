@@ -8,6 +8,7 @@ import Footer from "../../components/Footer";
 import CustomSelect from "../../components/CustomSelect";
 import Navbar from "../../components/Navbar";
 import { getProductBySlugOrId, getRelatedProducts, ALL_PRODUCTS } from "@/lib/products";
+import { useScrollLock } from "@/lib/scrollLock";
 import { useProductTransition } from "../../context/ProductTransitionContext";
 import {
   ArrowLeft,
@@ -65,21 +66,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const [isSubmittingInquiry, setIsSubmittingInquiry] = useState(false);
   const [inquiryType, setInquiryType] = useState("Product Enquiry");
 
-  // Lock body scroll and handle Escape key for modal
+  // Freeze background scroll & Lenis when modal is open
+  useScrollLock(quoteModalOpen);
+
+  // Handle Escape key for modal
   useEffect(() => {
-    if (quoteModalOpen) {
-      document.body.style.overflow = "hidden";
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") setQuoteModalOpen(false);
-      };
-      window.addEventListener("keydown", handleKeyDown);
-      return () => {
-        document.body.style.overflow = "unset";
-        window.removeEventListener("keydown", handleKeyDown);
-      };
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    if (!quoteModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setQuoteModalOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [quoteModalOpen]);
 
   const handleCopyCas = (cas: string) => {
@@ -539,6 +538,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <div
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12304A]/30 backdrop-blur-[2px]"
             onClick={() => setQuoteModalOpen(false)}
+            onTouchMove={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
           >
             <motion.div
               onClick={(e) => e.stopPropagation()}
@@ -546,6 +547,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 12 }}
               transition={{ type: "spring", damping: 26, stiffness: 380 }}
+              data-lenis-prevent="true"
               className="bg-white border border-[#C79A4B]/25 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl text-left space-y-5 max-h-[90vh] overflow-y-auto custom-scrollbar"
             >
               <button onClick={() => setQuoteModalOpen(false)}
@@ -640,7 +642,15 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
       </AnimatePresence>
 
       {/* ================= 6. FOOTER ================= */}
-      <Footer onOpenCatalog={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
+      <Footer
+        onOpenCatalog={() => {
+          if (typeof window !== "undefined" && (window as any).__lenis) {
+            (window as any).__lenis.scrollTo(0, { duration: 1.2 });
+          } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        }}
+      />
 
     </div>
   );

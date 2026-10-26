@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
 
 interface SupplierBrand {
 	name: string;
@@ -361,9 +362,86 @@ const SUPPLIERS: SupplierBrand[] = [
 ];
 
 export default function SupplierBand() {
+	const trackRef = useRef<HTMLDivElement>(null);
+	const tweenRef = useRef<gsap.core.Tween | null>(null);
+	const isHoveredRef = useRef(false);
+
+	useEffect(() => {
+		const track = trackRef.current;
+		if (!track) return;
+
+		const prefersReducedMotion =
+			typeof window !== "undefined" &&
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+		if (prefersReducedMotion) return;
+
+		const ctx = gsap.context(() => {
+			// Continuous 60fps marquee loop via GPU transform
+			const tween = gsap.to(track, {
+				xPercent: -50,
+				ease: "none",
+				duration: 48,
+				repeat: -1,
+			});
+			tweenRef.current = tween;
+
+			// Reactive scroll velocity acceleration via Lenis
+			const checkLenis = () => {
+				const lenis = (window as any).__lenis;
+				if (!lenis) return;
+
+				const handleScroll = (e: any) => {
+					if (!tweenRef.current) return;
+					const vel = Math.abs(e.velocity || 0);
+					if (vel > 0.05) {
+						const boost = Math.min(3.2, 1 + vel * 0.22);
+						gsap.to(tweenRef.current, {
+							timeScale: boost,
+							duration: 0.25,
+							overwrite: "auto",
+							onComplete: () => {
+								if (!tweenRef.current) return;
+								gsap.to(tweenRef.current, {
+									timeScale: isHoveredRef.current ? 0.2 : 1,
+									duration: 0.75,
+									ease: "power2.out",
+								});
+							},
+						});
+					}
+				};
+
+				lenis.on("scroll", handleScroll);
+				return () => lenis.off("scroll", handleScroll);
+			};
+
+			const unbindLenis = checkLenis();
+			return () => {
+				if (unbindLenis) unbindLenis();
+			};
+		});
+
+		return () => ctx.revert();
+	}, []);
+
+	const handleMouseEnter = () => {
+		isHoveredRef.current = true;
+		if (tweenRef.current) {
+			gsap.to(tweenRef.current, { timeScale: 0.2, duration: 0.5, ease: "power2.out" });
+		}
+	};
+
+	const handleMouseLeave = () => {
+		isHoveredRef.current = false;
+		if (tweenRef.current) {
+			gsap.to(tweenRef.current, { timeScale: 1, duration: 0.6, ease: "power2.out" });
+		}
+	};
+
 	return (
 		<div className="relative w-full pt-1 pb-4 sm:pb-5 overflow-hidden select-none">
-			{/* Minimalist Micro Label - positioned slightly higher */}
+			{/* Minimalist Micro Label */}
 			<div className="max-w-7xl mx-auto px-4 text-center mb-5 sm:mb-6">
 				<p className="text-[11px] sm:text-xs font-mono uppercase tracking-[0.22em] text-slate-400/90 font-medium">
 					Our Global Suppliers
@@ -373,6 +451,8 @@ export default function SupplierBand() {
 			{/* Full bleed marquee with seamless CSS linear gradient mask */}
 			<div 
 				className="w-full overflow-hidden"
+				onMouseEnter={handleMouseEnter}
+				onMouseLeave={handleMouseLeave}
 				style={{
 					maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
 					WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
@@ -380,8 +460,8 @@ export default function SupplierBand() {
 				}}
 			>
 				<div 
-					className="flex w-max animate-marquee hover:[animation-play-state:paused] items-center gap-12 sm:gap-16 py-1"
-					style={{ animationDuration: "55s" }}
+					ref={trackRef}
+					className="flex w-max items-center gap-12 sm:gap-16 py-1 will-change-transform"
 				>
 					{/* First set */}
 					{SUPPLIERS.map((s, idx) => (
@@ -409,4 +489,5 @@ export default function SupplierBand() {
 		</div>
 	);
 }
+
 

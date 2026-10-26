@@ -10,7 +10,7 @@ interface CtaBannerProps {
 
 export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
   return (
-    <section className="py-16 sm:py-20 bg-white relative overflow-hidden contain-section">
+    <section className="py-16 sm:py-20 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

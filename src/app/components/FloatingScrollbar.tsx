@@ -64,42 +64,62 @@ export default function FloatingScrollbar() {
 		setMounted(true);
 		recalculateMetrics();
 
+		const updateThumb = (currentScroll: number) => {
+			const winHeight = cachedWinHeight.current || window.innerHeight;
+			const docHeight = cachedDocHeight.current || document.documentElement.scrollHeight;
+			const maxScroll = docHeight - winHeight;
+
+			if (maxScroll <= 10 || cachedThumbHeight.current === 0) return;
+
+			const progress = Math.min(1, Math.max(0, currentScroll / maxScroll));
+			const availableTrack = Math.max(
+				0,
+				winHeight - topOffset - bottomOffset - cachedThumbHeight.current
+			);
+			const thumbTop = topOffset + progress * availableTrack;
+
+			if (thumbRef.current) {
+				thumbRef.current.style.transform = `translate3d(0, ${thumbTop}px, 0)`;
+				if (!isScrollingActive.current) {
+					isScrollingActive.current = true;
+					thumbRef.current.style.opacity = "0.9";
+				}
+			}
+
+			if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
+			hideTimeoutRef.current = setTimeout(() => {
+				isScrollingActive.current = false;
+				if (thumbRef.current) {
+					thumbRef.current.style.opacity = "0.4";
+				}
+			}, 1000);
+		};
+
 		const handleScroll = () => {
 			if (rafScrollId.current !== null) return;
-
 			rafScrollId.current = requestAnimationFrame(() => {
 				rafScrollId.current = null;
-				const winHeight = cachedWinHeight.current || window.innerHeight;
-				const docHeight = cachedDocHeight.current || document.documentElement.scrollHeight;
-				const maxScroll = docHeight - winHeight;
-
-				if (maxScroll <= 10 || cachedThumbHeight.current === 0) return;
-
-				const currentScroll = window.scrollY;
-				const progress = Math.min(1, Math.max(0, currentScroll / maxScroll));
-				const availableTrack = Math.max(
-					0,
-					winHeight - topOffset - bottomOffset - cachedThumbHeight.current
-				);
-				const thumbTop = topOffset + progress * availableTrack;
-
-				if (thumbRef.current) {
-					thumbRef.current.style.transform = `translate3d(0, ${thumbTop}px, 0)`;
-					if (!isScrollingActive.current) {
-						isScrollingActive.current = true;
-						thumbRef.current.style.opacity = "0.9";
-					}
-				}
-
-				if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
-				hideTimeoutRef.current = setTimeout(() => {
-					isScrollingActive.current = false;
-					if (thumbRef.current) {
-						thumbRef.current.style.opacity = "0.4";
-					}
-				}, 1000);
+				updateThumb(window.scrollY);
 			});
 		};
+
+		let lenisUnbind: (() => void) | null = null;
+		const checkLenis = () => {
+			const lenis = (window as any).__lenis;
+			if (lenis) {
+				const handleLenisScroll = (e: any) => {
+					updateThumb(e.scroll);
+				};
+				lenis.on("scroll", handleLenisScroll);
+				return () => lenis.off("scroll", handleLenisScroll);
+			}
+			return null;
+		};
+
+		lenisUnbind = checkLenis();
+		const lenisPollTimer = setTimeout(() => {
+			if (!lenisUnbind) lenisUnbind = checkLenis();
+		}, 300);
 
 		const handleResize = () => {
 			recalculateMetrics();
@@ -121,6 +141,8 @@ export default function FloatingScrollbar() {
 		}
 
 		return () => {
+			if (lenisUnbind) lenisUnbind();
+			clearTimeout(lenisPollTimer);
 			window.removeEventListener("scroll", handleScroll);
 			window.removeEventListener("resize", handleResize);
 			if (resizeObserver) resizeObserver.disconnect();
@@ -156,10 +178,14 @@ export default function FloatingScrollbar() {
 				const scrollRatio = deltaY / availableTrack;
 				const targetScroll =
 					dragStartScrollY.current + scrollRatio * (docHeight - winHeight);
-				window.scrollTo({
-					top: targetScroll,
-					behavior: "instant" as ScrollBehavior,
-				});
+				if (typeof window !== "undefined" && (window as any).__lenis) {
+					(window as any).__lenis.scrollTo(targetScroll, { immediate: true });
+				} else {
+					window.scrollTo({
+						top: targetScroll,
+						behavior: "instant" as ScrollBehavior,
+					});
+				}
 			});
 		};
 

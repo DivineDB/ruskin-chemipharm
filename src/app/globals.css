@@ -63,6 +63,28 @@ html {
 	scrollbar-width: none;
 }
 
+/* ─── Lenis Luxury Smooth Scroll Rules ─── */
+html.lenis,
+html.lenis body {
+	height: auto;
+}
+
+.lenis.lenis-smooth {
+	scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+	overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+	overflow: clip;
+}
+
+.lenis.lenis-smooth iframe {
+	pointer-events: none;
+}
+
 body {
 	background-color: var(--cream);
 	color: var(--text-body);
@@ -705,10 +727,6 @@ html {
 	transform: translateY(-3px) translateZ(0);
 }
 
-img {
-	content-visibility: auto;
-}
-
 .gpu-smooth {
 	transform: translateZ(0);
 	backface-visibility: hidden;
@@ -720,8 +738,6 @@ img {
 
 .contain-section {
 	contain: layout style;
-	content-visibility: auto;
-	contain-intrinsic-size: 1px 700px;
 }
 
 /* =====================================================

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
+import gsap from "gsap";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -13,17 +14,21 @@ import CustomSelect from "./components/CustomSelect";
 import InteractiveHexNetwork from "./components/InteractiveHexNetwork";
 import SupplierBand from "./components/SupplierBand";
 import HeroCarousel from "./components/HeroCarousel";
+import SectionHeader from "./components/SectionHeader";
+import TherapeuticCategoriesGrid from "./components/TherapeuticCategories";
 import {
 	HexImage,
 	HexBadge,
 	HexIcon,
 	MolecularDecoration,
+	HEX_CLIP,
 } from "./components/Hex";
 import {
 	ALL_PRODUCTS,
 	PRODUCT_CATEGORIES,
 	ApiProduct,
 } from "@/lib/products";
+import { useScrollLock } from "@/lib/scrollLock";
 import {
 	Search,
 	ArrowRight,
@@ -56,11 +61,11 @@ import {
 } from "lucide-react";
 
 
-// ─── Animated counter (Optimized zero-rerender direct DOM animation) ─────────
+// ─── Animated counter (Optimized zero-rerender direct DOM animation via GSAP) ─────────
 function CountUp({
 	end,
 	suffix = "",
-	duration = 1.6,
+	duration = 1.8,
 }: {
 	end: number;
 	suffix?: string;
@@ -72,27 +77,24 @@ function CountUp({
 	useEffect(() => {
 		if (!inView || !ref.current) return;
 		const node = ref.current;
-		let startTimestamp: number | null = null;
-		let rafId: number;
+		const obj = { val: 0 };
 
-		const step = (timestamp: number) => {
-			if (!startTimestamp) startTimestamp = timestamp;
-			const progress = Math.min((timestamp - startTimestamp) / (duration * 1000), 1);
-			// Smooth easeOutQuad
-			const easeProgress = 1 - (1 - progress) * (1 - progress);
-			const currentVal = Math.round(easeProgress * end);
-			node.textContent = `${currentVal}${suffix}`;
-			if (progress < 1) {
-				rafId = requestAnimationFrame(step);
-			}
+		const tween = gsap.to(obj, {
+			val: end,
+			duration,
+			ease: "power2.out",
+			onUpdate: () => {
+				node.textContent = `${Math.round(obj.val)}${suffix}`;
+			},
+		});
+
+		return () => {
+			tween.kill();
 		};
-
-		rafId = requestAnimationFrame(step);
-		return () => cancelAnimationFrame(rafId);
 	}, [inView, end, suffix, duration]);
 
 	return (
-		<span ref={ref} className="stat-num">
+		<span ref={ref} className="stat-num tabular-nums">
 			0{suffix}
 		</span>
 	);
@@ -244,23 +246,7 @@ export default function HomePage() {
 	const [formSubmitted, setFormSubmitted] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [hoveredPin, setHoveredPin] = useState<string | null>(null);
-	const [activeService, setActiveService] = useState<number | null>(null);
-	const servicesContainerRef = useRef<HTMLDivElement>(null);
-
-	// Close active service card when clicking outside the services section
-	useEffect(() => {
-		const handleClickOutside = (e: MouseEvent) => {
-			if (
-				servicesContainerRef.current &&
-				!servicesContainerRef.current.contains(e.target as Node)
-			) {
-				setActiveService(null);
-			}
-		};
-
-		document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, []);
+	const [hoveredServiceCard, setHoveredServiceCard] = useState<number | null>(null);
 
 	// Premium Parallax Interaction for Hero cluster
 	const heroMouseX = useMotionValue(0);
@@ -300,6 +286,7 @@ export default function HomePage() {
 		};
 	}, []);
 
+
 	const handleOpenCatalog = () => {
 		window.dispatchEvent(new CustomEvent("ruskin:open-search"));
 	};
@@ -310,14 +297,13 @@ export default function HomePage() {
 		setFormSubmitted(false);
 	};
 
-	// Body scroll lock & Escape key handling for open modals
+	// Freeze background scroll & Lenis when any modal is open
+	useScrollLock(quoteModalOpen || catalogModalOpen);
+
+	// Escape key handling for open modals
 	useEffect(() => {
 		const isAnyModalOpen = quoteModalOpen || catalogModalOpen;
-		if (isAnyModalOpen) {
-			document.body.style.overflow = "hidden";
-		} else {
-			document.body.style.overflow = "";
-		}
+		if (!isAnyModalOpen) return;
 
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
@@ -328,7 +314,6 @@ export default function HomePage() {
 
 		window.addEventListener("keydown", handleKeyDown);
 		return () => {
-			document.body.style.overflow = "";
 			window.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [quoteModalOpen, catalogModalOpen]);
@@ -487,435 +472,13 @@ export default function HomePage() {
 						preserveAspectRatio="none"
 						fill="none"
 					>
-						<path d="M0,0 Q720,38 1440,0 L1440,60 L0,60 Z" fill="#FFFFFF" />
+						<path d="M0,0 Q720,38 1440,0 L1440,60 L0,60 Z" fill="#F8FAFC" />
 					</svg>
 				</div>
 			</section>
 
 			{/* ══════════════════════════════════════════════════════════
-          3. OUR SERVICES — Editorial Interactive Accordion (Design Spec)
-          ══════════════════════════════════════════════════════════ */}
-			<section
-				id="services"
-				className="py-20 sm:py-28 bg-white relative overflow-hidden contain-section"
-			>
-				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					{/* Header Stack: Mandatory 4-part Ruskin Stack + Top-Right Circular Arrow (Matching Design Spec) */}
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						viewport={{ once: true, margin: "-60px" }}
-						transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-						className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2"
-					>
-						<div className="space-y-3 text-left">
-							{/* 1. Category Eyebrow with Gold Prefix Line */}
-							<span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
-								<div className="w-8 h-[2px] bg-[#C79A4B]" />
-								Our Services
-							</span>
-
-							{/* 2. Main Heading with Gold Span Highlight */}
-							<h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#12304A] leading-tight tracking-tight">
-								Comprehensive Pharma Services <br className="hidden sm:inline" />
-								<span className="text-[#C79A4B]">Tailored to Your Pipeline</span>
-							</h2>
-
-							{/* 3. SIGNATURE GOLD ACCENT BAR (MANDATORY RULE) */}
-							<div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
-
-							{/* 4. Descriptive Subtitle */}
-							<p className="text-base text-[#5A7A8E] font-normal max-w-2xl leading-relaxed">
-								Four specialized capabilities connecting bulk API reactors with leading formulation facilities — fully compliant, documented, and reliably delivered.
-							</p>
-						</div>
-
-						{/* Top-Right Circular Arrow directly matching the user's reference design */}
-						<div className="self-start md:self-end">
-							<Link
-								href="/services"
-								className="w-11 h-11 rounded-full border border-[#C79A4B] hover:bg-[#C79A4B] text-[#C79A4B] hover:text-white flex items-center justify-center transition-[background-color,color] duration-300 group shadow-xs cursor-pointer gpu-smooth"
-								aria-label="Explore all services"
-								title="Explore All Services"
-							>
-								<ArrowUpRight className="w-5 h-5 stroke-[2]" />
-							</Link>
-						</div>
-					</motion.div>
-
-					{/* Top Full-Width Divider Line */}
-					<motion.div
-						initial={{ opacity: 0, scaleX: 0.95 }}
-						whileInView={{ opacity: 1, scaleX: 1 }}
-						viewport={{ once: true }}
-						transition={{ duration: 0.5, delay: 0.1 }}
-						className="border-t border-[#12304A]/15 w-full mt-10 sm:mt-12"
-					/>
-
-					{/* Interactive Services List with Staggered Intro Animations */}
-					<div ref={servicesContainerRef} className="divide-y divide-[#12304A]/12">
-						{SERVICES.map((svc, index) => {
-							const isActive = activeService === svc.num;
-
-							return (
-								<motion.div
-									key={svc.num}
-									initial={{ opacity: 0, y: 18 }}
-									whileInView={{ opacity: 1, y: 0 }}
-									viewport={{ once: true, margin: "-40px" }}
-									transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
-									onClick={() => setActiveService(activeService === svc.num ? null : svc.num)}
-									onKeyDown={(e) => {
-										if (e.key === "Enter" || e.key === " ") {
-											e.preventDefault();
-											setActiveService(activeService === svc.num ? null : svc.num);
-										}
-									}}
-									role="button"
-									tabIndex={0}
-									aria-expanded={isActive}
-									className={`group w-full text-left outline-none cursor-pointer rounded-2xl -mx-4 px-4 sm:-mx-6 sm:px-6 transition-[background-color,border-color] duration-300 ${
-										isActive
-											? "py-7 sm:py-8 bg-[#FAF7F2] border border-[#C79A4B]/25"
-											: "py-5 sm:py-6 hover:bg-[#FAF7F2]/60 border border-transparent"
-									}`}
-								>
-									{/* Desktop & Tablet Layout (md and up) */}
-									<div className="hidden md:flex items-start gap-8 lg:gap-12">
-										{/* Column 1: Image Container */}
-										<div className="w-44 sm:w-52 lg:w-56 shrink-0">
-											<motion.div
-												animate={{ height: isActive ? 220 : 64 }}
-												transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-												className={`relative rounded-2xl overflow-hidden border transition-colors duration-300 ${
-													isActive
-														? "shadow-[0_12px_28px_rgba(18,48,74,0.12)] border-[#C79A4B]/40"
-														: "opacity-80 group-hover:opacity-100 shadow-sm border-[#12304A]/10 group-hover:border-[#C79A4B]/30"
-												}`}
-											>
-												<img
-													src={svc.img}
-													alt={svc.title}
-													className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-												/>
-												<div
-													className={`absolute inset-0 bg-gradient-to-t from-[#0B1E2E]/40 to-transparent transition-opacity duration-300 ${
-														isActive ? "opacity-100" : "opacity-30"
-													}`}
-												/>
-											</motion.div>
-										</div>
-
-										{/* Column 2: Number + Handled By */}
-										<div className="w-40 sm:w-48 lg:w-52 shrink-0">
-											<div className="flex items-center gap-2">
-												<span
-													className={`text-2xl sm:text-3xl font-extrabold tracking-tight transition-colors duration-200 ${
-														isActive ? "text-[#C79A4B]" : "text-[#12304A]/70 group-hover:text-[#12304A]"
-													}`}
-												>
-													{svc.numberStr}
-												</span>
-											</div>
-
-											{/* Handled By Section — synchronized height animation */}
-											<AnimatePresence initial={false}>
-												{isActive && (
-													<motion.div
-														initial={{ opacity: 0, height: 0 }}
-														animate={{
-															opacity: 1,
-															height: "auto",
-															transition: {
-																height: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
-																opacity: { duration: 0.32, delay: 0.08, ease: "easeOut" },
-															},
-														}}
-														exit={{
-															opacity: 0,
-															height: 0,
-															transition: {
-																opacity: { duration: 0.18, ease: "easeIn" },
-																height: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
-															},
-														}}
-														className="overflow-hidden"
-													>
-														<div className="pt-4 space-y-1">
-															<div className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-[#94A3B8]">
-																{svc.handledByLabel}
-															</div>
-															<div className="space-y-1 pt-1.5">
-																{svc.handledBy.map((item) => (
-																	<div
-																		key={item}
-																		className="text-xs font-medium text-[#5A7A8E] leading-tight"
-																	>
-																		{item}
-																	</div>
-																))}
-															</div>
-														</div>
-													</motion.div>
-												)}
-											</AnimatePresence>
-										</div>
-
-										{/* Column 3: Title + Details + CTA Button */}
-										<div className="flex-1 min-w-0 pr-2">
-											<div className="flex items-center justify-between gap-4">
-												<h3
-													className={`font-extrabold tracking-tight transition-colors duration-200 ${
-														isActive
-															? "text-2xl sm:text-3xl text-[#12304A]"
-															: "text-lg sm:text-xl text-[#12304A] group-hover:text-[#C79A4B]"
-													}`}
-												>
-													{svc.title}
-												</h3>
-												<div
-													className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 shadow-xs ${
-														isActive
-															? "bg-[#C79A4B] text-white"
-															: "border border-[#C79A4B] text-[#C79A4B] group-hover:bg-[#C79A4B] group-hover:text-white"
-													}`}
-												>
-													<motion.div
-														animate={{ rotate: isActive ? 180 : 0 }}
-														transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
-														className="flex items-center justify-center"
-													>
-														<ArrowDown className="w-4 h-4 stroke-[2]" />
-													</motion.div>
-												</div>
-											</div>
-
-											{/* Expanded Content with Smooth Framer Motion */}
-											<AnimatePresence initial={false}>
-												{isActive && (
-													<motion.div
-														initial={{ opacity: 0, height: 0 }}
-														animate={{
-															opacity: 1,
-															height: "auto",
-															transition: {
-																height: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
-																opacity: { duration: 0.32, delay: 0.06, ease: "easeOut" },
-															},
-														}}
-														exit={{
-															opacity: 0,
-															height: 0,
-															transition: {
-																opacity: { duration: 0.18, ease: "easeIn" },
-																height: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
-															},
-														}}
-														className="overflow-hidden"
-													>
-														<motion.div
-															initial={{ opacity: 0, y: 8 }}
-															animate={{ opacity: 1, y: 0 }}
-															exit={{ opacity: 0, y: -4 }}
-															transition={{ duration: 0.35, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
-															className="space-y-5 pt-3 pb-6"
-														>
-															<p className="text-sm sm:text-base text-[#5A7A8E] leading-relaxed max-w-3xl font-normal">
-																{svc.desc}
-															</p>
-
-															{/* Capability Specs Badges */}
-															<div className="flex flex-wrap gap-2 pt-1">
-																{svc.specs.map((spec) => (
-																	<span
-																		key={spec}
-																		className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white border border-[#12304A]/10 text-[#12304A] shadow-xs hover:border-[#C79A4B]/40 transition-colors"
-																	>
-																		<div className="w-1.5 h-1.5 rounded-full bg-[#C79A4B] mr-2" />
-																		{spec}
-																	</span>
-																))}
-															</div>
-
-															{/* Action Button & Link (Matching reference design "Get a Quote") */}
-															<div className="flex flex-wrap items-center gap-4 pt-3 pb-1 px-1 -mx-1">
-																<motion.button
-																	style={{ originX: 0 }}
-																	whileHover={{ scale: 1.03, y: -2 }}
-																	whileTap={{ scale: 0.98 }}
-																	onClick={(e) => {
-																		e.stopPropagation();
-																		handleOpenQuote(`Service Sourcing Inquiry: ${svc.title}`);
-																	}}
-																	className="inline-flex items-center gap-2.5 px-7 py-3 rounded-full bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-xs uppercase tracking-wider transition-[background-color,box-shadow] duration-300 shadow-md hover:shadow-xl cursor-pointer"
-																>
-																	<span>Get a Quote</span>
-																	<ArrowRight className="w-3.5 h-3.5" />
-																</motion.button>
-
-																<Link
-																	href={`/services#${svc.id}`}
-																	onClick={(e) => e.stopPropagation()}
-																	className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5A7A8E] hover:text-[#C79A4B] transition-colors py-2 px-1 group/spec"
-																>
-																	<span>Detailed Specifications</span>
-																	<ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/spec:translate-x-0.5 group-hover/spec:-translate-y-0.5" />
-																</Link>
-															</div>
-														</motion.div>
-													</motion.div>
-												)}
-											</AnimatePresence>
-										</div>
-									</div>
-
-									{/* Mobile Layout (< md) */}
-									<div className="block md:hidden">
-										{/* Persistent Header Bar */}
-										<div className="flex items-center justify-between gap-3">
-											<div className="flex items-center gap-3 min-w-0">
-												<motion.div
-													animate={{
-														width: isActive ? 52 : 44,
-														height: isActive ? 52 : 44,
-													}}
-													transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-													className="rounded-xl overflow-hidden shrink-0 border border-[#12304A]/10 shadow-xs"
-												>
-													<img
-														src={svc.img}
-														alt={svc.title}
-														className="w-full h-full object-cover"
-													/>
-												</motion.div>
-												<span className="text-base font-bold text-[#C79A4B] shrink-0 font-sans">
-													{svc.numberStr}
-												</span>
-												<span className="text-sm font-bold text-[#12304A] truncate">
-													{isActive ? svc.title : svc.shortTitle}
-												</span>
-											</div>
-
-											<div
-												className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 shadow-xs ${
-													isActive
-														? "bg-[#C79A4B] text-white"
-														: "border border-[#C79A4B] text-[#C79A4B] group-hover:bg-[#C79A4B] group-hover:text-white"
-												}`}
-											>
-												<motion.div
-													animate={{ rotate: isActive ? 180 : 0 }}
-													transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-													className="flex items-center justify-center"
-												>
-													<ArrowDown className="w-3.5 h-3.5 stroke-[2]" />
-												</motion.div>
-											</div>
-										</div>
-
-										{/* Mobile Smooth Expanded Content */}
-										<AnimatePresence initial={false}>
-											{isActive && (
-												<motion.div
-													initial={{ opacity: 0, height: 0 }}
-													animate={{
-														opacity: 1,
-														height: "auto",
-														transition: {
-															height: { duration: 0.38, ease: [0.16, 1, 0.3, 1] },
-															opacity: { duration: 0.28, delay: 0.06 },
-														},
-													}}
-													exit={{
-														opacity: 0,
-														height: 0,
-														transition: {
-															opacity: { duration: 0.16 },
-															height: { duration: 0.28, ease: [0.16, 1, 0.3, 1] },
-														},
-													}}
-													className="overflow-hidden"
-												>
-													<div className="pt-3.5 space-y-3">
-														<div className="bg-[#12304A]/[0.03] p-3 rounded-xl border border-[#12304A]/5">
-															<div className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#94A3B8]">
-																{svc.handledByLabel}
-															</div>
-															<div className="text-xs text-[#5A7A8E] space-y-0.5 mt-1">
-																{svc.handledBy.map((item) => (
-																	<div key={item}>{item}</div>
-																))}
-															</div>
-														</div>
-
-														<p className="text-xs sm:text-sm text-[#5A7A8E] leading-relaxed">
-															{svc.desc}
-														</p>
-
-														<div className="flex flex-wrap gap-1.5 pt-0.5">
-															{svc.specs.map((spec) => (
-																<span
-																	key={spec}
-																	className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-white border border-[#12304A]/10 text-[#12304A] shadow-xs"
-																>
-																	{spec}
-																</span>
-															))}
-														</div>
-
-														<div className="pt-1 pb-1 flex flex-col gap-2">
-															<button
-																onClick={(e) => {
-																	e.stopPropagation();
-																	handleOpenQuote(`Service Sourcing Inquiry: ${svc.title}`);
-																}}
-																className="w-full py-3 rounded-full bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm"
-															>
-																<span>Get a Quote</span>
-																<ArrowRight className="w-3.5 h-3.5" />
-															</button>
-															<Link
-																href={`/services#${svc.id}`}
-																onClick={(e) => e.stopPropagation()}
-																className="w-full py-2 text-center text-xs font-bold text-[#5A7A8E] hover:text-[#C79A4B] transition-colors"
-															>
-																Detailed Specifications &rarr;
-															</Link>
-														</div>
-													</div>
-												</motion.div>
-											)}
-										</AnimatePresence>
-									</div>
-								</motion.div>
-							);
-						})}
-					</div>
-
-					{/* ─── Bottom Action CTA: Explore All Services ─── */}
-					<motion.div
-						initial={{ opacity: 0, y: 18 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						viewport={{ once: true, margin: "-40px" }}
-						transition={{ duration: 0.55, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-						className="flex items-center justify-center pt-10 sm:pt-14"
-					>
-						<motion.button
-							whileHover={{ scale: 1.025, y: -2 }}
-							whileTap={{ scale: 0.98 }}
-							onClick={() => router.push("/services")}
-							className="flex items-center gap-2.5 px-9 py-4 rounded-full bg-[#12304A] text-white font-bold text-sm shadow-xl hover:bg-[#0B1E2E] transition-colors group cursor-pointer gpu-smooth"
-						>
-							<span>Explore All Comprehensive Services</span>
-							<ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200" />
-						</motion.button>
-					</motion.div>
-				</div>
-			</section>
-
-
-			{/* ══════════════════════════════════════════════════════════
-          4. PRODUCT RANGE — Cream background, Dynamic Categories
+          3. PRODUCT RANGE — Crisp Porcelain Desaturated Canvas
           ══════════════════════════════════════════════════════════ */}
 			<motion.section
 				initial={{ opacity: 0, y: 25 }}
@@ -923,8 +486,7 @@ export default function HomePage() {
 				viewport={{ once: true, margin: "-80px" }}
 				transition={{ duration: 0.6 }}
 				id="product-range"
-				className="py-20 sm:py-28 relative overflow-hidden contain-section"
-				style={{ background: "linear-gradient(135deg, #F5F0E8 0%, #FAF7F2 100%)" }}
+				className="py-20 sm:py-28 relative overflow-hidden bg-[#F8FAFC]"
 			>
 				<div className="absolute top-0 left-0 w-[200px] opacity-[0.06] pointer-events-none">
 					<MolecularDecoration color="#12304A" opacity={1} />
@@ -934,119 +496,146 @@ export default function HomePage() {
 				</div>
 
 				<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-					{/* Header */}
-					<div className="text-center space-y-3">
-						<span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
-							<div className="w-8 h-[2px] bg-[#C79A4B]" />
-							Product Range
-							<div className="w-8 h-[2px] bg-[#C79A4B]" />
-						</span>
-						<h2 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold text-[#12304A] leading-tight tracking-tight">
-							Product Portfolio &amp; <span className="text-[#C79A4B]">Core Categories</span>
-						</h2>
-						<div className="w-16 h-[3px] rounded-full bg-[#C79A4B] mx-auto" />
-						<p className="text-base text-[#5A7A8E] font-normal max-w-xl mx-auto">
-							64+ high-purity APIs, veterinary actives, pharmaceutical excipients, dietary nutrients, and nootropics.
-						</p>
+					{/* Header with luxury scroll reveal */}
+					<SectionHeader
+						centered
+						eyebrow="Therapeutic Portfolio"
+						lead="Active Molecules &"
+						highlight="Therapeutic Categories"
+						description="Direct factory indenting across 16 core therapeutic segments — high-purity APIs, approved dossiers, and certified global supply corridors."
+					/>
+
+					{/* 16 Therapeutic Categories Grid (4x4 Responsive Bento) */}
+					<div className="pt-2">
+						<TherapeuticCategoriesGrid />
 					</div>
 
-					{/* 5 Dynamic Category Cards + 1 Full Directory Card (2x3 Grid) */}
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-						{PRODUCT_CATEGORIES.map((cat, i) => {
-							const Icon = CATEGORY_ICON_MAP[cat.name] || Pill;
-							const isGold = i % 2 === 0;
-
-							return (
-								<motion.div
-									key={cat.name}
-									initial={{ opacity: 0, y: 18 }}
-									whileInView={{ opacity: 1, y: 0 }}
-									viewport={{ once: true }}
-									transition={{ duration: 0.45, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
-									whileHover={{ y: -5 }}
-									whileTap={{ scale: 0.98 }}
-									onClick={() => router.push(`/products?category=${encodeURIComponent(cat.name)}`)}
-									className="bg-white border border-[#12304A]/8 rounded-[22px] p-6 cursor-pointer group shadow-md hover:shadow-xl hover:border-[#C79A4B]/40 transition-[box-shadow,border-color] duration-300 flex flex-col justify-between min-h-[175px] text-left"
-								>
-									<div className="flex justify-between items-start">
-										<HexIcon size={46} bg={isGold ? "rgba(199,154,75,0.12)" : "rgba(18,48,74,0.08)"} className="group-hover:scale-105 transition-transform duration-300">
-											<Icon className="w-5 h-5" style={{ color: isGold ? "#C79A4B" : "#12304A" }} />
-										</HexIcon>
-										<div className="w-7 h-7 rounded-full flex items-center justify-center bg-[#12304A]/5 group-hover:bg-[#C79A4B] transition-colors">
-											<ArrowUpRight className="w-3.5 h-3.5 text-[#12304A] group-hover:text-white stroke-[2.5]" />
-										</div>
-									</div>
-
-									<div className="space-y-1 pt-4">
-										<h3 className="text-sm sm:text-base font-bold leading-snug text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200">
-											{cat.name}
-										</h3>
-										<div className="flex items-center gap-1.5">
-											<span className="stat-num text-xs font-bold text-[#C79A4B]">
-												{cat.count}
-											</span>
-											<span className="text-xs text-[#5A7A8E]">Active Products</span>
-										</div>
-									</div>
-								</motion.div>
-							);
-						})}
-
-						{/* 8th Card: All Catalog card */}
-						<motion.div
-							initial={{ opacity: 0, y: 18 }}
-							whileInView={{ opacity: 1, y: 0 }}
-							viewport={{ once: true }}
-							transition={{ duration: 0.45, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-							whileHover={{ y: -5 }}
-							whileTap={{ scale: 0.98 }}
-							onClick={() => router.push("/products")}
-							className="bg-[#0B1E2E] text-white rounded-[22px] p-6 cursor-pointer group shadow-xl hover:shadow-2xl transition-[box-shadow,border-color] duration-300 flex flex-col justify-between min-h-[175px] text-left border border-white/10 hover:border-[#C79A4B]/40"
-						>
-							<div className="flex justify-between items-start">
-								<HexIcon size={46} bg="rgba(199,154,75,0.25)" className="group-hover:scale-105 transition-transform duration-300">
-									<Globe className="w-5 h-5 text-[#C79A4B]" />
-								</HexIcon>
-								<div className="w-7 h-7 rounded-full flex items-center justify-center bg-white/10 group-hover:bg-[#C79A4B] transition-colors">
-									<ArrowUpRight className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-								</div>
-							</div>
-							<div className="space-y-1 pt-4">
-								<h3 className="text-sm sm:text-base font-bold leading-snug text-white">
-									Complete Directory
-								</h3>
-								<div className="flex items-center gap-1.5 text-xs text-slate-300">
-									<span className="stat-num font-bold text-[#C79A4B]">{ALL_PRODUCTS.length}</span>
-									<span>Registered Molecules</span>
-								</div>
-							</div>
-						</motion.div>
-					</div>
-
-					{/* Action CTA */}
-					<div className="flex items-center justify-center pt-2">
+					{/* Action CTA Row */}
+					<div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
 						<motion.button
 							whileHover={{ scale: 1.025, y: -2 }}
 							whileTap={{ scale: 0.98 }}
 							onClick={() => router.push("/products")}
-							className="flex items-center gap-2.5 px-9 py-4 rounded-full bg-[#12304A] text-white font-bold text-sm shadow-xl hover:bg-[#0B1E2E] transition-colors group cursor-pointer gpu-smooth"
+							className="flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-[#12304A] hover:bg-[#0B1E2E] text-white font-bold text-sm shadow-md hover:shadow-xl transition-all group cursor-pointer gpu-smooth"
 						>
-							<span>Explore Entire Product Directory</span>
-							<ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200" />
+							<span>Explore All 46+ Registered Molecules</span>
+							<ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
 						</motion.button>
 					</div>
 				</div>
 			</motion.section>
 
 			{/* ══════════════════════════════════════════════════════════
+          4. SERVICES WE OFFER — 4-Card Feature Layout (Design Spec)
+          ══════════════════════════════════════════════════════════ */}
+			{/* ══════════════════════════════════════════════════════════
+          4. SERVICES WE OFFER — 4-Card Feature Layout (Design Spec)
+          ══════════════════════════════════════════════════════════ */}
+			<section
+				id="services"
+				className="py-16 sm:py-20 bg-white relative overflow-hidden border-t border-[#12304A]/6"
+			>
+				{/* Ambient Decorative Accents */}
+				<div className="absolute -top-12 -right-12 w-48 h-48 opacity-[0.04] pointer-events-none">
+					<MolecularDecoration color="#C79A4B" />
+				</div>
+				<div className="absolute -bottom-10 -left-10 w-44 h-44 opacity-[0.03] pointer-events-none -scale-x-100">
+					<MolecularDecoration color="#12304A" />
+				</div>
+
+				<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					{/* Centered Section Header Stack matching AGENTS.md design tokens */}
+					<div className="text-center max-w-3xl mx-auto space-y-3 pb-2">
+						<span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase justify-center">
+							<div className="w-8 h-[2px] bg-[#C79A4B]" />
+							Services We Offer
+							<div className="w-8 h-[2px] bg-[#C79A4B]" />
+						</span>
+						<h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#12304A] leading-tight tracking-tight">
+							Comprehensive Pharma Services <br className="hidden sm:inline" />
+							<span className="text-[#C79A4B]">Tailored to Your Pipeline</span>
+						</h2>
+						<div className="w-16 h-[3px] rounded-full bg-[#C79A4B] mx-auto" />
+						<p className="text-base text-[#5A7A8E] font-normal max-w-2xl mx-auto leading-relaxed">
+							Four specialized capabilities connecting bulk API reactors with leading formulation facilities — fully compliant, documented, and reliably delivered.
+						</p>
+					</div>
+
+					{/* Centered 2x2 Square-Like Feature Cards Grid */}
+					<div className="max-w-5xl mx-auto mt-8 sm:mt-10">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+							{SERVICES.map((svc) => {
+								const Icon = svc.icon;
+
+								return (
+									<motion.div
+										key={svc.num}
+										whileHover={{ y: -3 }}
+										transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+										className="group rounded-[22px] sm:rounded-[26px] p-5 sm:p-6 flex flex-col justify-between min-h-[220px] sm:min-h-[235px] cursor-pointer relative overflow-hidden bg-[#FAF7F2] border-2 border-[#12304A]/[0.08] hover:border-[#C79A4B] shadow-[0_2px_8px_rgba(18,48,74,0.04)] hover:shadow-[0_10px_24px_-6px_rgba(18,48,74,0.07)] transition-[border-color,box-shadow] duration-250"
+									>
+										{/* Subtle Faint Corner Watermark Icon */}
+										<div className="absolute -bottom-5 -right-5 pointer-events-none select-none">
+											<Icon className="w-28 h-28 text-[#12304A]/[0.02] group-hover:text-[#C79A4B]/[0.04] transition-colors duration-300" />
+										</div>
+
+										{/* Content Stack */}
+										<div className="relative z-10">
+											{/* Clean Direct Title (Icons & Service labels removed) */}
+											<h3 className="text-lg sm:text-xl font-extrabold tracking-tight text-[#12304A] leading-snug">
+												{svc.title}
+											</h3>
+
+											{/* Signature Ruskin Gold Accent Line */}
+											<div className="w-10 h-[2px] bg-[#C79A4B] rounded-full my-2.5" />
+
+											{/* Description */}
+											<p className="text-[13.5px] sm:text-[14px] leading-relaxed font-normal text-[#5A7A8E]">
+												{svc.desc}
+											</p>
+										</div>
+
+										{/* Bottom Section: Action Pill Button + Metric */}
+										<div className="relative z-10 pt-3.5 mt-4 border-t border-[#12304A]/8 flex items-center justify-between">
+											<button
+												onClick={(e) => {
+													e.stopPropagation();
+													handleOpenQuote(`Service Sourcing Inquiry: ${svc.title}`);
+												}}
+												className="group/btn inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider transition-colors duration-200 cursor-pointer bg-[#12304A] text-white group-hover:bg-[#C79A4B] shadow-xs"
+											>
+												<span>Consult Now</span>
+												<ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+											</button>
+											<span className="text-xs font-semibold text-[#5A7A8E] group-hover:text-[#12304A] transition-colors duration-200">
+												{svc.metric.val} {svc.metric.label}
+											</span>
+										</div>
+									</motion.div>
+								);
+							})}
+						</div>
+
+						{/* Centered Explore All Services Action Pill Button */}
+						<div className="mt-8 sm:mt-10 text-center">
+							<Link
+								href="/services"
+								className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-sm tracking-wide transition-all duration-300 shadow-md hover:shadow-xl shrink-0 cursor-pointer gpu-smooth group"
+							>
+								<span>Explore All Services</span>
+								<ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+							</Link>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			{/* ══════════════════════════════════════════════════════════
           5. GLOBAL REACH — World Map with Live Pulse Pins
           ══════════════════════════════════════════════════════════ */}
-			<motion.section
-				initial={{ opacity: 0, y: 25 }}
-				whileInView={{ opacity: 1, y: 0 }}
-				viewport={{ once: true, margin: "-80px" }}
-				transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-				className="relative bg-[#0B1E2E] py-20 sm:py-28 overflow-hidden contain-section"
+			<section
+				id="global-network"
+				className="relative bg-[#0B1E2E] py-20 sm:py-28 overflow-hidden"
 			>
 				{/* Wave in */}
 				<div className="absolute top-0 inset-x-0 -mt-px">
@@ -1055,41 +644,23 @@ export default function HomePage() {
 						className="w-full h-[50px] sm:h-[80px]"
 						preserveAspectRatio="none"
 					>
-						<path d="M0,0 C480,80 960,0 1440,60 L1440,0 L0,0 Z" fill="#FAF7F2" />
+						<path d="M0,0 C480,80 960,0 1440,60 L1440,0 L0,0 Z" fill="#FFFFFF" />
 					</svg>
 				</div>
 
 				<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 pt-8">
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						whileInView={{ opacity: 1, y: 0 }}
-						viewport={{ once: true }}
-						transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-						className="text-center space-y-3"
-					>
-						<span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
-							<div className="w-8 h-[2px] bg-[#C79A4B]" />
-							Global Reach
-							<div className="w-8 h-[2px] bg-[#C79A4B]" />
-						</span>
-						<h2 className="text-3xl sm:text-4xl lg:text-[46px] font-extrabold text-white leading-tight tracking-tight">
-							Ruskin’s <span className="text-[#C79A4B]">Global Sourcing Network</span>
-						</h2>
-						<div className="w-16 h-[3px] rounded-full bg-[#C79A4B] mx-auto" />
-						<p className="text-base text-slate-300 font-normal max-w-xl mx-auto">
-							Supplying pharmaceutical formulators in 30+ countries across 5 continents with certified, compliant APIs.
-						</p>
-					</motion.div>
+					<SectionHeader
+						centered
+						dark
+						eyebrow="Global Reach"
+						lead="Ruskin’s"
+						highlight="Global Sourcing Network"
+						description="Supplying pharmaceutical formulators in 30+ countries across 5 continents with certified, compliant APIs."
+					/>
 
 					<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
 						{/* Interactive Map Console */}
-						<motion.div
-							initial={{ opacity: 0, scale: 0.99, y: 16 }}
-							whileInView={{ opacity: 1, scale: 1, y: 0 }}
-							viewport={{ once: true }}
-							transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-							className="lg:col-span-8 bg-[#071521] border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between h-full"
-						>
+						<div className="lg:col-span-8 bg-[#071521] border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between h-full">
 							{/* Console Header Bar */}
 							<div className="flex items-center justify-between pb-3 border-b border-white/10 text-[10px] font-mono tracking-wider text-slate-400">
 								<span className="text-white font-bold uppercase tracking-[0.18em]">Global Distribution Corridors</span>
@@ -1115,11 +686,12 @@ export default function HomePage() {
 									viewBox="0 0 1000 520"
 									fill="none"
 								>
+									{/* Static ambient dashed tracks */}
 									{TRADE_ROUTES.map((route) => (
 										<path
-											key={route.id}
+											key={`track-${route.id}`}
 											d={route.d}
-											stroke="rgba(199, 154, 75, 0.32)"
+											stroke="rgba(199, 154, 75, 0.35)"
 											strokeWidth="1.2"
 											strokeDasharray="4 4"
 											strokeLinecap="round"
@@ -1185,16 +757,10 @@ export default function HomePage() {
 									30+ Countries Served
 								</span>
 							</div>
-						</motion.div>
+						</div>
 
 						{/* Unified Operational Metrics Console */}
-						<motion.div
-							initial={{ opacity: 0, x: 20 }}
-							whileInView={{ opacity: 1, x: 0 }}
-							viewport={{ once: true }}
-							transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-							className="lg:col-span-4 bg-[#071521] border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between h-full"
-						>
+						<div className="lg:col-span-4 bg-[#071521] border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col justify-between h-full">
 							{/* Top Console Header */}
 							<div className="flex items-center justify-between pb-3 border-b border-white/10">
 								<span className="text-[10px] font-mono font-bold uppercase tracking-[0.18em] text-[#C79A4B]">
@@ -1239,7 +805,7 @@ export default function HomePage() {
 								<span>Standard Dispatch: Air &amp; Sea Cargo</span>
 								<span className="text-[#C79A4B] font-semibold text-[10px] font-mono">100% TRACEABLE</span>
 							</div>
-						</motion.div>
+						</div>
 					</div>
 				</div>
 
@@ -1253,7 +819,7 @@ export default function HomePage() {
 						<path d="M0,80 C480,0 960,80 1440,20 L1440,80 L0,80 Z" fill="#FAF7F2" />
 					</svg>
 				</div>
-			</motion.section>
+			</section>
 
 			{/* ══════════════════════════════════════════════════════════
           7. GLOBAL EVENTS
@@ -1284,12 +850,15 @@ export default function HomePage() {
 							exit={{ opacity: 0 }}
 							className="fixed inset-0 z-50 bg-[#12304A]/35 backdrop-blur-[3px]"
 							onClick={() => setCatalogModalOpen(false)}
+							onTouchMove={(e) => e.stopPropagation()}
+							onWheel={(e) => e.stopPropagation()}
 						/>
 						<motion.div
 							initial={{ opacity: 0, scale: 0.94, y: 16 }}
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.94, y: 12 }}
 							transition={{ type: "spring", damping: 28, stiffness: 380 }}
+							data-lenis-prevent="true"
 							className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(620px,calc(100vw-32px))] flex flex-col rounded-3xl overflow-hidden bg-white shadow-2xl border border-[#12304A]/10 max-h-[85vh]"
 						>
 							{/* Header */}
@@ -1339,7 +908,10 @@ export default function HomePage() {
 							</div>
 
 							{/* Results List */}
-							<div className="p-5 overflow-y-auto flex-1 space-y-3 custom-scrollbar text-left">
+							<div
+								data-lenis-prevent="true"
+								className="p-5 overflow-y-auto flex-1 space-y-3 custom-scrollbar text-left"
+							>
 								{filteredCatalog.length > 0 ? (
 									filteredCatalog.map((product) => (
 										<div
@@ -1410,12 +982,15 @@ export default function HomePage() {
 							exit={{ opacity: 0 }}
 							className="fixed inset-0 z-50 bg-[#12304A]/35 backdrop-blur-[3px]"
 							onClick={() => setQuoteModalOpen(false)}
+							onTouchMove={(e) => e.stopPropagation()}
+							onWheel={(e) => e.stopPropagation()}
 						/>
 						<motion.div
 							initial={{ opacity: 0, scale: 0.92, y: 16 }}
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.94, y: 12 }}
 							transition={{ type: "spring", damping: 26, stiffness: 380 }}
+							data-lenis-prevent="true"
 							className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(480px,calc(100vw-32px))] max-h-[90vh] overflow-y-auto custom-scrollbar rounded-3xl bg-white shadow-[0_25px_70px_rgba(18,48,74,0.35)] border border-[#12304A]/10 text-left"
 						>
 							<button

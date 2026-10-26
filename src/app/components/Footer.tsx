@@ -1,9 +1,7 @@
-"use client";
-
-import React, { useRef } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { MolecularDecoration, FloatingHex, HEX_CLIP } from "./Hex";
 
@@ -12,100 +10,35 @@ interface FooterProps {
 }
 
 export default function Footer({ onOpenCatalog }: FooterProps) {
-  // ─── Subtle Banner Cursor Parallax Tracking (Zero React Re-renders, 120 FPS GPU) ───
-  const footerRef = useRef<HTMLElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  // Ultra-smooth, high damping spring for liquid subtle response
-  const springConfig = { damping: 36, stiffness: 65, mass: 0.6 };
-  const smoothX = useSpring(mouseX, springConfig);
-  const smoothY = useSpring(mouseY, springConfig);
-
-  // Micro-amplitude parallax translations (identical physics to Product page banner)
-  const layerDeepX = useTransform(smoothX, [-0.5, 0.5], [-8, 8]);
-  const layerDeepY = useTransform(smoothY, [-0.5, 0.5], [-6, 6]);
-
-  const layerMidX = useTransform(smoothX, [-0.5, 0.5], [10, -10]);
-  const layerMidY = useTransform(smoothY, [-0.5, 0.5], [7, -7]);
-
-  const layerForeX = useTransform(smoothX, [-0.5, 0.5], [-14, 14]);
-  const layerForeY = useTransform(smoothY, [-0.5, 0.5], [-10, 10]);
-
-  // Dedicated watermark cursor parallax (lively, noticeable response to mouse movement)
-  const watermarkX = useTransform(smoothX, [-0.5, 0.5], [-22, 22]);
-  const watermarkY = useTransform(smoothY, [-0.5, 0.5], [-16, 16]);
-  const watermarkRotate = useTransform(smoothX, [-0.5, 0.5], [-3.5, 3.5]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (!footerRef.current) return;
-    const rect = footerRef.current.getBoundingClientRect();
-    const normX = (e.clientX - rect.left) / rect.width - 0.5;
-    const normY = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(normX);
-    mouseY.set(normY);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
-
   return (
     <footer
       id="contact"
-      ref={footerRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="bg-[#071521] text-white pt-16 pb-10 relative overflow-hidden border-t border-white/10 contain-section"
+      className="bg-[#071521] text-white pt-16 pb-10 relative overflow-hidden border-t border-white/10"
     >
-      {/* ── Live Floating Hex & Molecular Lattice Background (Interactive Cursor Parallax) ── */}
+      {/* ── Ambient Background Elements (Pure CSS, 0 JS overhead, 120 FPS) ── */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
-        {/* Layer 1: Scaled-down Big Molecular Cluster with Deep Layer Parallax & Tilt */}
-        <motion.div
-          style={{ x: layerDeepX, y: layerDeepY }}
-          className="absolute -bottom-6 -left-6 sm:-bottom-8 sm:-left-8 w-[160px] sm:w-[200px] lg:w-[240px] will-change-transform"
-        >
-          <div className="animate-float-tilt-1">
-            <MolecularDecoration color="#C79A4B" opacity={0.16} className="w-full h-auto" />
-          </div>
-        </motion.div>
+        {/* Layer 1: Scaled-down Big Molecular Cluster */}
+        <div className="absolute -bottom-6 -left-6 sm:-bottom-8 sm:-left-8 w-[160px] sm:w-[200px] lg:w-[240px]">
+          <MolecularDecoration color="#C79A4B" opacity={0.14} className="w-full h-auto" />
+        </div>
 
-        {/* Layer 2: Micro-Hex 1: Delicate Gold Ring with Inner Atom (Mid-Left Float) */}
-        <motion.div
-          style={{ x: layerForeX, y: layerForeY }}
-          className="absolute bottom-28 left-[17%] sm:left-[21%] hidden sm:block will-change-transform"
-        >
-          <div className="animate-float-hex-1">
-            <FloatingHex size={24} color="#C79A4B" opacity={0.28} strokeWidth={1.2} hasInner hasDot />
-          </div>
-        </motion.div>
+        {/* Layer 2: Micro-Hex 1 */}
+        <div className="absolute bottom-28 left-[17%] sm:left-[21%] hidden sm:block">
+          <FloatingHex size={24} color="#C79A4B" opacity={0.24} strokeWidth={1.2} hasInner hasDot />
+        </div>
 
-        {/* Layer 3: Micro-Hex 2: Delicate Ice-White Hexagon (Upper-Mid Left Float) */}
-        <motion.div
-          style={{ x: layerMidX, y: layerMidY }}
-          className="absolute bottom-40 left-[8%] sm:left-[11%] hidden md:block will-change-transform"
-        >
-          <div className="animate-float-hex-2" style={{ animationDelay: "-3s" }}>
-            <FloatingHex size={20} color="#FFFFFF" opacity={0.18} strokeWidth={1} />
-          </div>
-        </motion.div>
+        {/* Layer 3: Micro-Hex 2 */}
+        <div className="absolute bottom-40 left-[8%] sm:left-[11%] hidden md:block">
+          <FloatingHex size={20} color="#FFFFFF" opacity={0.15} strokeWidth={1} />
+        </div>
 
-        {/* Layer 4: Micro-Hex 3: Delicate Small Gold Hexagon (Ground Accent Float) */}
-        <motion.div
-          style={{ x: layerDeepX, y: layerDeepY }}
-          className="absolute bottom-12 left-[27%] sm:left-[30%] hidden lg:block will-change-transform"
-        >
-          <div className="animate-float-tilt-2" style={{ animationDelay: "-5s" }}>
-            <FloatingHex size={16} color="#C79A4B" opacity={0.22} strokeWidth={1} />
-          </div>
-        </motion.div>
+        {/* Layer 4: Micro-Hex 3 */}
+        <div className="absolute bottom-12 left-[27%] sm:left-[30%] hidden lg:block">
+          <FloatingHex size={16} color="#C79A4B" opacity={0.18} strokeWidth={1} />
+        </div>
 
-        {/* Ruskin emblem watermark positioned elegantly above bottom bar and reacting to cursor parallax */}
-        <motion.div
-          style={{ x: watermarkX, y: watermarkY, rotate: watermarkRotate }}
-          className="absolute bottom-14 sm:bottom-16 lg:bottom-20 right-8 sm:right-12 lg:right-20 w-32 h-32 sm:w-36 sm:h-36 lg:w-44 lg:h-44 pointer-events-none select-none will-change-transform opacity-[0.045]"
-        >
+        {/* Ruskin emblem watermark */}
+        <div className="absolute bottom-14 sm:bottom-16 lg:bottom-20 right-8 sm:right-12 lg:right-20 w-32 h-32 sm:w-36 sm:h-36 lg:w-44 lg:h-44 pointer-events-none select-none opacity-[0.04]">
           <Image
             src="/logoonly.svg"
             alt="Ruskin Chemipharm Emblem"
@@ -113,13 +46,13 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
             height={176}
             className="w-full h-full object-contain"
           />
-        </motion.div>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
 
-        {/* Top layout: 4 well-balanced columns with clean, open typography and actual product categories */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 xl:gap-12 items-start text-left w-full">
+        {/* Top layout: 3 well-balanced columns with clean, open typography */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12 items-start text-left w-full">
 
           {/* Column 1: Brand & Headquarters */}
           <motion.div 
@@ -127,7 +60,7 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-6"
+            className="md:col-span-5 space-y-6"
           >
             <div className="-mt-3.5 sm:-mt-4 lg:-mt-[18px]">
               <Image
@@ -198,7 +131,7 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-4"
+            className="md:col-span-3 space-y-4"
           >
             <div>
               <h4 className="text-sm font-bold text-white uppercase tracking-wider">Quick Links</h4>
@@ -249,70 +182,13 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
             </ul>
           </motion.div>
 
-          {/* Column 3: Key Portfolios (Actual categories in products catalog) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.55, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-4"
-          >
-            <div>
-              <h4 className="text-sm font-bold text-white uppercase tracking-wider">Key Portfolios</h4>
-              <div className="w-8 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
-            </div>
-
-            <ul className="space-y-3 text-xs text-slate-300">
-              <li>
-                <Link
-                  href="/products?category=Pharma"
-                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
-                >
-                  Pharma APIs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products?category=Animal%20Care"
-                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
-                >
-                  Animal Care
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products?category=Excipients"
-                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
-                >
-                  Excipients
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products?category=Food%20%26%20Nutrition"
-                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
-                >
-                  Food &amp; Nutrition
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products?category=Nootropics"
-                  className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block"
-                >
-                  Nootropics
-                </Link>
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* Column 4: Reach Us */}
+          {/* Column 3: Reach Us */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.55, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-4"
+            className="md:col-span-4 space-y-4"
           >
             <div>
               <h4 className="text-sm font-bold text-white uppercase tracking-wider">Reach Us</h4>

@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import BackToTop from "./components/BackToTop";
 import FloatingScrollbar from "./components/FloatingScrollbar";
 import SearchModal from "./components/SearchModal";
+import SmoothScroll from "./components/SmoothScroll";
 import { ProductTransitionProvider } from "./context/ProductTransitionContext";
 import "./globals.css";
 
@@ -55,13 +56,15 @@ export default function RootLayout({
 				suppressHydrationWarning
 				className="bg-[#FAF7F2] text-[#5A7A8E] antialiased min-h-screen selection:bg-[#C79A4B] selection:text-white"
 			>
-				<SearchModal />
-				<FloatingScrollbar />
-				<Navbar />
-				<ProductTransitionProvider>
-					{children}
-				</ProductTransitionProvider>
-				<BackToTop />
+				<SmoothScroll>
+					<SearchModal />
+					<FloatingScrollbar />
+					<Navbar />
+					<ProductTransitionProvider>
+						{children}
+					</ProductTransitionProvider>
+					<BackToTop />
+				</SmoothScroll>
 			</body>
 		</html>
 	);

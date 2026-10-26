@@ -9,6 +9,8 @@ import { Search, X, ArrowUpRight } from "lucide-react";
 import CustomSelect from "./CustomSelect";
 import { ALL_PRODUCTS, PRODUCT_CATEGORIES, ApiProduct } from "@/lib/products";
 
+import { useScrollLock } from "@/lib/scrollLock";
+
 export default function SearchModal() {
 	const pathname = usePathname();
 	const router = useRouter();
@@ -19,6 +21,9 @@ export default function SearchModal() {
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const isProductsPage = pathname === "/products";
+
+	// Fully lock background scrolling (native and Lenis) when modal is open
+	useScrollLock(isOpen);
 
 	// Listen for global open-search event
 	useEffect(() => {
@@ -38,13 +43,7 @@ export default function SearchModal() {
 			const timer = setTimeout(() => {
 				inputRef.current?.focus();
 			}, 60);
-			document.body.style.overflow = "hidden";
-			return () => {
-				clearTimeout(timer);
-				document.body.style.overflow = "";
-			};
-		} else {
-			document.body.style.overflow = "";
+			return () => clearTimeout(timer);
 		}
 	}, [isOpen]);
 
@@ -113,6 +112,8 @@ export default function SearchModal() {
 						transition={{ duration: 0.2 }}
 						className="fixed inset-0 z-[100] bg-[#12304A]/40 backdrop-blur-sm"
 						onClick={() => setIsOpen(false)}
+						onTouchMove={(e) => e.stopPropagation()}
+						onWheel={(e) => e.stopPropagation()}
 					/>
 
 					{/* Modal Dialog */}
@@ -121,6 +122,7 @@ export default function SearchModal() {
 						animate={{ opacity: 1, scale: 1, y: 0 }}
 						exit={{ opacity: 0, scale: 0.95, y: 12 }}
 						transition={{ type: "spring", damping: 28, stiffness: 380 }}
+						data-lenis-prevent="true"
 						className="fixed z-[101] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(640px,calc(100vw-32px))] flex flex-col rounded-3xl overflow-hidden bg-white shadow-[0_25px_70px_rgba(18,48,74,0.3)] border border-[#12304A]/10 max-h-[85vh] text-left"
 					>
 						{/* Header */}
@@ -183,7 +185,10 @@ export default function SearchModal() {
 						</div>
 
 						{/* Results List */}
-						<div className="p-5 overflow-y-auto flex-1 space-y-3 custom-scrollbar text-left bg-[#FAF7F2]/40">
+						<div
+							data-lenis-prevent="true"
+							className="p-5 overflow-y-auto flex-1 space-y-3 custom-scrollbar text-left bg-[#FAF7F2]/40"
+						>
 							{filteredProducts.length > 0 ? (
 								filteredProducts.map((product) => (
 									<div
