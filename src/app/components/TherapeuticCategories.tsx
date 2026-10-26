@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
 	Pill,
@@ -173,120 +173,61 @@ export const THERAPEUTIC_CATEGORIES: TherapeuticCategory[] = [
 	},
 ];
 
-const DOMAIN_TABS = [
-	{ id: "all", label: "All Therapeutics", count: 16 },
-	{ id: "critical", label: "Critical Care & Oncology", count: 4 },
-	{ id: "cardiometabolic", label: "Cardiometabolic", count: 4 },
-	{ id: "neuro", label: "Neuro & Specialized", count: 4 },
-	{ id: "bionutrition", label: "Bio-Nutraceuticals", count: 4 },
-] as const;
-
 export default function TherapeuticCategoriesGrid() {
 	const router = useRouter();
-	const [activeDomain, setActiveDomain] = useState<string>("all");
-
-	const filteredCategories =
-		activeDomain === "all"
-			? THERAPEUTIC_CATEGORIES
-			: THERAPEUTIC_CATEGORIES.filter((c) => c.domain === activeDomain);
 
 	const handleCategoryClick = (cat: TherapeuticCategory) => {
 		router.push(`/products?search=${encodeURIComponent(cat.searchQuery)}`);
 	};
 
 	return (
-		<div className="w-full space-y-7 sm:space-y-9">
-			{/* ─── Architectural Filter Tabs (Desaturated, Minimalist) ─── */}
-			<div className="flex items-center justify-center">
-				<div className="inline-flex p-1 rounded-full bg-white border border-slate-200/80 shadow-xs max-w-full overflow-x-auto custom-scrollbar">
-					{DOMAIN_TABS.map((tab) => {
-						const isActive = activeDomain === tab.id;
-						return (
-							<button
-								key={tab.id}
-								type="button"
-								onClick={() => setActiveDomain(tab.id)}
-								className={`relative px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 shrink-0 flex items-center gap-2 cursor-pointer ${
-									isActive
-										? "text-white shadow-xs"
-										: "text-slate-500 hover:text-[#12304A]"
-								}`}
-							>
-								{isActive && (
-									<motion.div
-										layoutId="activeTherapeuticTab"
-										transition={{ type: "spring", damping: 28, stiffness: 380 }}
-										className="absolute inset-0 bg-[#12304A] rounded-full z-0"
-									/>
-								)}
-								<span className="relative z-10">{tab.label}</span>
-								<span
-									className={`relative z-10 text-[10.5px] font-mono px-1.5 py-0.5 rounded-full ${
-										isActive
-											? "bg-white/20 text-white font-medium"
-											: "bg-slate-100 text-slate-500"
-									}`}
-								>
-									{tab.count}
-								</span>
-							</button>
-						);
-					})}
-				</div>
-			</div>
-
+		<div className="w-full">
 			{/* ─── Desaturated Architectural Cards (Spacious, No Truncations) ─── */}
-			<motion.div
-				layout
-				className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4"
-			>
-				<AnimatePresence mode="popLayout">
-					{filteredCategories.map((cat, idx) => {
-						const Icon = cat.icon;
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+				{THERAPEUTIC_CATEGORIES.map((cat, idx) => {
+					const Icon = cat.icon;
 
-						return (
-							<motion.div
-								key={cat.id}
-								layout
-								initial={{ opacity: 0, scale: 0.97 }}
-								animate={{ opacity: 1, scale: 1 }}
-								exit={{ opacity: 0, scale: 0.96 }}
-								transition={{ duration: 0.22, delay: idx * 0.012 }}
-								whileHover={{ y: -2.5 }}
-								whileTap={{ scale: 0.985 }}
-								onClick={() => handleCategoryClick(cat)}
-								className="group relative bg-white rounded-2xl p-4 sm:p-4.5 cursor-pointer border border-slate-200/80 hover:border-[#C79A4B] shadow-[0_1px_3px_rgba(18,48,74,0.03)] hover:shadow-[0_10px_24px_-6px_rgba(18,48,74,0.08)] transition-[border-color,box-shadow] duration-250 flex items-center gap-3.5 text-left will-change-transform"
-							>
-								{/* Left: Desaturated Clean Navy HexIcon */}
-								<div className="shrink-0 flex items-center justify-center">
-									<HexIcon
-										size={42}
-										bg="rgba(18,48,74,0.04)"
-										className="group-hover:scale-105 transition-transform duration-200"
-									>
-										<Icon
-											className="w-4.5 h-4.5 text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200"
-										/>
-									</HexIcon>
-								</div>
+					return (
+						<motion.div
+							key={cat.id}
+							initial={{ opacity: 0, y: 14 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.3, delay: idx * 0.02 }}
+							whileHover={{ y: -2.5 }}
+							whileTap={{ scale: 0.985 }}
+							onClick={() => handleCategoryClick(cat)}
+							className="group relative bg-white rounded-2xl p-4 sm:p-4.5 cursor-pointer border border-slate-200/80 hover:border-[#C79A4B] shadow-[0_1px_3px_rgba(18,48,74,0.03)] hover:shadow-[0_10px_24px_-6px_rgba(18,48,74,0.08)] transition-[border-color,box-shadow] duration-250 flex items-center gap-3.5 text-left will-change-transform"
+						>
+							{/* Left: Desaturated Clean Navy HexIcon */}
+							<div className="shrink-0 flex items-center justify-center">
+								<HexIcon
+									size={42}
+									bg="rgba(18,48,74,0.04)"
+									className="group-hover:scale-105 transition-transform duration-200"
+								>
+									<Icon
+										className="w-4.5 h-4.5 text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200"
+									/>
+								</HexIcon>
+							</div>
 
-								{/* Center: Title & Pharmaceutical Subtitle (Zero Truncation) */}
-								<div className="flex-1 min-w-0">
-									<div className="flex items-center justify-between gap-1">
-										<h4 className="text-[13.5px] sm:text-[14px] font-bold text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200 leading-snug">
-											{cat.name}
-										</h4>
-										<ArrowUpRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-[#C79A4B] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 shrink-0 ml-1" />
-									</div>
-									<p className="text-[11.5px] font-normal text-[#5A7A8E] leading-tight mt-0.5">
-										{cat.tag}
-									</p>
+							{/* Center: Title & Pharmaceutical Subtitle (Zero Truncation) */}
+							<div className="flex-1 min-w-0">
+								<div className="flex items-center justify-between gap-1">
+									<h4 className="text-[13.5px] sm:text-[14px] font-bold text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200 leading-snug">
+										{cat.name}
+									</h4>
+									<ArrowUpRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-[#C79A4B] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 shrink-0 ml-1" />
 								</div>
-							</motion.div>
-						);
-					})}
-				</AnimatePresence>
-			</motion.div>
+								<p className="text-[11.5px] font-normal text-[#5A7A8E] leading-tight mt-0.5">
+									{cat.tag}
+								</p>
+							</div>
+						</motion.div>
+					);
+				})}
+			</div>
 		</div>
 	);
 }

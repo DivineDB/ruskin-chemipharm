@@ -518,7 +518,7 @@ export default function HomePage() {
 							onClick={() => router.push("/products")}
 							className="flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-[#12304A] hover:bg-[#0B1E2E] text-white font-bold text-sm shadow-md hover:shadow-xl transition-all group cursor-pointer gpu-smooth"
 						>
-							<span>Explore All 46+ Registered Molecules</span>
+							<span>Explore All 66+ APIs</span>
 							<ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
 						</motion.button>
 					</div>
