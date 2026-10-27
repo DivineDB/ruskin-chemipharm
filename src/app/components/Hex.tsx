@@ -145,8 +145,8 @@ export function HexImage({
 		<div
 			className={`relative transition-[filter,transform] duration-300 gpu-smooth ${
 				glow
-					? "drop-shadow-[0_24px_45px_rgba(199,154,75,0.3)]"
-					: "drop-shadow-[0_22px_40px_rgba(11,30,46,0.18)]"
+					? "drop-shadow-[0_8px_20px_rgba(199,154,75,0.12)]"
+					: "drop-shadow-[0_4px_14px_rgba(11,30,46,0.07)]"
 			} ${className}`}
 			style={{
 				width: width ? `${width}px` : undefined,

@@ -118,6 +118,7 @@ const SERVICES = [
 		title: "End-to-End Sourcing",
 		shortTitle: "End-to-End Sourcing",
 		tag: "Global Procurement",
+		ctaLabel: "Inquire Sourcing",
 		handledByLabel: "HANDLED BY",
 		handledBy: [
 			"Audited cGMP Synthesizers",
@@ -142,6 +143,7 @@ const SERVICES = [
 		title: "Regulatory & Documentation Support",
 		shortTitle: "Regulatory & Documentation Support",
 		tag: "Regulatory Affairs",
+		ctaLabel: "Dossier & Registration",
 		handledByLabel: "HANDLED BY",
 		handledBy: [
 			"CDSCO Regulatory Directorate",
@@ -166,6 +168,7 @@ const SERVICES = [
 		title: "Batch COA Verification",
 		shortTitle: "Batch COA Verification",
 		tag: "Quality & Compliance",
+		ctaLabel: "Verify COA & DMF",
 		handledByLabel: "HANDLED BY",
 		handledBy: [
 			"Quality Assurance Directorate",
@@ -190,6 +193,7 @@ const SERVICES = [
 		title: "Global & Domestic Footprint",
 		shortTitle: "Global & Domestic Footprint",
 		tag: "Market Access",
+		ctaLabel: "Supply Network",
 		handledByLabel: "HANDLED BY",
 		handledBy: [
 			"Institutional Sales Network",
@@ -528,24 +532,39 @@ export default function HomePage() {
 			{/* ══════════════════════════════════════════════════════════
           4. SERVICES WE OFFER — 4-Card Feature Layout (Design Spec)
           ══════════════════════════════════════════════════════════ */}
-			{/* ══════════════════════════════════════════════════════════
-          4. SERVICES WE OFFER — 4-Card Feature Layout (Design Spec)
-          ══════════════════════════════════════════════════════════ */}
 			<section
 				id="services"
 				className="py-16 sm:py-20 bg-white relative overflow-hidden border-t border-[#12304A]/6"
 			>
 				{/* Ambient Decorative Accents */}
-				<div className="absolute -top-12 -right-12 w-48 h-48 opacity-[0.04] pointer-events-none">
+				<motion.div
+					initial={{ opacity: 0, scale: 0.9 }}
+					whileInView={{ opacity: 0.04, scale: 1 }}
+					viewport={{ once: true }}
+					transition={{ duration: 1, ease: "easeOut" }}
+					className="absolute -top-12 -right-12 w-48 h-48 pointer-events-none"
+				>
 					<MolecularDecoration color="#C79A4B" />
-				</div>
-				<div className="absolute -bottom-10 -left-10 w-44 h-44 opacity-[0.03] pointer-events-none -scale-x-100">
+				</motion.div>
+				<motion.div
+					initial={{ opacity: 0, scale: 0.9 }}
+					whileInView={{ opacity: 0.03, scale: 1 }}
+					viewport={{ once: true }}
+					transition={{ duration: 1, ease: "easeOut", delay: 0.15 }}
+					className="absolute -bottom-10 -left-10 w-44 h-44 pointer-events-none -scale-x-100"
+				>
 					<MolecularDecoration color="#12304A" />
-				</div>
+				</motion.div>
 
 				<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					{/* Centered Section Header Stack matching AGENTS.md design tokens */}
-					<div className="text-center max-w-3xl mx-auto space-y-3 pb-2">
+					<motion.div
+						initial={{ opacity: 0, y: 22, filter: "blur(4px)" }}
+						whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+						viewport={{ once: true, margin: "-50px" }}
+						transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+						className="text-center max-w-3xl mx-auto space-y-3 pb-2"
+					>
 						<span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase justify-center">
 							<div className="w-8 h-[2px] bg-[#C79A4B]" />
 							Services We Offer
@@ -559,10 +578,25 @@ export default function HomePage() {
 						<p className="text-base text-[#5A7A8E] font-normal max-w-2xl mx-auto leading-relaxed">
 							Four specialized capabilities connecting bulk API reactors with leading formulation facilities — fully compliant, documented, and reliably delivered.
 						</p>
-					</div>
+					</motion.div>
 
-					{/* Centered 2x2 Square-Like Feature Cards Grid */}
-					<div className="max-w-5xl mx-auto mt-8 sm:mt-10">
+					{/* Centered 2x2 Square-Like Feature Cards Grid with Staggered Intro Reveal */}
+					<motion.div
+						initial="hidden"
+						whileInView="visible"
+						viewport={{ once: true, margin: "-40px" }}
+						variants={{
+							hidden: { opacity: 0 },
+							visible: {
+								opacity: 1,
+								transition: {
+									staggerChildren: 0.12,
+									delayChildren: 0.1,
+								},
+							},
+						}}
+						className="max-w-5xl mx-auto mt-8 sm:mt-10"
+					>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
 							{SERVICES.map((svc) => {
 								const Icon = svc.icon;
@@ -570,24 +604,44 @@ export default function HomePage() {
 								return (
 									<motion.div
 										key={svc.num}
-										whileHover={{ y: -3 }}
-										transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-										className="group rounded-[22px] sm:rounded-[26px] p-5 sm:p-6 flex flex-col justify-between min-h-[220px] sm:min-h-[235px] cursor-pointer relative overflow-hidden bg-[#FAF7F2] border-2 border-[#12304A]/[0.08] hover:border-[#C79A4B] shadow-[0_2px_8px_rgba(18,48,74,0.04)] hover:shadow-[0_10px_24px_-6px_rgba(18,48,74,0.07)] transition-[border-color,box-shadow] duration-250"
+										variants={{
+											hidden: { opacity: 0, y: 28, scale: 0.98 },
+											visible: {
+												opacity: 1,
+												y: 0,
+												scale: 1,
+												transition: {
+													duration: 0.65,
+													ease: [0.16, 1, 0.3, 1],
+												},
+											},
+										}}
+										whileHover={{
+											y: -3,
+											transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
+										}}
+										onClick={() => handleOpenQuote(`Service Inquiry: ${svc.title}`)}
+										className="group rounded-[24px] sm:rounded-[26px] p-6 sm:p-7 flex flex-col justify-between min-h-[240px] sm:min-h-[255px] cursor-pointer relative overflow-hidden bg-gradient-to-br from-white via-[#FAF7F2] to-[#FAF7F2] border border-[#12304A]/10 hover:border-[#C79A4B]/60 shadow-[0_2px_8px_rgba(18,48,74,0.02)] hover:shadow-[0_4px_14px_rgba(18,48,74,0.04)] transition-all duration-250"
 									>
-										{/* Subtle Faint Corner Watermark Icon */}
-										<div className="absolute -bottom-5 -right-5 pointer-events-none select-none">
-											<Icon className="w-28 h-28 text-[#12304A]/[0.02] group-hover:text-[#C79A4B]/[0.04] transition-colors duration-300" />
+										{/* Top Header Row: Icon Badge + Category Domain Badge */}
+										<div className="relative z-10 flex items-center justify-between mb-4">
+											<div className="w-11 h-11 rounded-2xl bg-white border border-[#12304A]/10 group-hover:border-[#C79A4B]/40 flex items-center justify-center text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200">
+												<Icon className="w-5 h-5 transition-transform duration-200 group-hover:scale-105" />
+											</div>
+
+											<span className="text-[11px] font-mono font-bold tracking-wider uppercase text-[#C79A4B] bg-[#C79A4B]/10 border border-[#C79A4B]/20 px-3 py-1 rounded-full">
+												{svc.tag}
+											</span>
 										</div>
 
 										{/* Content Stack */}
 										<div className="relative z-10">
-											{/* Clean Direct Title (Icons & Service labels removed) */}
 											<h3 className="text-lg sm:text-xl font-extrabold tracking-tight text-[#12304A] leading-snug">
 												{svc.title}
 											</h3>
 
 											{/* Signature Ruskin Gold Accent Line */}
-											<div className="w-10 h-[2px] bg-[#C79A4B] rounded-full my-2.5" />
+											<div className="w-10 h-[2.5px] bg-[#C79A4B] rounded-full my-2.5 transition-all duration-300 group-hover:w-16" />
 
 											{/* Description */}
 											<p className="text-[13.5px] sm:text-[14px] leading-relaxed font-normal text-[#5A7A8E]">
@@ -595,29 +649,33 @@ export default function HomePage() {
 											</p>
 										</div>
 
-										{/* Bottom Section: Action Pill Button + Metric */}
-										<div className="relative z-10 pt-3.5 mt-4 border-t border-[#12304A]/8 flex items-center justify-between">
-											<button
-												onClick={(e) => {
-													e.stopPropagation();
-													handleOpenQuote(`Service Sourcing Inquiry: ${svc.title}`);
-												}}
-												className="group/btn inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full font-bold text-xs uppercase tracking-wider transition-colors duration-200 cursor-pointer bg-[#12304A] text-white group-hover:bg-[#C79A4B] shadow-xs"
-											>
-												<span>Consult Now</span>
-												<ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-											</button>
-											<span className="text-xs font-semibold text-[#5A7A8E] group-hover:text-[#12304A] transition-colors duration-200">
-												{svc.metric.val} {svc.metric.label}
+										{/* Bottom Section: Contextual Directed Action Link + Metric */}
+										<div className="relative z-10 pt-4 mt-4 border-t border-[#12304A]/8 flex items-center justify-between">
+											<span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200">
+												<span>{svc.ctaLabel}</span>
+												<ArrowUpRight className="w-3.5 h-3.5 text-[#C79A4B] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
 											</span>
+
+											<div className="flex items-center gap-1.5 text-xs text-[#5A7A8E]">
+												<span className="font-mono font-bold text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200">
+													{svc.metric.val}
+												</span>
+												<span className="text-[11.5px] text-[#5A7A8E]">{svc.metric.label}</span>
+											</div>
 										</div>
 									</motion.div>
 								);
 							})}
 						</div>
 
-						{/* Centered Explore All Services Action Pill Button */}
-						<div className="mt-8 sm:mt-10 text-center">
+						{/* Centered Explore All Services Action Pill Button with Intro Fade */}
+						<motion.div
+							initial={{ opacity: 0, y: 16 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{ duration: 0.6, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+							className="mt-8 sm:mt-10 text-center"
+						>
 							<Link
 								href="/services"
 								className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-sm tracking-wide transition-all duration-300 shadow-md hover:shadow-xl shrink-0 cursor-pointer gpu-smooth group"
@@ -625,8 +683,8 @@ export default function HomePage() {
 								<span>Explore All Services</span>
 								<ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
 							</Link>
-						</div>
-					</div>
+						</motion.div>
+					</motion.div>
 				</div>
 			</section>
 

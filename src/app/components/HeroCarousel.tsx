@@ -75,7 +75,7 @@ const HEX_SLOTS = [
 		width: "94%",
 		frame: "#C79A4B",
 		frameWidth: 5,
-		glow: true,
+		glow: false,
 	},
 	{
 		left: "68%",
