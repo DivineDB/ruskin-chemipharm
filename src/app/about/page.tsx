@@ -6,7 +6,12 @@ import Link from "next/link";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Quote, ArrowRight, ArrowUpRight, X } from "lucide-react";
+import {
+  Quote,
+  ArrowRight,
+  ArrowUpRight,
+  X,
+} from "lucide-react";
 import Footer from "../components/Footer";
 import SectionHeader from "../components/SectionHeader";
 import CtaBanner from "../components/CtaBanner";
@@ -319,6 +324,146 @@ function AnimatedNumber({
     </span>
   );
 }
+
+// ─── Inline LinkedIn Icon Component ──────────────────────────────────────────
+function LinkedInIcon({ className = "w-3.5 h-3.5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+    </svg>
+  );
+}
+
+// ─── High-End Executive Placeholder Frame (Sharp corners, studio aesthetic) ───
+function ExecutivePortraitPlaceholder({
+  initials,
+  name,
+  role,
+}: {
+  initials: string;
+  name: string;
+  role: string;
+}) {
+  return (
+    <div className="relative w-full h-full bg-gradient-to-b from-[#0b1e2e] via-[#071521] to-[#040e16] flex flex-col items-center justify-center overflow-hidden p-6 select-none rounded-none">
+      {/* Precision architectural dot grid */}
+      <div
+        className="absolute inset-0 opacity-[0.08]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, #C79A4B 1px, transparent 0)`,
+          backgroundSize: "18px 18px",
+        }}
+      />
+
+      {/* Ambient studio spotlight */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(199,154,75,0.18)_0%,transparent_70%)]" />
+
+      {/* Monogram Badge */}
+      <div className="relative z-10 flex flex-col items-center">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-none border border-[#C79A4B]/40 bg-[#12304A]/70 backdrop-blur-xs flex items-center justify-center relative shadow-[0_8px_30px_rgba(0,0,0,0.5)] group-hover:border-[#C79A4B] transition-colors duration-500">
+          {/* Subtle gold corner marks */}
+          <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t-2 border-l-2 border-[#C79A4B]" />
+          <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b-2 border-r-2 border-[#C79A4B]" />
+
+          <span className="text-2xl sm:text-3xl font-sans font-extrabold tracking-wider text-[#C79A4B]">
+            {initials}
+          </span>
+        </div>
+
+        {/* Studio Lighting Vignette Line */}
+        <div className="mt-4 flex items-center gap-2">
+          <div className="w-5 h-[1px] bg-gradient-to-r from-transparent to-[#C79A4B]/60" />
+          <span className="text-[10px] uppercase font-mono tracking-[0.2em] text-[#C79A4B]/80 font-bold">
+            Executive Desk
+          </span>
+          <div className="w-5 h-[1px] bg-gradient-to-l from-transparent to-[#C79A4B]/60" />
+        </div>
+      </div>
+
+      {/* Bottom vignette gradient */}
+      <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-[#071521] to-transparent pointer-events-none" />
+    </div>
+  );
+}
+
+interface ExecutiveMember {
+  name: string;
+  role: string;
+  tier: "senior" | "functional";
+  image?: string;
+  initials: string;
+  linkedin: string;
+  description: string;
+}
+
+const LEADERSHIP_MEMBERS: ExecutiveMember[] = [
+  // ── Top Row: 3 Senior Leaders ──
+  {
+    name: "Kiran Premchand Shah",
+    role: "FOUNDER & MANAGING DIRECTOR",
+    tier: "senior",
+    image: "/images/kiran-shah.jpg",
+    initials: "KS",
+    linkedin: "https://linkedin.com/in/kiran-shah-ruskin",
+    description: "Founding visionary of Ruskin Chemipharm (Est. 1984), shaping international API indenting across four decades.",
+  },
+  {
+    name: "Krishna Kumar Iyer",
+    role: "GENERAL MANAGER",
+    tier: "senior",
+    initials: "KI",
+    linkedin: "https://linkedin.com/in/krishna-kumar-iyer",
+    description: "Joined in 1997 to anchor operational scalability, global principal alliances, and cross-border logistics excellence.",
+  },
+  {
+    name: "Yash Jhaveri",
+    role: "HEAD OF MARKETING & OPERATIONS",
+    tier: "senior",
+    initials: "YJ",
+    linkedin: "https://linkedin.com/in/yash-jhaveri",
+    description: "Driving commercial expansion, international indenting partnerships, and strategic pipelines since 2014.",
+  },
+  // ── Bottom Row: 4 Functional Heads ──
+  {
+    name: "Atman Ajmera",
+    role: "BUSINESS DEVELOPMENT LEAD",
+    tier: "functional",
+    initials: "AA",
+    linkedin: "https://linkedin.com/in/atman-ajmera",
+    description: "Specialized API sourcing programs and institutional buyer partnerships across regional corridors.",
+  },
+  {
+    name: "Dr. Arvind Deshmukh",
+    role: "REGULATORY AFFAIRS DIRECTOR",
+    tier: "functional",
+    initials: "AD",
+    linkedin: "https://linkedin.com/in/dr-arvind-deshmukh",
+    description: "Overseeing international DMF dossiers, pharmacopoeial compliance, and global audit readiness.",
+  },
+  {
+    name: "Rajesh V. Parekh",
+    role: "GLOBAL PROCUREMENT HEAD",
+    tier: "functional",
+    initials: "RP",
+    linkedin: "https://linkedin.com/in/rajesh-v-parekh",
+    description: "Managing tier-1 synthesizer qualification, supply integrity, and raw material chemical assurance.",
+  },
+  {
+    name: "Pooja N. Mehta",
+    role: "QUALITY ASSURANCE HEAD",
+    tier: "functional",
+    initials: "PM",
+    linkedin: "https://linkedin.com/in/pooja-n-mehta",
+    description: "Leading analytical laboratory validation, certificate of analysis verification, and batch traceability.",
+  },
+];
+
+const SRLC_METRICS = [
+  { value: "21M+", label: "Lives Touched Globally" },
+  { value: "10", label: "Holistic Care Categories" },
+  { value: "UN ECOSOC", label: "Special Consultative Status" },
+  { value: "13×", label: "Highest Fundraising NGO at Tata Mumbai Marathon" },
+];
 
 export default function AboutPage() {
   const timelineSectionRef = useRef<HTMLDivElement>(null);
@@ -1096,7 +1241,406 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ─── 5. CALL TO ACTION BANNER ─────────────────────────────────────────── */}
+        {/* ─── 5. LEADERSHIP: THE FACES OF RUSKIN CHEMIPHARM ───────────────────── */}
+        <section
+          id="leadership"
+          className="py-24 sm:py-32 bg-[#FAF7F2] relative overflow-hidden border-t border-[#12304A]/10 text-left"
+          style={{
+            backgroundImage: `radial-gradient(#12304A 0.6px, transparent 0.6px), radial-gradient(#C79A4B 0.6px, #FAF7F2 0.6px)`,
+            backgroundSize: "28px 28px",
+            backgroundPosition: "0 0, 14px 14px",
+          }}
+        >
+          {/* Subtle Ambient Vignettes */}
+          <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-[#FAF7F2] to-transparent pointer-events-none" />
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            {/* Standard Ruskin 4-Part Header Stack */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={{
+                hidden: { opacity: 0, y: 24 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+              className="space-y-3 text-left mb-14 sm:mb-16"
+            >
+              <span className="inline-flex items-center gap-2 text-[#C79A4B] text-xs sm:text-sm font-bold tracking-widest uppercase">
+                <div className="w-8 h-[2px] bg-[#C79A4B]" />
+                LEADERSHIP & EXECUTIVE TEAM
+              </span>
+
+              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#12304A] leading-tight tracking-tight">
+                The Faces of <span className="text-[#C79A4B]">Ruskin Chemipharm</span>
+              </h2>
+
+              <div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
+
+              <p className="text-base sm:text-lg text-[#5A7A8E] font-normal max-w-2xl lg:max-w-3xl leading-relaxed">
+                Four decades of trust, scientific precision, and enduring global partnerships—built by people who care.
+              </p>
+            </motion.div>
+
+            {/* ── Row 1: 3 Senior Leaders (Founder, GM, Head of Marketing) ── */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-40px" }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.12 },
+                },
+              }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-10"
+            >
+              {LEADERSHIP_MEMBERS.filter((m) => m.tier === "senior").map((member) => (
+                <motion.div
+                  key={member.name}
+                  variants={{
+                    hidden: { opacity: 0, y: 30 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }}
+                  whileHover={{ y: -6 }}
+                  className="group relative bg-white border border-[#12304A]/15 rounded-none shadow-[0_4px_20px_rgba(18,48,74,0.04)] hover:shadow-[0_20px_40px_rgba(18,48,74,0.12)] hover:border-[#C79A4B] transition-all duration-500 flex flex-col overflow-hidden"
+                >
+                  {/* Photo Frame (Strictly square corners - rounded-none) */}
+                  <div className="aspect-[3/3.6] w-full relative overflow-hidden bg-[#071521] rounded-none">
+                    {member.image ? (
+                      <Image
+                        src={member.image}
+                        alt={`${member.name} - ${member.role}`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out rounded-none"
+                      />
+                    ) : (
+                      <ExecutivePortraitPlaceholder
+                        initials={member.initials}
+                        name={member.name}
+                        role={member.role}
+                      />
+                    )}
+
+                    {/* Subtle Corner Architectural Accent */}
+                    <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#C79A4B] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+
+                  {/* Caption & Leadership Details */}
+                  <div className="p-6 bg-white flex flex-col justify-between flex-1 border-t border-[#12304A]/10">
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-bold text-[#12304A] font-sans group-hover:text-[#C79A4B] transition-colors leading-snug">
+                        {member.name}
+                      </h3>
+                      <div className="text-[11px] font-bold text-[#C79A4B] tracking-wider uppercase mt-1">
+                        {member.role}
+                      </div>
+                      <p className="text-xs text-[#5A7A8E] mt-2.5 leading-relaxed">
+                        {member.description}
+                      </p>
+                    </div>
+
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-xs font-semibold text-[#5A7A8E] hover:text-[#0A66C2] transition-colors mt-5 pt-3.5 border-t border-[#12304A]/10 w-full group/link"
+                      aria-label={`${member.name} LinkedIn Profile`}
+                    >
+                      <div className="w-5 h-5 bg-[#0A66C2] text-white flex items-center justify-center rounded-none shadow-xs group-hover/link:brightness-110 transition-all">
+                        <LinkedInIcon className="w-3 h-3 fill-current" />
+                      </div>
+                      <span className="text-[11px] tracking-wide font-medium">LinkedIn Profile</span>
+                      <ArrowUpRight className="w-3 h-3 ml-auto opacity-0 group-hover/link:opacity-100 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-all text-[#0A66C2]" />
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* ── Row 2: 4 Functional Heads (BD, Regulatory, Procurement, QA) ── */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-40px" }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.1 },
+                },
+              }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6"
+            >
+              {LEADERSHIP_MEMBERS.filter((m) => m.tier === "functional").map((member) => (
+                <motion.div
+                  key={member.name}
+                  variants={{
+                    hidden: { opacity: 0, y: 28 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }}
+                  whileHover={{ y: -5 }}
+                  className="group relative bg-white border border-[#12304A]/15 rounded-none shadow-[0_4px_18px_rgba(18,48,74,0.03)] hover:shadow-[0_16px_32px_rgba(18,48,74,0.1)] hover:border-[#C79A4B] transition-all duration-500 flex flex-col overflow-hidden"
+                >
+                  {/* Photo Frame (Strictly square corners - rounded-none) */}
+                  <div className="aspect-[3/3.6] w-full relative overflow-hidden bg-[#071521] rounded-none">
+                    {member.image ? (
+                      <Image
+                        src={member.image}
+                        alt={`${member.name} - ${member.role}`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 25vw"
+                        className="object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out rounded-none"
+                      />
+                    ) : (
+                      <ExecutivePortraitPlaceholder
+                        initials={member.initials}
+                        name={member.name}
+                        role={member.role}
+                      />
+                    )}
+
+                    {/* Subtle Corner Architectural Accent */}
+                    <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#C79A4B] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+
+                  {/* Caption & Metadata */}
+                  <div className="p-5 bg-white flex flex-col justify-between flex-1 border-t border-[#12304A]/10">
+                    <div>
+                      <h3 className="text-base font-bold text-[#12304A] font-sans group-hover:text-[#C79A4B] transition-colors leading-snug">
+                        {member.name}
+                      </h3>
+                      <div className="text-[10px] font-bold text-[#C79A4B] tracking-wider uppercase mt-1">
+                        {member.role}
+                      </div>
+                      <p className="text-[11.5px] text-[#5A7A8E] mt-2 leading-relaxed">
+                        {member.description}
+                      </p>
+                    </div>
+
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-xs font-semibold text-[#5A7A8E] hover:text-[#0A66C2] transition-colors mt-4 pt-3 border-t border-[#12304A]/10 w-full group/link"
+                      aria-label={`${member.name} LinkedIn Profile`}
+                    >
+                      <div className="w-4 h-4 bg-[#0A66C2] text-white flex items-center justify-center rounded-none shadow-xs group-hover/link:brightness-110 transition-all">
+                        <LinkedInIcon className="w-2.5 h-2.5 fill-current" />
+                      </div>
+                      <span className="text-[10px] tracking-wide font-medium">LinkedIn</span>
+                      <ArrowUpRight className="w-2.5 h-2.5 ml-auto opacity-0 group-hover/link:opacity-100 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-all text-[#0A66C2]" />
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ─── 6. GIVING BACK: A COMMITMENT TO CARE (SRLC 10-FOLD PROGRAMME) ────── */}
+        <section
+          id="giving-back"
+          className="pt-20 sm:pt-28 pb-0 bg-[#FAF7F2] relative overflow-hidden border-t border-[#12304A]/10 text-left"
+        >
+          {/* Subtle Ambient Background Hairline Texture */}
+          <div
+            className="absolute inset-0 opacity-[0.025] pointer-events-none"
+            style={{
+              backgroundImage: `radial-gradient(#12304A 1px, transparent 1px)`,
+              backgroundSize: "32px 32px",
+            }}
+          />
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            {/* ── Editorial Top Grid: Header Stack + Narrative Split ── */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={{
+                hidden: { opacity: 0, y: 24 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start"
+            >
+              {/* Left Column: Mandatory 4-Part Left-Aligned Header Stack */}
+              <div className="lg:col-span-6 space-y-3.5">
+                <span className="inline-flex items-center gap-2 text-[#C79A4B] text-xs sm:text-sm font-bold tracking-widest uppercase font-mono">
+                  <div className="w-8 h-[2px] bg-[#C79A4B]" />
+                  GIVING BACK & SOCIAL RESPONSIBILITY
+                </span>
+
+                <h2 className="text-3xl sm:text-4xl lg:text-[42px] xl:text-[44px] font-extrabold text-[#12304A] font-sans leading-[1.14] tracking-tight">
+                  A Commitment to <span className="text-[#C79A4B]">Community & Care</span>
+                </h2>
+
+                <div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
+
+                <div className="pt-1.5">
+                  <img
+                    src="/srlc-logo.png"
+                    alt="Shrimad Rajchandra Love and Care"
+                    className="h-9 sm:h-10 w-auto object-contain opacity-95"
+                  />
+                </div>
+              </div>
+
+              {/* Right Column: Editorial Narrative (Exact requested copy) */}
+              <div className="lg:col-span-6 space-y-4 text-sm sm:text-[15px] text-[#5A7A8E] font-sans leading-relaxed lg:pt-3">
+                <p>
+                  At Ruskin Chemipharm, our responsibility extends beyond supply chains and market leadership. We are privileged to support <strong className="text-[#12304A] font-semibold">Shrimad Rajchandra Love and Care (SRLC)</strong>, a global humanitarian movement inspired by Shrimad Rajchandraji and guided by <strong className="text-[#12304A] font-semibold">Pujya Gurudevshri Rakeshji</strong>.
+                </p>
+                <p>
+                  Operating across ten comprehensive care categories—ranging from healthcare and education to environmental care and animal welfare—SRLC has impacted over 21 million lives worldwide. The organization’s operational scale, transparency, and relentless commitment to service reflect the core values we hold at Ruskin.
+                </p>
+                <p className="text-[#12304A] font-medium pt-1">
+                  Our association with SRLC is driven by a shared belief in sustainable impact, institutional integrity, and meaningful service to society.
+                </p>
+
+                <div className="pt-2">
+                  <a
+                    href="https://loveandcare.srmd.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-xs font-bold font-mono tracking-wider uppercase text-[#12304A] hover:text-[#C79A4B] transition-colors group cursor-pointer"
+                  >
+                    <span>Explore SRLC Global Work</span>
+                    <div className="w-6 h-[1.5px] bg-[#C79A4B] group-hover:w-10 transition-all duration-300" />
+                    <ArrowUpRight className="w-4 h-4 text-[#C79A4B] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* ── Middle: SRLC Banner (From Internet) ── */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 sm:mt-14 relative z-10">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-60px" }}
+              variants={{
+                hidden: { opacity: 0, y: 24 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+                },
+              }}
+              className="relative w-full h-[280px] sm:h-[380px] lg:h-[460px] overflow-hidden border border-[#12304A]/12 group shadow-xl"
+            >
+              <Image
+                src="/srlc-hospital-banner.jpg"
+                alt="Shrimad Rajchandra Love and Care - Hospital and Humanitarian Initiatives"
+                fill
+                className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                sizes="(max-width: 1280px) 100vw, 1280px"
+              />
+
+              {/* Gradient Vignette: anchored to bottom ~45% so top stays bright & visible */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071521] via-[#071521]/65 via-42% to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#071521]/80 via-transparent to-transparent pointer-events-none hidden sm:block" />
+
+              {/* Top Right: Official SRLC White Logo Badge */}
+              <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 bg-[#0B1E2E]/85 backdrop-blur-md px-4 py-2.5 border border-white/15 flex items-center gap-3">
+                <img
+                  src="/srlc-logo-white.png"
+                  alt="Shrimad Rajchandra Love and Care Official Logo"
+                  className="h-6 sm:h-7 w-auto object-contain"
+                />
+              </div>
+
+              {/* Bottom Content Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 lg:p-10 z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+                <div className="space-y-2 max-w-2xl text-left">
+                  <span className="inline-flex items-center gap-2 text-[#E5C378] text-[11px] sm:text-xs font-mono font-bold tracking-[0.2em] uppercase">
+                    <div className="w-5 h-[1.5px] bg-[#E5C378]" />
+                    GLOBAL HUMANITARIAN INITIATIVE · DHARAMPUR, GUJARAT
+                  </span>
+                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white font-sans tracking-tight leading-snug">
+                    Shrimad Rajchandra Love and Care
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-200 font-sans leading-relaxed line-clamp-2 sm:line-clamp-none">
+                    Our association with SRLC is driven by a shared belief in sustainable impact, institutional integrity, and meaningful service to society.
+                  </p>
+                </div>
+
+                <a
+                  href="https://loveandcare.srmd.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-[#C79A4B] hover:bg-[#B58A3E] text-white text-xs font-bold font-mono tracking-wider uppercase transition-colors shrink-0 cursor-pointer shadow-lg"
+                >
+                  <span>Visit Official SRLC Portal</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* ── Lower: Full-Width Edge-to-Edge Impact Ribbon (No Shadow, Filled Left to Right) ── */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: { staggerChildren: 0.1 },
+              },
+            }}
+            className="w-full bg-[#C79A4B] py-8 sm:py-10 mt-12 sm:mt-16 mb-0 relative z-10"
+          >
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+              {SRLC_METRICS.map((metric, idx) => (
+                <motion.div
+                  key={metric.value}
+                  variants={{
+                    hidden: { opacity: 0, y: 16 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }}
+                  className={`space-y-1.5 ${
+                    idx !== 0 ? "lg:border-l lg:border-white/25 lg:pl-8" : ""
+                  }`}
+                >
+                  <div className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-white font-sans tracking-tight">
+                    {metric.value}
+                  </div>
+                  <div className="text-xs sm:text-sm font-bold text-white font-sans leading-snug">
+                    {metric.label}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </section>
+
+        {/* ─── 7. CALL TO ACTION BANNER ─────────────────────────────────────────── */}
         <CtaBanner onRequestQuote={() => setQuoteModalOpen(true)} />
       </main>
 
