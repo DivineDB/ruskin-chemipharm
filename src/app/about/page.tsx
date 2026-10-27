@@ -2,12 +2,14 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
+import Link from "next/link";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Quote } from "lucide-react";
+import { Quote, ArrowRight, ArrowUpRight, X } from "lucide-react";
 import Footer from "../components/Footer";
 import SectionHeader from "../components/SectionHeader";
+import CtaBanner from "../components/CtaBanner";
 
 interface Milestone {
   step: string;
@@ -324,6 +326,13 @@ export default function AboutPage() {
   const journeyRef = useRef<HTMLDivElement>(null);
   const ribbonProgressRef = useRef<SVGPathElement>(null);
   const [activeMilestone, setActiveMilestone] = useState(0);
+  const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenQuoteEvent = () => setQuoteModalOpen(true);
+    window.addEventListener("ruskin:open-quote", handleOpenQuoteEvent);
+    return () => window.removeEventListener("ruskin:open-quote", handleOpenQuoteEvent);
+  }, []);
 
   // ── Inspiration Section Refs ──
   const inspirationRef = useRef<HTMLElement>(null);
@@ -1022,6 +1031,25 @@ export default function AboutPage() {
                       <strong className="text-[#12304A] font-bold">Enduring Relationships</strong>: Fostering transparent, decades-long partnerships with synthesizers and formulation leaders worldwide.
                     </p>
                   </div>
+
+                  {/* Action CTA Row at the end of Our Story */}
+                  <div className="pt-4 flex flex-wrap items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setQuoteModalOpen(true)}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-xs sm:text-sm tracking-wide transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group"
+                    >
+                      <span>Request Sourcing Consultation</span>
+                      <ArrowUpRight className="w-4 h-4 text-[#C79A4B] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                    </button>
+                    <Link
+                      href="/products"
+                      className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-[#C79A4B] text-[#12304A] hover:text-white border border-[#12304A]/15 hover:border-[#C79A4B] font-bold text-xs sm:text-sm tracking-wide shadow-xs hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
+                    >
+                      <span>Explore Active Products</span>
+                      <ArrowRight className="w-4 h-4 text-[#C79A4B] group-hover:text-white transition-all duration-300 group-hover:translate-x-1" />
+                    </Link>
+                  </div>
                 </motion.div>
               </div>
 
@@ -1068,10 +1096,110 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* ─── 5. CALL TO ACTION BANNER ─────────────────────────────────────────── */}
+        <CtaBanner onRequestQuote={() => setQuoteModalOpen(true)} />
       </main>
 
       {/* Footer */}
       <Footer onOpenCatalog={() => (window.location.href = "/products")} />
+
+      {/* ─── REQUEST QUOTE MODAL ──────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {quoteModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-[#12304A]/50 backdrop-blur-sm"
+              onClick={() => setQuoteModalOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 12 }}
+              transition={{ type: "spring", damping: 25, stiffness: 350 }}
+              className="relative z-10 w-[min(480px,calc(100vw-32px))] max-h-[90vh] overflow-y-auto custom-scrollbar rounded-3xl bg-white shadow-2xl border border-[#12304A]/10 text-left p-6 sm:p-8"
+            >
+              <button
+                type="button"
+                onClick={() => setQuoteModalOpen(false)}
+                className="absolute top-4 right-4 text-[#5A7A8E] hover:text-[#12304A] p-1.5 rounded-full hover:bg-[#12304A]/5 transition-colors cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="space-y-5">
+                <div>
+                  <div className="text-[10px] uppercase font-bold text-[#C79A4B] tracking-widest mb-1">
+                    CONNECT WITH RUSKIN CHEMIPHARM
+                  </div>
+                  <h3 className="text-xl font-extrabold text-[#12304A]">
+                    Schedule a Sourcing Consultation
+                  </h3>
+                  <p className="text-xs text-[#5A7A8E] mt-1">
+                    Our commercial and regulatory sourcing team responds within 4 business hours.
+                  </p>
+                </div>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    alert("Thank you. Your consultation request has been dispatched to our commercial desk.");
+                    setQuoteModalOpen(false);
+                  }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <label className="block text-xs font-semibold text-[#12304A] mb-1">
+                      Full Name *
+                    </label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="Dr. Sarah Jenkins"
+                      className="w-full bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-2.5 text-xs text-[#12304A] placeholder-[#5A7A8E]/60 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#12304A] mb-1">
+                      Corporate Email *
+                    </label>
+                    <input
+                      required
+                      type="email"
+                      placeholder="s.jenkins@pharmalabs.com"
+                      className="w-full bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-2.5 text-xs text-[#12304A] placeholder-[#5A7A8E]/60 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#12304A] mb-1">
+                      Target Active Ingredient / Inquiry Details *
+                    </label>
+                    <textarea
+                      required
+                      rows={3}
+                      placeholder="Specify API molecule, grade (USP/EP/IP), and estimated commercial volume..."
+                      className="w-full bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-2.5 text-xs text-[#12304A] placeholder-[#5A7A8E]/60 focus:outline-none resize-none"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-[#12304A] hover:bg-[#0B1E2E] text-white py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                  >
+                    <span>Transmit Sourcing Request</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </form>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
