@@ -503,7 +503,7 @@ export default function HomePage() {
 					{/* Header with luxury scroll reveal */}
 					<SectionHeader
 						centered
-						eyebrow="Therapeutic Portfolio"
+						eyebrow="API Portfolio"
 						lead="Active Molecules &"
 						highlight="Therapeutic Categories"
 						description="Direct factory indenting across 16 core therapeutic segments — high-purity APIs, approved dossiers, and certified global supply corridors."
@@ -597,7 +597,7 @@ export default function HomePage() {
 						}}
 						className="max-w-5xl mx-auto mt-8 sm:mt-10"
 					>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7">
 							{SERVICES.map((svc) => {
 								const Icon = svc.icon;
 
@@ -605,62 +605,70 @@ export default function HomePage() {
 									<motion.div
 										key={svc.num}
 										variants={{
-											hidden: { opacity: 0, y: 28, scale: 0.98 },
+											hidden: { opacity: 0, y: 20 },
 											visible: {
 												opacity: 1,
 												y: 0,
-												scale: 1,
 												transition: {
-													duration: 0.65,
+													duration: 0.5,
 													ease: [0.16, 1, 0.3, 1],
 												},
 											},
 										}}
 										whileHover={{
 											y: -3,
-											transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
+											transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] },
 										}}
-										onClick={() => handleOpenQuote(`Service Inquiry: ${svc.title}`)}
-										className="group rounded-[24px] sm:rounded-[26px] p-6 sm:p-7 flex flex-col justify-between min-h-[240px] sm:min-h-[255px] cursor-pointer relative overflow-hidden bg-gradient-to-br from-white via-[#FAF7F2] to-[#FAF7F2] border border-[#12304A]/10 hover:border-[#C79A4B]/60 shadow-[0_2px_8px_rgba(18,48,74,0.02)] hover:shadow-[0_4px_14px_rgba(18,48,74,0.04)] transition-all duration-250"
+										className="group rounded-[24px] p-7 sm:p-8 flex flex-col justify-between bg-white border border-[#12304A]/8 hover:border-[#C79A4B]/50 shadow-[0_2px_12px_rgba(18,48,74,0.03)] hover:shadow-[0_12px_32px_-8px_rgba(18,48,74,0.08)] transition-all duration-300"
 									>
-										{/* Top Header Row: Icon Badge + Category Domain Badge */}
-										<div className="relative z-10 flex items-center justify-between mb-4">
-											<div className="w-11 h-11 rounded-2xl bg-white border border-[#12304A]/10 group-hover:border-[#C79A4B]/40 flex items-center justify-center text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200">
-												<Icon className="w-5 h-5 transition-transform duration-200 group-hover:scale-105" />
-											</div>
+										{/* Header Row: Hex Icon & Top-Right Ruskin Brand Logo */}
+										<div className="flex items-center justify-between gap-4 mb-6">
+											<HexIcon size={44} bg="rgba(18,48,74,0.04)" className="group-hover:scale-105 transition-transform duration-200">
+												<Icon className="w-5 h-5 text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200" />
+											</HexIcon>
 
-											<span className="text-[11px] font-mono font-bold tracking-wider uppercase text-[#C79A4B] bg-[#C79A4B]/10 border border-[#C79A4B]/20 px-3 py-1 rounded-full">
-												{svc.tag}
-											</span>
+											<div className="w-7 h-7 relative opacity-40 group-hover:opacity-100 transition-opacity duration-300">
+												<Image
+													src="/logoonly-navy.svg"
+													alt="Ruskin Emblem"
+													fill
+													className="object-contain"
+												/>
+											</div>
 										</div>
 
 										{/* Content Stack */}
-										<div className="relative z-10">
-											<h3 className="text-lg sm:text-xl font-extrabold tracking-tight text-[#12304A] leading-snug">
+										<div className="space-y-3">
+											<h3 className="text-xl sm:text-[22px] font-extrabold tracking-tight text-[#12304A] leading-snug group-hover:text-[#C79A4B] transition-colors duration-200">
 												{svc.title}
 											</h3>
 
-											{/* Signature Ruskin Gold Accent Line */}
-											<div className="w-10 h-[2.5px] bg-[#C79A4B] rounded-full my-2.5 transition-all duration-300 group-hover:w-16" />
-
-											{/* Description */}
-											<p className="text-[13.5px] sm:text-[14px] leading-relaxed font-normal text-[#5A7A8E]">
+											<p className="text-[14px] leading-relaxed font-normal text-[#5A7A8E]">
 												{svc.desc}
 											</p>
+
+											{/* Subtle bullet points */}
+											<div className="pt-2 space-y-1.5">
+												{svc.points.slice(0, 2).map((pt, i) => (
+													<div key={i} className="flex items-center gap-2 text-xs text-[#5A7A8E]">
+														<span className="w-1.5 h-1.5 rounded-full bg-[#C79A4B]" />
+														<span>{pt}</span>
+													</div>
+												))}
+											</div>
 										</div>
 
-										{/* Bottom Section: Contextual Directed Action Link + Metric */}
-										<div className="relative z-10 pt-4 mt-4 border-t border-[#12304A]/8 flex items-center justify-between">
-											<span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200">
-												<span>{svc.ctaLabel}</span>
-												<ArrowUpRight className="w-3.5 h-3.5 text-[#C79A4B] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+										{/* Bottom Metric Bar */}
+										<div className="pt-5 mt-6 border-t border-[#12304A]/6 flex items-center justify-between text-xs">
+											<span className="text-[#94A3B8] font-medium tracking-wide">
+												{svc.tag}
 											</span>
 
-											<div className="flex items-center gap-1.5 text-xs text-[#5A7A8E]">
-												<span className="font-mono font-bold text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200">
+											<div className="flex items-baseline gap-1.5">
+												<span className="stat-num text-sm sm:text-base font-bold text-[#12304A] group-hover:text-[#C79A4B] transition-colors duration-200">
 													{svc.metric.val}
 												</span>
-												<span className="text-[11.5px] text-[#5A7A8E]">{svc.metric.label}</span>
+												<span className="text-[11px] text-[#5A7A8E]">{svc.metric.label}</span>
 											</div>
 										</div>
 									</motion.div>

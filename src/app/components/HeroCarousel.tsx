@@ -11,7 +11,7 @@ import {
 	useTransform,
 } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Check, Download } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { HexImage } from "./Hex";
 
 /* ───────────────────────────────────────────────────────────────────────────
@@ -55,6 +55,24 @@ const SLIDES: HeroSlide[] = [
 		cta: { label: "Learn About Compliance", href: "/services" },
 		image: { src: "/images/quality.webp", alt: "GMP Purity Testing" },
 	},
+	{
+		id: "global-distribution",
+		eyebrow: "Global Network & Reach",
+		lead: "Worldwide distribution network",
+		highlight: "across 25+ countries",
+		copy: "Reliable international supply corridors connecting audited manufacturers with pharmaceutical leaders across four continents.",
+		cta: { label: "Explore Global Reach", href: "/about" },
+		image: { src: "/images/distribution.webp", alt: "Global Pharmaceutical Distribution" },
+	},
+	{
+		id: "strategic-partnerships",
+		eyebrow: "Audited Synthesis Alliances",
+		lead: "Direct factory indenting",
+		highlight: "& strategic manufacturer ties",
+		copy: "Long-standing partnerships with world-class bulk drug producers, ensuring consistent raw material availability and pricing stability.",
+		cta: { label: "Discover Alliances", href: "/about" },
+		image: { src: "/images/partnership.webp", alt: "Strategic Pharmaceutical Partnerships" },
+	},
 ];
 
 const SLIDE_DURATION_MS = 3000;
@@ -95,45 +113,7 @@ const HEX_SLOTS = [
 	},
 ] as const;
 
-/* ───────────────────────────────────────────────────────────────────────────
-   Progress indicator (one per slide)
-   ─────────────────────────────────────────────────────────────────────────── */
-function SlideIndicator({
-	index,
-	active,
-	progress,
-	label,
-	onSelect,
-}: {
-	index: number;
-	active: boolean;
-	progress: MotionValue<number>;
-	label: string;
-	onSelect: (i: number) => void;
-}) {
-	const scaleX = useTransform(progress, (p) => (active ? p : 0));
-	return (
-		<button
-			id={`hero-slide-indicator-${index + 1}`}
-			type="button"
-			onClick={() => onSelect(index)}
-			aria-label={`Go to slide ${index + 1}: ${label}`}
-			aria-current={active ? "true" : undefined}
-			className="group relative py-3 cursor-pointer"
-		>
-			<span
-				className={`block h-[3px] rounded-full overflow-hidden transition-[width,background-color] duration-500 ease-out ${
-					active ? "w-14 bg-[#12304A]/12" : "w-6 bg-[#12304A]/15 group-hover:bg-[#C79A4B]/50"
-				}`}
-			>
-				<motion.span
-					style={{ scaleX }}
-					className="block h-full w-full origin-left rounded-full bg-[#C79A4B]"
-				/>
-			</span>
-		</button>
-	);
-}
+
 
 /* ───────────────────────────────────────────────────────────────────────────
    HeroCarousel
@@ -344,54 +324,6 @@ export default function HeroCarousel({
 						<span>Request Quote &amp; COA</span>
 					</motion.button>
 				</motion.div>
-
-				{/* Slide controls + COA download */}
-				<motion.div
-					variants={{
-						hidden: { opacity: 0, y: 14 },
-						visible: {
-							opacity: 1,
-							y: 0,
-							transition: { duration: 0.6, ease: EASE_PREMIUM },
-						},
-					}}
-					className="flex flex-col-reverse sm:flex-row sm:items-center gap-3 sm:gap-6 pt-1"
-				>
-					<div className="flex items-center gap-3">
-						<span className="stat-num text-xs font-bold text-[#12304A] tabular-nums w-5">
-							{String(active + 1).padStart(2, "0")}
-						</span>
-						<div className="flex items-center gap-2">
-							{SLIDES.map((s, i) => (
-								<SlideIndicator
-									key={s.id}
-									index={i}
-									active={i === active}
-									progress={progress}
-									label={s.eyebrow}
-									onSelect={goTo}
-								/>
-							))}
-						</div>
-						<span className="stat-num text-xs font-semibold text-[#94A3B8] tabular-nums">
-							{String(SLIDES.length).padStart(2, "0")}
-						</span>
-					</div>
-
-					<span className="hidden sm:block w-px h-4 bg-[#12304A]/15" />
-
-					<button
-						id="hero-coa-download"
-						onClick={onDownloadPdf}
-						className="inline-flex items-center gap-2.5 text-xs font-semibold text-[#5A7A8E] hover:text-[#12304A] transition-colors group cursor-pointer"
-					>
-						<div className="w-5 h-5 rounded-full bg-[#C79A4B]/15 flex items-center justify-center flex-shrink-0 group-hover:bg-[#C79A4B] transition-colors">
-							<Check className="w-3 h-3 text-[#C79A4B] group-hover:text-white stroke-[3] transition-colors" />
-						</div>
-						<span>Instant COA &amp; TDS Downloads</span>
-						<Download className="w-3.5 h-3.5 text-[#C79A4B] group-hover:translate-y-0.5 transition-transform duration-200" />
-					</button>
-				</motion.div>
 			</motion.div>
 
 			{/* ── Right: Rotating Hex Cluster (Original Fluid Motion) ── */}
@@ -412,21 +344,38 @@ export default function HeroCarousel({
 					className="relative w-[300px] h-[360px] sm:w-[350px] sm:h-[410px] lg:w-[390px] lg:h-[450px] xl:w-[410px] xl:h-[470px] gpu-smooth"
 				>
 					{SLIDES.map((s, i) => {
-						// slotIndex: 0 = Main, 1 = Top-Right, 2 = Bottom-Right
-						const slotIndex = (i - active + SLIDES.length) % SLIDES.length;
-						const slot = HEX_SLOTS[slotIndex];
-						const isMain = slotIndex === 0;
+						// relative index: 0 = Main active, 1 = Next (top-right), 2 = Next+1 (bottom-right)
+						const relIndex = (i - active + SLIDES.length) % SLIDES.length;
+						const isVisible = relIndex < 3;
+						const isMain = relIndex === 0;
+
+						// Target positioning:
+						// Visible slots: 0 -> Main, 1 -> Top-Right, 2 -> Bottom-Right
+						// Offstage/hidden slots: gently tucked behind bottom-right accent hex with opacity 0 and scale 0.8
+						const targetSlot = isVisible
+							? HEX_SLOTS[relIndex]
+							: {
+									left: "70%",
+									top: "70%",
+									width: "25%",
+									frame: "#FFFFFF",
+									frameWidth: 2,
+									glow: false,
+							  };
 
 						// Layering: The hex moving to Main rises on top (zIndex 30).
 						// The outgoing Main gracefully slides underneath (zIndex 18).
-						// The background accent hex remains at zIndex 10.
-						let zIndex = 10;
+						// Accent hex 1 is zIndex 12, accent hex 2 is zIndex 10.
+						// Hidden slides remain at zIndex 0.
+						let zIndex = 0;
 						if (isMain) {
 							zIndex = isTransitioning ? 30 : 20;
 						} else if (isTransitioning && i === prevActive) {
 							zIndex = 16;
-						} else if (slotIndex === 1) {
+						} else if (relIndex === 1) {
 							zIndex = 12;
+						} else if (relIndex === 2) {
+							zIndex = 10;
 						}
 
 						return (
@@ -435,16 +384,19 @@ export default function HeroCarousel({
 								type="button"
 								id={`hero-hex-${s.id}`}
 								aria-label={isMain ? s.image.alt : `Switch to: ${s.eyebrow}`}
-								tabIndex={isMain ? -1 : 0}
-								onClick={() => !isMain && goTo(i)}
-								whileHover={!isMain ? { scale: 1.035, opacity: 1 } : undefined}
-								whileTap={!isMain ? { scale: 0.98 } : undefined}
+								aria-hidden={!isVisible}
+								tabIndex={isVisible && !isMain ? 0 : -1}
+								onClick={() => isVisible && !isMain && goTo(i)}
+								whileHover={isVisible && !isMain ? { scale: 1.035, opacity: 1 } : undefined}
+								whileTap={isVisible && !isMain ? { scale: 0.98 } : undefined}
 								initial={false}
 								animate={{
-									left: slot.left,
-									top: slot.top,
-									width: slot.width,
-									opacity: isMain ? 1 : 0.84,
+									left: targetSlot.left,
+									top: targetSlot.top,
+									width: targetSlot.width,
+									opacity: isMain ? 1 : isVisible ? 0.84 : 0,
+									scale: isVisible ? 1 : 0.85,
+									pointerEvents: isVisible ? ("auto" as const) : ("none" as const),
 								}}
 								onAnimationComplete={() => {
 									if (isMain) setIsTransitioning(false);
@@ -460,21 +412,23 @@ export default function HeroCarousel({
 								style={{
 									zIndex,
 									aspectRatio: "0.866025 / 1",
-									willChange: "left, top, width, opacity",
+									willChange: "left, top, width, opacity, transform",
 									transform: "translateZ(0)",
 								}}
 								className={`absolute block outline-none focus-visible:ring-2 focus-visible:ring-[#C79A4B] rounded-3xl will-change-transform ${
 									isMain
 										? "cursor-default"
-										: "cursor-pointer group"
+										: isVisible
+										? "cursor-pointer group"
+										: "pointer-events-none"
 								}`}
 							>
 								<HexImage
 									src={s.image.src}
 									alt={s.image.alt}
-									frame={slot.frame}
-									frameWidth={slot.frameWidth}
-									glow={slot.glow}
+									frame={targetSlot.frame}
+									frameWidth={targetSlot.frameWidth}
+									glow={targetSlot.glow}
 									priority={i === 0}
 									className="w-full h-full !transition-none"
 									imgClassName={`w-full h-full object-cover transition-transform duration-1000 ease-out ${

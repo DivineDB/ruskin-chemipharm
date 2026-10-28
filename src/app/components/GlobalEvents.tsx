@@ -23,12 +23,6 @@ const EVENT_SLIDES: Record<string, string[]> = {
     "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=640&q=75",
     "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=640&q=75",
   ],
-  pharmapack: [
-    "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=640&q=75",
-    "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=640&q=75",
-    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=640&q=75",
-    "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=640&q=75",
-  ],
 };
 
 interface GlobalEventsProps {
@@ -37,7 +31,6 @@ interface GlobalEventsProps {
 
 export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
   const [cphiSlide, setCphiSlide] = useState(0);
-  const [pharmapackSlide, setPharmapackSlide] = useState(0);
   const [isInView, setIsInView] = useState(false);
   const sectionRef = React.useRef<HTMLElement>(null);
 
@@ -58,18 +51,15 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
     if (!isInView) return;
     const timer = setInterval(() => {
       setCphiSlide((s) => (s + 1) % EVENT_SLIDES.cphi.length);
-      setPharmapackSlide((s) => (s + 1) % EVENT_SLIDES.pharmapack.length);
     }, 4500);
     return () => clearInterval(timer);
   }, [isInView]);
 
-  const nextSlide = (key: "cphi" | "pharmapack") => {
-    if (key === "cphi") setCphiSlide((s) => (s + 1) % EVENT_SLIDES.cphi.length);
-    else setPharmapackSlide((s) => (s + 1) % EVENT_SLIDES.pharmapack.length);
+  const nextSlide = () => {
+    setCphiSlide((s) => (s + 1) % EVENT_SLIDES.cphi.length);
   };
-  const prevSlide = (key: "cphi" | "pharmapack") => {
-    if (key === "cphi") setCphiSlide((s) => (s - 1 + EVENT_SLIDES.cphi.length) % EVENT_SLIDES.cphi.length);
-    else setPharmapackSlide((s) => (s - 1 + EVENT_SLIDES.pharmapack.length) % EVENT_SLIDES.pharmapack.length);
+  const prevSlide = () => {
+    setCphiSlide((s) => (s - 1 + EVENT_SLIDES.cphi.length) % EVENT_SLIDES.cphi.length);
   };
 
   const events = [
@@ -77,34 +67,17 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
       key: "cphi" as const,
       slide: cphiSlide,
       setSlide: setCphiSlide,
-      title: "CPhI Worldwide 2026",
-      location: "Fiera Milano, Milan, Italy",
-      date: "October 6–8, 2026",
-      hall: "Hall 4 — Stand 4D12",
-      zone: "APIs & Intermediates Pavilion",
-      badge: "Flagship Global Expo",
+      title: "CPHI India 2026",
+      location: "India Expo Centre, Greater Noida, Delhi NCR",
+      date: "November 25–27, 2026",
+      hall: "Hall 1 — Stand 1C24",
+      zone: "Active Pharmaceutical Ingredients (API) Pavilion",
+      badge: "Flagship Indian Expo",
       badgeColor: "#C79A4B",
       agenda: [
         "Commercial API Procurement Contracts",
         "DCGI & CDSCO Import Registrations",
         "Custom Chemical Synthesis Partnerships",
-      ],
-    },
-    {
-      key: "pharmapack" as const,
-      slide: pharmapackSlide,
-      setSlide: setPharmapackSlide,
-      title: "Pharmapack Europe 2027",
-      location: "Paris Expo Porte de Versailles, France",
-      date: "Jan 20–21, 2027",
-      hall: "Hall 7.2 — Stand J48",
-      zone: "Drug Delivery & Formulation Hub",
-      badge: "Confirmed Delegation",
-      badgeColor: "#071521",
-      agenda: [
-        "Sterile Formulation Excipients",
-        "Cold-Chain Logistics Protocols (2°C–8°C)",
-        "European CEP/EDQM Dossier Alignment",
       ],
     },
   ];
@@ -195,7 +168,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    onClick={() => prevSlide(event.key)}
+                    onClick={() => prevSlide()}
                     className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#071521]/90 border border-white/20 text-white flex items-center justify-center opacity-90 sm:opacity-0 sm:group-hover/slider:opacity-100 transition-opacity hover:bg-[#071521] z-10 shadow-md cursor-pointer"
                     aria-label="Previous exhibition photo"
                   >
@@ -204,7 +177,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    onClick={() => nextSlide(event.key)}
+                    onClick={() => nextSlide()}
                     className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#071521]/90 border border-white/20 text-white flex items-center justify-center opacity-90 sm:opacity-0 sm:group-hover/slider:opacity-100 transition-opacity hover:bg-[#071521] z-10 shadow-md cursor-pointer"
                     aria-label="Next exhibition photo"
                   >

@@ -11,6 +11,8 @@ import {
   ArrowRight,
   ArrowUpRight,
   X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import Footer from "../components/Footer";
 import SectionHeader from "../components/SectionHeader";
@@ -397,16 +399,6 @@ interface ExecutiveMember {
 }
 
 const LEADERSHIP_MEMBERS: ExecutiveMember[] = [
-  // ── Top Row: 3 Senior Leaders ──
-  {
-    name: "Kiran Premchand Shah",
-    role: "FOUNDER & MANAGING DIRECTOR",
-    tier: "senior",
-    image: "/images/kiran-shah.jpg",
-    initials: "KS",
-    linkedin: "https://linkedin.com/in/kiran-shah-ruskin",
-    description: "Founding visionary of Ruskin Chemipharm (Est. 1984), shaping international API indenting across four decades.",
-  },
   {
     name: "Krishna Kumar Iyer",
     role: "GENERAL MANAGER",
@@ -423,38 +415,48 @@ const LEADERSHIP_MEMBERS: ExecutiveMember[] = [
     linkedin: "https://linkedin.com/in/yash-jhaveri",
     description: "Driving commercial expansion, international indenting partnerships, and strategic pipelines since 2014.",
   },
-  // ── Bottom Row: 4 Functional Heads ──
   {
     name: "Atman Ajmera",
     role: "BUSINESS DEVELOPMENT LEAD",
     tier: "functional",
     initials: "AA",
     linkedin: "https://linkedin.com/in/atman-ajmera",
-    description: "Specialized API sourcing programs and institutional buyer partnerships across regional corridors.",
+    description: "Driving next-generation API sourcing programs, strategic outreach, and institutional buyer partnerships.",
+  },
+];
+
+const SRLC_SLIDES = [
+  {
+    image: "/srlc-hospital-banner.jpg",
+    alt: "Shrimad Rajchandra Love and Care - Hospital and Healthcare Initiatives",
+    tag: "HEALTHCARE INITIATIVES · DHARAMPUR, GUJARAT",
+    title: "Multispeciality Hospital & Research Centre",
+    description:
+      "Providing world-class, charitable medical care to underserved tribal communities in South Gujarat across 10 holistic care pillars.",
   },
   {
-    name: "Dr. Arvind Deshmukh",
-    role: "REGULATORY AFFAIRS DIRECTOR",
-    tier: "functional",
-    initials: "AD",
-    linkedin: "https://linkedin.com/in/dr-arvind-deshmukh",
-    description: "Overseeing international DMF dossiers, pharmacopoeial compliance, and global audit readiness.",
+    image: "/srlc-hero-banner.jpg",
+    alt: "Shrimad Rajchandra Love and Care - Holistic Care Programmes",
+    tag: "HOLISTIC CARE PROGRAMMES · GLOBAL OUTREACH",
+    title: "Empowering Lives Across 10 Care Pillars",
+    description:
+      "Impacting over 21 million lives worldwide through humanitarian relief, education, women empowerment, and environmental preservation.",
   },
   {
-    name: "Rajesh V. Parekh",
-    role: "GLOBAL PROCUREMENT HEAD",
-    tier: "functional",
-    initials: "RP",
-    linkedin: "https://linkedin.com/in/rajesh-v-parekh",
-    description: "Managing tier-1 synthesizer qualification, supply integrity, and raw material chemical assurance.",
+    image: "/srlc-tmm-banner.png",
+    alt: "Shrimad Rajchandra Love and Care - Tata Mumbai Marathon",
+    tag: "COMMUNITY ENGAGEMENT · TATA MUMBAI MARATHON",
+    title: "13× Highest Fundraising NGO",
+    description:
+      "Recognized repeatedly as the highest fundraising NGO at the Tata Mumbai Marathon, powered by unwavering selfless volunteerism.",
   },
   {
-    name: "Pooja N. Mehta",
-    role: "QUALITY ASSURANCE HEAD",
-    tier: "functional",
-    initials: "PM",
-    linkedin: "https://linkedin.com/in/pooja-n-mehta",
-    description: "Leading analytical laboratory validation, certificate of analysis verification, and batch traceability.",
+    image: "/srlc-banner-bapa.jpg",
+    alt: "Shrimad Rajchandra Love and Care - Compassionate Humanitarian Relief",
+    tag: "COMPASSION IN ACTION · GLOBAL REACH",
+    title: "Service With Empathy & Integrity",
+    description:
+      "A global movement inspired by Shrimad Rajchandraji and guided by Pujya Gurudevshri Rakeshji, serving all living beings selflessly.",
   },
 ];
 
@@ -472,6 +474,16 @@ export default function AboutPage() {
   const ribbonProgressRef = useRef<SVGPathElement>(null);
   const [activeMilestone, setActiveMilestone] = useState(0);
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [currentSrlcSlide, setCurrentSrlcSlide] = useState(0);
+  const [isSrlcPaused, setIsSrlcPaused] = useState(false);
+
+  useEffect(() => {
+    if (isSrlcPaused) return;
+    const interval = setInterval(() => {
+      setCurrentSrlcSlide((prev) => (prev + 1) % SRLC_SLIDES.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isSrlcPaused]);
 
   useEffect(() => {
     const handleOpenQuoteEvent = () => setQuoteModalOpen(true);
@@ -806,7 +818,7 @@ export default function AboutPage() {
 
                 {/* 4. Descriptive Subtitle */}
                 <p className="text-[14px] sm:text-[15px] text-[#CBD5E1] font-normal leading-relaxed pt-0.5 max-w-md">
-                  Four decades of global API sourcing excellence, landmark DCGI approvals, and direct primary manufacturer partnerships established since 1984.
+                  From pioneering API imports in 1984 to direct factory indenting, landmark DCGI approvals, and enduring global synthesizer alliances.
                 </p>
 
                 <div className="pt-2 flex items-center gap-2 text-xs text-[#C79A4B] font-semibold tracking-wider uppercase">
@@ -1003,9 +1015,9 @@ export default function AboutPage() {
                   </div>
                 </div>
 
-                {/* Caption (Plus Jakarta Sans - font-sans, font-semibold) */}
+                {/* Caption (Plus Jakarta Sans - font-sans, larger & signature gold) */}
                 <div className="pt-3 text-center">
-                  <span className="font-sans text-sm sm:text-[14.5px] font-semibold tracking-wide text-[#12304A]">
+                  <span className="font-sans text-base sm:text-lg font-bold tracking-wide text-[#C79A4B]">
                     Pujya Gurudevshri Rakeshji
                   </span>
                 </div>
@@ -1245,11 +1257,6 @@ export default function AboutPage() {
         <section
           id="leadership"
           className="py-24 sm:py-32 bg-[#FAF7F2] relative overflow-hidden border-t border-[#12304A]/10 text-left"
-          style={{
-            backgroundImage: `radial-gradient(#12304A 0.6px, transparent 0.6px), radial-gradient(#C79A4B 0.6px, #FAF7F2 0.6px)`,
-            backgroundSize: "28px 28px",
-            backgroundPosition: "0 0, 14px 14px",
-          }}
         >
           {/* Subtle Ambient Vignettes */}
           <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-white/60 to-transparent pointer-events-none" />
@@ -1287,7 +1294,7 @@ export default function AboutPage() {
               </p>
             </motion.div>
 
-            {/* ── Row 1: 3 Senior Leaders (Founder, GM, Head of Marketing) ── */}
+            {/* ── 3 Primary Leaders: Krishna, Yash, and Atman ── */}
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -1299,9 +1306,9 @@ export default function AboutPage() {
                   transition: { staggerChildren: 0.12 },
                 },
               }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-10"
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8"
             >
-              {LEADERSHIP_MEMBERS.filter((m) => m.tier === "senior").map((member) => (
+              {LEADERSHIP_MEMBERS.map((member) => (
                 <motion.div
                   key={member.name}
                   variants={{
@@ -1368,88 +1375,6 @@ export default function AboutPage() {
                 </motion.div>
               ))}
             </motion.div>
-
-            {/* ── Row 2: 4 Functional Heads (BD, Regulatory, Procurement, QA) ── */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-40px" }}
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: { staggerChildren: 0.1 },
-                },
-              }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6"
-            >
-              {LEADERSHIP_MEMBERS.filter((m) => m.tier === "functional").map((member) => (
-                <motion.div
-                  key={member.name}
-                  variants={{
-                    hidden: { opacity: 0, y: 28 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-                    },
-                  }}
-                  whileHover={{ y: -5 }}
-                  className="group relative bg-white border border-[#12304A]/15 rounded-none shadow-[0_4px_18px_rgba(18,48,74,0.03)] hover:shadow-[0_16px_32px_rgba(18,48,74,0.1)] hover:border-[#C79A4B] transition-all duration-500 flex flex-col overflow-hidden"
-                >
-                  {/* Photo Frame (Strictly square corners - rounded-none) */}
-                  <div className="aspect-[3/3.6] w-full relative overflow-hidden bg-[#071521] rounded-none">
-                    {member.image ? (
-                      <Image
-                        src={member.image}
-                        alt={`${member.name} - ${member.role}`}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 25vw"
-                        className="object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out rounded-none"
-                      />
-                    ) : (
-                      <ExecutivePortraitPlaceholder
-                        initials={member.initials}
-                        name={member.name}
-                        role={member.role}
-                      />
-                    )}
-
-                    {/* Subtle Corner Architectural Accent */}
-                    <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#C79A4B] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-
-                  {/* Caption & Metadata */}
-                  <div className="p-5 bg-white flex flex-col justify-between flex-1 border-t border-[#12304A]/10">
-                    <div>
-                      <h3 className="text-base font-bold text-[#12304A] font-sans group-hover:text-[#C79A4B] transition-colors leading-snug">
-                        {member.name}
-                      </h3>
-                      <div className="text-[10px] font-bold text-[#C79A4B] tracking-wider uppercase mt-1">
-                        {member.role}
-                      </div>
-                      <p className="text-[11.5px] text-[#5A7A8E] mt-2 leading-relaxed">
-                        {member.description}
-                      </p>
-                    </div>
-
-                    <a
-                      href={member.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-xs font-semibold text-[#5A7A8E] hover:text-[#0A66C2] transition-colors mt-4 pt-3 border-t border-[#12304A]/10 w-full group/link"
-                      aria-label={`${member.name} LinkedIn Profile`}
-                    >
-                      <div className="w-4 h-4 bg-[#0A66C2] text-white flex items-center justify-center rounded-none shadow-xs group-hover/link:brightness-110 transition-all">
-                        <LinkedInIcon className="w-2.5 h-2.5 fill-current" />
-                      </div>
-                      <span className="text-[10px] tracking-wide font-medium">LinkedIn</span>
-                      <ArrowUpRight className="w-2.5 h-2.5 ml-auto opacity-0 group-hover/link:opacity-100 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-all text-[#0A66C2]" />
-                    </a>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
           </div>
         </section>
 
@@ -1483,26 +1408,27 @@ export default function AboutPage() {
               }}
               className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start"
             >
-              {/* Left Column: Mandatory 4-Part Left-Aligned Header Stack */}
+              {/* Left Column: Mandatory 4-Part Left-Aligned Header Stack with SRLC Logo above heading */}
               <div className="lg:col-span-6 space-y-3.5">
                 <span className="inline-flex items-center gap-2 text-[#C79A4B] text-xs sm:text-sm font-bold tracking-widest uppercase font-mono">
                   <div className="w-8 h-[2px] bg-[#C79A4B]" />
                   GIVING BACK & SOCIAL RESPONSIBILITY
                 </span>
 
+                {/* SRLC Logo moved to top of heading */}
+                <div className="pt-1 pb-0.5">
+                  <img
+                    src="/srlc-logo.png"
+                    alt="Shrimad Rajchandra Love and Care"
+                    className="h-10 sm:h-12 w-auto object-contain opacity-95"
+                  />
+                </div>
+
                 <h2 className="text-3xl sm:text-4xl lg:text-[42px] xl:text-[44px] font-extrabold text-[#12304A] font-sans leading-[1.14] tracking-tight">
                   A Commitment to <span className="text-[#C79A4B]">Community & Care</span>
                 </h2>
 
                 <div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
-
-                <div className="pt-1.5">
-                  <img
-                    src="/srlc-logo.png"
-                    alt="Shrimad Rajchandra Love and Care"
-                    className="h-9 sm:h-10 w-auto object-contain opacity-95"
-                  />
-                </div>
               </div>
 
               {/* Right Column: Editorial Narrative (Exact requested copy) */}
@@ -1533,7 +1459,7 @@ export default function AboutPage() {
             </motion.div>
           </div>
 
-          {/* ── Middle: SRLC Banner (From Internet) ── */}
+          {/* ── Middle: SRLC Interactive Carousel Banner ── */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 sm:mt-14 relative z-10">
             <motion.div
               initial="hidden"
@@ -1547,18 +1473,33 @@ export default function AboutPage() {
                   transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
                 },
               }}
-              className="relative w-full h-[280px] sm:h-[380px] lg:h-[460px] overflow-hidden border border-[#12304A]/12 group shadow-xl"
+              onMouseEnter={() => setIsSrlcPaused(true)}
+              onMouseLeave={() => setIsSrlcPaused(false)}
+              className="relative w-full h-[320px] sm:h-[400px] lg:h-[480px] overflow-hidden border border-[#12304A]/12 group shadow-xl bg-[#071521]"
             >
-              <Image
-                src="/srlc-hospital-banner.jpg"
-                alt="Shrimad Rajchandra Love and Care - Hospital and Humanitarian Initiatives"
-                fill
-                className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                sizes="(max-width: 1280px) 100vw, 1280px"
-              />
+              {/* Carousel Slides */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentSrlcSlide}
+                  initial={{ opacity: 0, scale: 1.03 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0 w-full h-full"
+                >
+                  <Image
+                    src={SRLC_SLIDES[currentSrlcSlide].image}
+                    alt={SRLC_SLIDES[currentSrlcSlide].alt}
+                    fill
+                    priority
+                    className="object-cover object-center group-hover:scale-105 transition-transform duration-1000 ease-out"
+                    sizes="(max-width: 1280px) 100vw, 1280px"
+                  />
+                </motion.div>
+              </AnimatePresence>
 
               {/* Gradient Vignette: anchored to bottom ~45% so top stays bright & visible */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071521] via-[#071521]/65 via-42% to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071521] via-[#071521]/70 via-42% to-transparent pointer-events-none" />
               <div className="absolute inset-0 bg-gradient-to-r from-[#071521]/80 via-transparent to-transparent pointer-events-none hidden sm:block" />
 
               {/* Top Right: Official SRLC White Logo Badge */}
@@ -1570,19 +1511,61 @@ export default function AboutPage() {
                 />
               </div>
 
+              {/* Carousel Navigation Arrows */}
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentSrlcSlide(
+                    (prev) => (prev - 1 + SRLC_SLIDES.length) % SRLC_SLIDES.length
+                  )
+                }
+                className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#071521]/70 hover:bg-[#C79A4B] text-white border border-white/15 flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer shadow-lg backdrop-blur-sm"
+                aria-label="Previous slide"
+              >
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setCurrentSrlcSlide((prev) => (prev + 1) % SRLC_SLIDES.length)
+                }
+                className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#071521]/70 hover:bg-[#C79A4B] text-white border border-white/15 flex items-center justify-center transition-all duration-300 hover:scale-110 cursor-pointer shadow-lg backdrop-blur-sm"
+                aria-label="Next slide"
+              >
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+
               {/* Bottom Content Overlay */}
               <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 lg:p-10 z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
                 <div className="space-y-2 max-w-2xl text-left">
                   <span className="inline-flex items-center gap-2 text-[#E5C378] text-[11px] sm:text-xs font-mono font-bold tracking-[0.2em] uppercase">
                     <div className="w-5 h-[1.5px] bg-[#E5C378]" />
-                    GLOBAL HUMANITARIAN INITIATIVE · DHARAMPUR, GUJARAT
+                    {SRLC_SLIDES[currentSrlcSlide].tag}
                   </span>
                   <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white font-sans tracking-tight leading-snug">
-                    Shrimad Rajchandra Love and Care
+                    {SRLC_SLIDES[currentSrlcSlide].title}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-200 font-sans leading-relaxed line-clamp-2 sm:line-clamp-none">
-                    Our association with SRLC is driven by a shared belief in sustainable impact, institutional integrity, and meaningful service to society.
+                    {SRLC_SLIDES[currentSrlcSlide].description}
                   </p>
+
+                  {/* Slide Progress / Indicators */}
+                  <div className="flex items-center gap-2 pt-2">
+                    {SRLC_SLIDES.map((_, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setCurrentSrlcSlide(idx)}
+                        aria-label={`Go to slide ${idx + 1}`}
+                        className={`h-1.5 transition-all duration-300 rounded-full cursor-pointer ${
+                          currentSrlcSlide === idx
+                            ? "w-8 bg-[#C79A4B]"
+                            : "w-2.5 bg-white/40 hover:bg-white/70"
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
 
                 <a
