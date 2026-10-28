@@ -252,7 +252,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => onScheduleMeeting(`Schedule Meeting at ${event.title} (${event.hall})`)}
-                      className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#C79A4B] text-white text-sm font-bold hover:bg-[#B58A3E] transition-colors shadow-lg group/btn w-full cursor-pointer"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#C79A4B] text-white text-sm font-bold hover:bg-[#B58A3E] transition-colors shadow-lg group/btn w-full cursor-pointer"
                     >
                       <span>Schedule Booth Meeting</span>
                       <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -287,7 +287,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onScheduleMeeting("Virtual Technical Dossier & Sourcing Consultation")}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#12304A] text-white text-xs font-bold hover:bg-[#0B1E2E] transition-colors shrink-0 cursor-pointer shadow-sm"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#12304A] text-white text-xs font-bold hover:bg-[#0B1E2E] transition-colors shrink-0 cursor-pointer shadow-sm"
           >
             <ShieldCheck className="w-3.5 h-3.5 text-[#C79A4B]" />
             <span>Book Virtual Dossier Meeting</span>

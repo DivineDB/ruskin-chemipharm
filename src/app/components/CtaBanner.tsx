@@ -52,7 +52,7 @@ export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={onRequestQuote}
-                className="flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-7 py-3.5 sm:px-8 sm:py-3.5 rounded-full text-sm font-bold transition-colors group w-full sm:w-auto cursor-pointer"
+                className="flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-7 py-3.5 sm:px-8 sm:py-3.5 rounded-xl text-sm font-bold transition-colors group w-full sm:w-auto cursor-pointer"
               >
                 <span>Request API Quote</span>
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform stroke-[2.5] duration-200" />

@@ -297,7 +297,7 @@ export default function HeroCarousel({
 						whileHover={{ scale: 1.025, y: -2 }}
 						whileTap={{ scale: 0.98 }}
 						onClick={() => router.push(slide.cta.href)}
-						className="relative overflow-hidden flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#C79A4B] text-white font-bold text-sm sm:text-base shadow-lg shadow-[#C79A4B]/20 hover:bg-[#B58A3E] transition-colors group w-full sm:w-auto sm:min-w-[260px] cursor-pointer gpu-smooth"
+						className="relative overflow-hidden flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-[#C79A4B] text-white font-bold text-sm sm:text-base shadow-lg shadow-[#C79A4B]/20 hover:bg-[#B58A3E] transition-colors group w-full sm:w-auto sm:min-w-[260px] cursor-pointer gpu-smooth"
 					>
 						<AnimatePresence mode="wait" initial={false}>
 							<motion.span
@@ -319,7 +319,7 @@ export default function HeroCarousel({
 						whileHover={{ scale: 1.025, y: -2 }}
 						whileTap={{ scale: 0.98 }}
 						onClick={onRequestQuote}
-						className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-white border border-[#12304A]/15 text-[#12304A] font-bold text-sm sm:text-base hover:bg-[#FAF7F2] hover:border-[#12304A]/30 transition-[background-color,border-color] shadow-sm w-full sm:w-auto cursor-pointer gpu-smooth"
+						className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-white border border-[#12304A]/15 text-[#12304A] font-bold text-sm sm:text-base hover:bg-[#FAF7F2] hover:border-[#12304A]/30 transition-[background-color,border-color] shadow-sm w-full sm:w-auto cursor-pointer gpu-smooth"
 					>
 						<span>Request Quote &amp; COA</span>
 					</motion.button>

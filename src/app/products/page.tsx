@@ -512,7 +512,7 @@ function ProductsContent() {
 											});
 										}
 									}}
-									className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-[#C79A4B] text-white font-bold text-sm shadow-xl hover:bg-[#B58A3E] transition-all cursor-pointer"
+									className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-[#C79A4B] text-white font-bold text-sm shadow-xl hover:bg-[#B58A3E] transition-all cursor-pointer"
 								>
 									<Search className="w-4 h-4" />
 									<span>Search {ALL_PRODUCTS.length}+ Products</span>
@@ -525,7 +525,7 @@ function ProductsContent() {
 								>
 									<button
 										onClick={() => handleOpenQuote()}
-										className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-sm backdrop-blur-md transition-all cursor-pointer"
+										className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-sm backdrop-blur-md transition-all cursor-pointer"
 									>
 										<span>Request Custom Quote</span>
 										<ArrowUpRight className="w-4 h-4 text-[#C79A4B]" />
@@ -1197,7 +1197,7 @@ function ProductsContent() {
 										whileTap={{ scale: 0.98 }}
 										type="submit"
 										disabled={isSubmittingInquiry}
-										className="inline-flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] disabled:bg-[#C79A4B]/80 text-white font-extrabold text-sm px-10 py-4 rounded-full transition-colors shadow-lg shadow-[#C79A4B]/20 w-full sm:w-auto cursor-pointer gpu-smooth"
+										className="inline-flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] disabled:bg-[#C79A4B]/80 text-white font-extrabold text-sm px-10 py-4 rounded-xl transition-colors shadow-lg shadow-[#C79A4B]/20 w-full sm:w-auto cursor-pointer gpu-smooth"
 									>
 										{isSubmittingInquiry ? (
 											<span className="inline-flex items-center gap-2">
@@ -1265,7 +1265,7 @@ function ProductsContent() {
 									whileHover={{ scale: 1.03 }}
 									whileTap={{ scale: 0.97 }}
 									onClick={() => setInquirySubmitted(false)}
-									className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-3 rounded-full text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
+									className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-3 rounded-xl text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
 								>
 									Submit Another Request
 								</motion.button>
@@ -1513,7 +1513,7 @@ function ProductsContent() {
 										whileHover={{ scale: 1.03 }}
 										whileTap={{ scale: 0.97 }}
 										onClick={() => setQuoteModalOpen(false)}
-										className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-full text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
+										className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
 									>
 										Close Window
 									</motion.button>

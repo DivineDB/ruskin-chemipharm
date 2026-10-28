@@ -379,7 +379,7 @@ export default function ContactPage() {
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-sm"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shadow-sm"
                         >
                           <MessageCircle className="w-3.5 h-3.5" />
                           <span>Instant WhatsApp Follow-up</span>
@@ -387,7 +387,7 @@ export default function ContactPage() {
                         <button
                           type="button"
                           onClick={resetForm}
-                          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/10 border border-white/10 text-white text-xs font-bold hover:bg-white/20 transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/10 border border-white/10 text-white text-xs font-bold hover:bg-white/20 transition-colors cursor-pointer"
                         >
                           <span>Submit Another Inquiry</span>
                         </button>

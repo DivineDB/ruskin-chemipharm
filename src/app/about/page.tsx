@@ -1194,14 +1194,14 @@ export default function AboutPage() {
                     <button
                       type="button"
                       onClick={() => setQuoteModalOpen(true)}
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-xs sm:text-sm tracking-wide transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-xs sm:text-sm tracking-wide transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer group"
                     >
                       <span>Request Sourcing Consultation</span>
                       <ArrowUpRight className="w-4 h-4 text-[#C79A4B] group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                     </button>
                     <Link
                       href="/products"
-                      className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-[#C79A4B] text-[#12304A] hover:text-white border border-[#12304A]/15 hover:border-[#C79A4B] font-bold text-xs sm:text-sm tracking-wide shadow-xs hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
+                      className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white hover:bg-[#C79A4B] text-[#12304A] hover:text-white border border-[#12304A]/15 hover:border-[#C79A4B] font-bold text-xs sm:text-sm tracking-wide shadow-xs hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
                     >
                       <span>Explore Active Products</span>
                       <ArrowRight className="w-4 h-4 text-[#C79A4B] group-hover:text-white transition-all duration-300 group-hover:translate-x-1" />

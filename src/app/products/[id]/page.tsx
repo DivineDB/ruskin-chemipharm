@@ -228,7 +228,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleOpenModal(`Request Sample for ${currentProduct.name}`)}
-                className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-7 py-3.5 rounded-full text-sm font-extrabold transition-colors shadow-md cursor-pointer gpu-smooth"
+                className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-7 py-3.5 rounded-xl text-sm font-extrabold transition-colors shadow-md cursor-pointer gpu-smooth"
               >
                 Request Sample
               </motion.button>
@@ -237,7 +237,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handleOpenModal(`Request COA & Technical Specs for ${currentProduct.name}`)}
-                className="inline-flex items-center gap-2 bg-[#12304A] hover:bg-[#0B1E2E] text-white px-7 py-3.5 rounded-full text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
+                className="inline-flex items-center gap-2 bg-[#12304A] hover:bg-[#0B1E2E] text-white px-7 py-3.5 rounded-xl text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
               >
                 Request COA
               </motion.button>
@@ -468,7 +468,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     whileTap={{ scale: 0.98 }}
                     disabled={isSubmittingInquiry}
                     type="submit"
-                    className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] disabled:opacity-75 text-white font-extrabold text-sm px-9 py-4 rounded-full transition-colors shadow-lg shadow-[#C79A4B]/20 cursor-pointer gpu-smooth"
+                    className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] disabled:opacity-75 text-white font-extrabold text-sm px-9 py-4 rounded-xl transition-colors shadow-lg shadow-[#C79A4B]/20 cursor-pointer gpu-smooth"
                   >
                     {isSubmittingInquiry ? (
                       <>
@@ -521,7 +521,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setInquirySubmitted(false)}
-                  className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-3 rounded-full text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
+                  className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-3 rounded-xl text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
                 >
                   Submit Another Request
                 </motion.button>
@@ -631,7 +631,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   <h3 className="text-xl font-bold text-[#12304A]">Request Submitted</h3>
                   <p className="text-xs text-[#5A7A8E] max-w-xs mx-auto">Our regulatory team will provide batch COA and technical specifications within 2 business hours.</p>
                   <button onClick={() => setQuoteModalOpen(false)}
-                    className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-full text-sm font-bold transition-colors">
+                    className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-xl text-sm font-bold transition-colors">
                     Close Window
                   </button>
                 </motion.div>

@@ -520,7 +520,7 @@ export default function HomePage() {
 							whileHover={{ scale: 1.025, y: -2 }}
 							whileTap={{ scale: 0.98 }}
 							onClick={() => router.push("/products")}
-							className="flex items-center gap-2.5 px-8 py-3.5 rounded-full bg-[#12304A] hover:bg-[#0B1E2E] text-white font-bold text-sm shadow-md hover:shadow-xl transition-all group cursor-pointer gpu-smooth"
+							className="flex items-center gap-2.5 px-8 py-3.5 rounded-xl bg-[#12304A] hover:bg-[#0B1E2E] text-white font-bold text-sm shadow-md hover:shadow-xl transition-all group cursor-pointer gpu-smooth"
 						>
 							<span>Explore All 66+ APIs</span>
 							<ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
@@ -686,7 +686,7 @@ export default function HomePage() {
 						>
 							<Link
 								href="/services"
-								className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-sm tracking-wide transition-all duration-300 shadow-md hover:shadow-xl shrink-0 cursor-pointer gpu-smooth group"
+								className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[#12304A] hover:bg-[#C79A4B] text-white font-bold text-sm tracking-wide transition-all duration-300 shadow-md hover:shadow-xl shrink-0 cursor-pointer gpu-smooth group"
 							>
 								<span>Explore All Services</span>
 								<ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -1204,7 +1204,7 @@ export default function HomePage() {
 											whileHover={{ scale: 1.03 }}
 											whileTap={{ scale: 0.97 }}
 											onClick={() => setQuoteModalOpen(false)}
-											className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-full text-xs font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
+											className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-xl text-xs font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
 										>
 											Done
 										</motion.button>
