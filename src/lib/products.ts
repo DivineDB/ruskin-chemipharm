@@ -13,6 +13,7 @@ export interface ApiProduct {
 }
 
 export const ALL_PRODUCTS: ApiProduct[] = [
+
   // =========================================================================
   // 1. PHARMA (Contrast Media, Anesthetics, Antibacterials, Oncology & Hormones)
   // Sourced directly from Ruskin's registered DCGI portfolio (productList.xlsx)
@@ -409,14 +410,15 @@ export const ALL_PRODUCTS: ApiProduct[] = [
   },
 
   // =========================================================================
-  // 2. ANIMAL CARE (Veterinary Actives & Herd Health)
+
+  // 2. VETERINARY (Animal Health Actives & Veterinary Formulations)
   // Sourced directly from Ruskin's registered DCGI portfolio & veterinary lines
   // =========================================================================
   {
     id: "ab7",
     slug: "levamisole",
     name: "Levamisole",
-    category: "Animal Care",
+    category: "Veterinary",
     casNumber: "14769-73-4",
     purity: "99.5%",
     grade: "BP Vet, USP, Ph. Eur.",
@@ -429,7 +431,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "an1",
     slug: "procaine-penicillin",
     name: "Procaine Penicillin IP",
-    category: "Animal Care",
+    category: "Veterinary",
     casNumber: "54-35-3",
     purity: "99.2%",
     grade: "IP, USP, BP Vet",
@@ -442,7 +444,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "ab6",
     slug: "benzathine-penicillin",
     name: "Benzathine Penicillin IP",
-    category: "Animal Care",
+    category: "Veterinary",
     casNumber: "1538-09-6",
     purity: "99.4%",
     grade: "IP, USP, BP Vet",
@@ -455,7 +457,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "ab5",
     slug: "benzylpenicillin-sodium",
     name: "Benzylpenicillin Sodium IP",
-    category: "Animal Care",
+    category: "Veterinary",
     casNumber: "69-57-8",
     purity: "99.6%",
     grade: "IP, USP, Ph. Eur.",
@@ -468,7 +470,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "vit12",
     slug: "menadione",
     name: "Menadione (Vitamin K3)",
-    category: "Animal Care",
+    category: "Veterinary",
     casNumber: "58-27-5",
     purity: "99.2%",
     grade: "USP, Feed Grade",
@@ -481,7 +483,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "vet1",
     slug: "ivermectin",
     name: "Ivermectin",
-    category: "Animal Care",
+    category: "Veterinary",
     casNumber: "70288-86-7",
     purity: "99.0%",
     grade: "USP, BP Vet, EP",
@@ -494,7 +496,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "vet2",
     slug: "enrofloxacin",
     name: "Enrofloxacin",
-    category: "Animal Care",
+    category: "Veterinary",
     casNumber: "93106-60-6",
     purity: "99.5%",
     grade: "BP Vet, USP",
@@ -507,7 +509,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "vet3",
     slug: "tilmicosin",
     name: "Tilmicosin",
-    category: "Animal Care",
+    category: "Veterinary",
     casNumber: "108050-54-0",
     purity: "99.0%",
     grade: "USP Vet, EP",
@@ -520,7 +522,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "vet4",
     slug: "fipronil",
     name: "Fipronil",
-    category: "Animal Care",
+    category: "Veterinary",
     casNumber: "120068-37-3",
     purity: "99.2%",
     grade: "Vet Technical Grade",
@@ -531,7 +533,103 @@ export const ALL_PRODUCTS: ApiProduct[] = [
   },
 
   // =========================================================================
-  // 3. EXCIPIENTS (Binders, Disintegrants & Polymers for Formulators)
+
+  // 3. NEUTRA (Cognitive Enhancers & Neuro-Actives)
+  // Sourced directly from Ruskin's registered DCGI portfolio & neuro bio-actives
+  // =========================================================================
+  {
+    id: "noo2",
+    slug: "piracetam",
+    name: "Piracetam IP",
+    category: "Neutra",
+    casNumber: "7491-74-9",
+    purity: "99.6%",
+    grade: "IP, Ph. Eur., BP",
+    dmfStatus: "DCGI Registered",
+    manufacturer: "Jiangxi Yuehua Pharmaceutical Co. Ltd",
+    tagline: "Flagship racetam nootropic enhancing synaptic neurotransmission and cerebral microcirculation.",
+    description: "Cyclic GABA derivative allosterically modulating AMPA receptors and improving erythrocyte deformability for heightened cerebral blood flow, mental processing speed, and cognitive retention. Directly registered with DCGI."
+  },
+  {
+    id: "vit6",
+    slug: "thiamine-hcl",
+    name: "Thiamine Hydrochloride (Vitamin B1) IP/EP",
+    category: "Neutra",
+    casNumber: "67-03-8",
+    purity: "99.4%",
+    grade: "IP, EP, USP",
+    dmfStatus: "DCGI Registered",
+    manufacturer: "Jiangxi Tianxin Pharmaceutical Co., Ltd.",
+    tagline: "Vitamin B1 hydrochloride neural coenzyme for cerebral glucose metabolism and neural energy.",
+    description: "Crystalline vitamin B1 active serving as essential thiamine pyrophosphate (TPP) coenzyme required for neural ATP energy generation, nerve impulse conduction, and cognitive clarity. Directly registered with DCGI."
+  },
+  {
+    id: "noo1",
+    slug: "citicoline-sodium",
+    name: "Citicoline Sodium (CDP-Choline)",
+    category: "Neutra",
+    casNumber: "33818-15-4",
+    purity: "99.5%",
+    grade: "USP, Ph. Eur., Nutraceutical Grade",
+    dmfStatus: "USDMF Available",
+    manufacturer: "Kyowa Hakko Bio Co., Ltd.",
+    tagline: "Flagship cholinergic nootropic supporting phospholipid synthesis, focus, and memory.",
+    description: "High-bioavailability cytidine 5'-diphosphocholine sodium active supplying both choline and cytidine across the blood-brain barrier for neuronal membrane repair, dopamine receptor density, and mental acuity."
+  },
+  {
+    id: "noo3",
+    slug: "alpha-gpc",
+    name: "Alpha-GPC (L-Alpha Glycerylphosphorylcholine)",
+    category: "Neutra",
+    casNumber: "28319-77-9",
+    purity: "99.0%",
+    grade: "Pharma & Dietary Grade",
+    dmfStatus: "USDMF Available",
+    manufacturer: "Chemi Nutra / Lipoid GmbH",
+    tagline: "Highly bioavailable acetylcholine precursor for cognitive clarity, memory, and athletic power.",
+    description: "Physiological phospholipid precursor directly supplying choline to central cholinergic neurons for enhanced acetylcholine synthesis, growth hormone secretion, and neuromuscular precision."
+  },
+  {
+    id: "noo4",
+    slug: "l-theanine",
+    name: "L-Theanine",
+    category: "Neutra",
+    casNumber: "3081-61-6",
+    purity: "99.8%",
+    grade: "USP, FCC Grade",
+    dmfStatus: "Tech Pack Ready",
+    manufacturer: "Taiyo Kagaku Co., Ltd.",
+    tagline: "Natural amino acid inducing calm alpha-wave focus without drowsiness.",
+    description: "Non-proteinogenic amino acid analogue of glutamine that crosses the blood-brain barrier to modulate GABA, serotonin, and dopamine, generating a relaxed yet alert mental state."
+  },
+  {
+    id: "noo5",
+    slug: "phosphatidylserine",
+    name: "Phosphatidylserine (PS 50% / 70%)",
+    category: "Neutra",
+    casNumber: "51446-62-9",
+    purity: "99.0%",
+    grade: "Pharma & Nutraceutical Grade",
+    dmfStatus: "USDMF Available",
+    manufacturer: "Enzymotec Ltd. / Lipogen",
+    tagline: "Essential neuronal membrane phospholipid critical for memory, attention, and cognitive longevity.",
+    description: "Major acidic phospholipid class in brain cortex cell membranes maintaining membrane fluidity, neurotransmitter release, nerve growth factor reception, and age-related memory preservation."
+  },
+  {
+    id: "noo6",
+    slug: "huperzine-a",
+    name: "Huperzine A",
+    category: "Neutra",
+    casNumber: "102518-79-6",
+    purity: "99.2%",
+    grade: "High-Purity Natural Extract",
+    dmfStatus: "Tech Pack Ready",
+    manufacturer: "Chengdu Wagott Bio-Tech Co., Ltd.",
+    tagline: "Potent selective acetylcholinesterase inhibitor for memory consolidation and neuroprotection.",
+    description: "Naturally derived sesquiterpene alkaloid exerting reversible inhibition of acetylcholinesterase to increase synaptic acetylcholine levels, prolonging memory retention and cognitive performance."
+  },
+
+  // 4. EXCIPIENTS (Binders, Disintegrants & Polymers for Formulators)
   // Sourced from audited global excipient manufacturing partners
   // =========================================================================
   {
@@ -640,14 +738,15 @@ export const ALL_PRODUCTS: ApiProduct[] = [
   },
 
   // =========================================================================
-  // 4. FOOD & NUTRITION (CoQ10, Renal Keto-Analogues & Dietary Vitamins)
+
+  // 5. NUTRACEUTICALS (CoQ10, Renal Keto-Analogues & Dietary Vitamins)
   // Sourced directly from Ruskin's registered DCGI portfolio (productList.xlsx)
   // =========================================================================
   {
     id: "nut1",
     slug: "coenzyme-q10",
     name: "Coenzyme Q10 USP (Ubidecarenone)",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "303-98-0",
     purity: "99.5%",
     grade: "USP, EP",
@@ -660,7 +759,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "vit4",
     slug: "pyridoxine-hcl",
     name: "Pyridoxine Hydrochloride (Vitamin B6) IP/EP",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "58-56-0",
     purity: "99.5%",
     grade: "IP, EP, USP",
@@ -673,7 +772,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "nut2",
     slug: "thiamine-mononitrate",
     name: "Thiamine Mononitrate (Thiamine Nitrate) IP/EP",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "532-43-4",
     purity: "99.4%",
     grade: "IP, EP, USP",
@@ -686,7 +785,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "keto1",
     slug: "dl-alpha-hydroxymethionine-calcium",
     name: "D,L-α-Hydroxymethionine Calcium",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "4857-44-3",
     purity: "99.2%",
     grade: "Ph. Eur., Medical Food",
@@ -699,7 +798,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "keto2",
     slug: "dl-alpha-ketoisoleucine-calcium",
     name: "D,L-α-Ketoisoleucine Calcium",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "51828-95-6",
     purity: "99.2%",
     grade: "Ph. Eur., Medical Food",
@@ -712,7 +811,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "keto3",
     slug: "alpha-ketoleucine-calcium",
     name: "α-Ketoleucine Calcium",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "51828-94-5",
     purity: "99.3%",
     grade: "Ph. Eur., Medical Food",
@@ -725,7 +824,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "keto4",
     slug: "alpha-ketophenylalanine-calcium",
     name: "α-Ketophenylalanine Calcium",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "51828-93-4",
     purity: "99.1%",
     grade: "Ph. Eur., Medical Food",
@@ -738,7 +837,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "keto5",
     slug: "alpha-ketovaline-calcium",
     name: "α-Ketovaline Calcium",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "51828-97-8",
     purity: "99.2%",
     grade: "Ph. Eur., Medical Food",
@@ -751,7 +850,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "vit3",
     slug: "ascorbic-acid",
     name: "Ascorbic Acid (Vitamin C)",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "50-81-7",
     purity: "99.8%",
     grade: "USP, Ph. Eur., IP, FCC",
@@ -764,7 +863,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "vit9",
     slug: "cholecalciferol",
     name: "Cholecalciferol (Vitamin D3)",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "67-97-0",
     purity: "99.6%",
     grade: "USP, Ph. Eur., FCC",
@@ -777,7 +876,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "vit10",
     slug: "tocopherol-acetate",
     name: "Tocopherol Acetate (Vitamin E)",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "7695-91-2",
     purity: "99.5%",
     grade: "USP, Ph. Eur., Food Grade",
@@ -790,7 +889,7 @@ export const ALL_PRODUCTS: ApiProduct[] = [
     id: "vit5",
     slug: "cyanocobalamin",
     name: "Cyanocobalamin (Vitamin B12)",
-    category: "Food & Nutrition",
+    category: "Nutraceuticals",
     casNumber: "68-19-9",
     purity: "99.0%",
     grade: "USP, Ph. Eur., FCC",
@@ -801,100 +900,6 @@ export const ALL_PRODUCTS: ApiProduct[] = [
   },
 
   // =========================================================================
-  // 5. NOOTROPICS (Cognitive Enhancers & Neuro-Actives)
-  // Sourced directly from Ruskin's registered DCGI portfolio & neuro bio-actives
-  // =========================================================================
-  {
-    id: "noo2",
-    slug: "piracetam",
-    name: "Piracetam IP",
-    category: "Nootropics",
-    casNumber: "7491-74-9",
-    purity: "99.6%",
-    grade: "IP, Ph. Eur., BP",
-    dmfStatus: "DCGI Registered",
-    manufacturer: "Jiangxi Yuehua Pharmaceutical Co. Ltd",
-    tagline: "Flagship racetam nootropic enhancing synaptic neurotransmission and cerebral microcirculation.",
-    description: "Cyclic GABA derivative allosterically modulating AMPA receptors and improving erythrocyte deformability for heightened cerebral blood flow, mental processing speed, and cognitive retention. Directly registered with DCGI."
-  },
-  {
-    id: "vit6",
-    slug: "thiamine-hcl",
-    name: "Thiamine Hydrochloride (Vitamin B1) IP/EP",
-    category: "Nootropics",
-    casNumber: "67-03-8",
-    purity: "99.4%",
-    grade: "IP, EP, USP",
-    dmfStatus: "DCGI Registered",
-    manufacturer: "Jiangxi Tianxin Pharmaceutical Co., Ltd.",
-    tagline: "Vitamin B1 hydrochloride neural coenzyme for cerebral glucose metabolism and neural energy.",
-    description: "Crystalline vitamin B1 active serving as essential thiamine pyrophosphate (TPP) coenzyme required for neural ATP energy generation, nerve impulse conduction, and cognitive clarity. Directly registered with DCGI."
-  },
-  {
-    id: "noo1",
-    slug: "citicoline-sodium",
-    name: "Citicoline Sodium (CDP-Choline)",
-    category: "Nootropics",
-    casNumber: "33818-15-4",
-    purity: "99.5%",
-    grade: "USP, Ph. Eur., Nutraceutical Grade",
-    dmfStatus: "USDMF Available",
-    manufacturer: "Kyowa Hakko Bio Co., Ltd.",
-    tagline: "Flagship cholinergic nootropic supporting phospholipid synthesis, focus, and memory.",
-    description: "High-bioavailability cytidine 5'-diphosphocholine sodium active supplying both choline and cytidine across the blood-brain barrier for neuronal membrane repair, dopamine receptor density, and mental acuity."
-  },
-  {
-    id: "noo3",
-    slug: "alpha-gpc",
-    name: "Alpha-GPC (L-Alpha Glycerylphosphorylcholine)",
-    category: "Nootropics",
-    casNumber: "28319-77-9",
-    purity: "99.0%",
-    grade: "Pharma & Dietary Grade",
-    dmfStatus: "USDMF Available",
-    manufacturer: "Chemi Nutra / Lipoid GmbH",
-    tagline: "Highly bioavailable acetylcholine precursor for cognitive clarity, memory, and athletic power.",
-    description: "Physiological phospholipid precursor directly supplying choline to central cholinergic neurons for enhanced acetylcholine synthesis, growth hormone secretion, and neuromuscular precision."
-  },
-  {
-    id: "noo4",
-    slug: "l-theanine",
-    name: "L-Theanine",
-    category: "Nootropics",
-    casNumber: "3081-61-6",
-    purity: "99.8%",
-    grade: "USP, FCC Grade",
-    dmfStatus: "Tech Pack Ready",
-    manufacturer: "Taiyo Kagaku Co., Ltd.",
-    tagline: "Natural amino acid inducing calm alpha-wave focus without drowsiness.",
-    description: "Non-proteinogenic amino acid analogue of glutamine that crosses the blood-brain barrier to modulate GABA, serotonin, and dopamine, generating a relaxed yet alert mental state."
-  },
-  {
-    id: "noo5",
-    slug: "phosphatidylserine",
-    name: "Phosphatidylserine (PS 50% / 70%)",
-    category: "Nootropics",
-    casNumber: "51446-62-9",
-    purity: "99.0%",
-    grade: "Pharma & Nutraceutical Grade",
-    dmfStatus: "USDMF Available",
-    manufacturer: "Enzymotec Ltd. / Lipogen",
-    tagline: "Essential neuronal membrane phospholipid critical for memory, attention, and cognitive longevity.",
-    description: "Major acidic phospholipid class in brain cortex cell membranes maintaining membrane fluidity, neurotransmitter release, nerve growth factor reception, and age-related memory preservation."
-  },
-  {
-    id: "noo6",
-    slug: "huperzine-a",
-    name: "Huperzine A",
-    category: "Nootropics",
-    casNumber: "102518-79-6",
-    purity: "99.2%",
-    grade: "High-Purity Natural Extract",
-    dmfStatus: "Tech Pack Ready",
-    manufacturer: "Chengdu Wagott Bio-Tech Co., Ltd.",
-    tagline: "Potent selective acetylcholinesterase inhibitor for memory consolidation and neuroprotection.",
-    description: "Naturally derived sesquiterpene alkaloid exerting reversible inhibition of acetylcholinesterase to increase synaptic acetylcholine levels, prolonging memory retention and cognitive performance."
-  }
 ];
 
 export function getProductBySlugOrId(identifier: string): ApiProduct | undefined {

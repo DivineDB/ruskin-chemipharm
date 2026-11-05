@@ -529,7 +529,7 @@ function ProductsContent() {
 								eyebrow="Product Directory"
 								lead="DCGI-Approved &"
 								highlight="Registered API Directory"
-								description={`Explore our catalog of ${ALL_PRODUCTS.length}+ high-purity APIs, veterinary actives, excipients, dietary nutrients, and nootropics sourced directly from audited global manufacturing partners.`}
+								description={`Explore our catalog of ${ALL_PRODUCTS.length}+ high-purity APIs, veterinary actives, neuro-actives, excipients, and nutraceuticals sourced directly from audited global manufacturing partners.`}
 							/>
 
 							{/* Hero CTA Buttons: API Catalog / Finished Formulations */}

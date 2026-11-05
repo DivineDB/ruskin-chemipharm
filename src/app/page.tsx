@@ -103,10 +103,10 @@ function CountUp({
 // ─── Category Icon Mapping ────────────────────────────────────────────────────
 const CATEGORY_ICON_MAP: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
 	"Pharma": Pill,
-	"Animal Care": HeartPulse,
+	"Veterinary": HeartPulse,
+	"Neutra": Brain,
 	"Excipients": Layers,
-	"Food & Nutrition": FlaskConical,
-	"Nootropics": Brain,
+	"Nutraceuticals": FlaskConical,
 };
 
 // ─── 4 Core Ruskin Services ───────────────────────────────────────────────────
