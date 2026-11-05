@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Footer from "../../components/Footer";
 import CustomSelect from "../../components/CustomSelect";
 import Navbar from "../../components/Navbar";
-import { getProductBySlugOrId, getRelatedProducts, ALL_PRODUCTS } from "@/lib/products";
+import { getProductBySlugOrId, ALL_PRODUCTS } from "@/lib/products";
 import { useScrollLock } from "@/lib/scrollLock";
 import { useProductTransition } from "../../context/ProductTransitionContext";
 import {
@@ -39,7 +39,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const currentProduct = product || ALL_PRODUCTS[0];
-  const relatedProducts = getRelatedProducts(currentProduct, 4);
 
   // Cross-page seamless title growth transition
   const { isTransitioningFor, registerTarget, startTransition } = useProductTransition();
@@ -247,87 +246,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
         </motion.div>
 
-        {/* ================= 3. RELATED PRODUCTS SECTION ================= */}
-        <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-6 text-left"
-        >
-          <div className="space-y-2">
-            <span className="inline-flex items-center gap-2 text-[#C79A4B] text-sm font-bold tracking-widest uppercase">
-              <div className="w-8 h-[2px] bg-[#C79A4B]" />
-              Related Products
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#12304A] tracking-tight">
-              Related Compounds in {currentProduct.category}
-            </h2>
-            <div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />
-          </div>
-
-          {/* Grid of Related Product Cards — matching navy product cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {relatedProducts.map((rel) => {
-              const isRelTransitioning = isTransitioningFor(rel.name);
-              return (
-              <motion.div
-                key={rel.id}
-                whileHover={{ y: -4, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } }}
-                className="relative bg-[#0B1E2E] border border-white/[0.08] hover:border-[#C79A4B]/35 rounded-[22px] overflow-hidden shadow-sm hover:shadow-[0_16px_36px_-8px_rgba(7,21,33,0.5)] transition-[border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group flex flex-col justify-between p-5 gpu-smooth cursor-pointer"
-              >
-                <Link
-                  href={`/products/${rel.slug}`}
-                  onClick={(e) => {
-                    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-                    e.preventDefault();
-                    const headingEl = e.currentTarget.querySelector("h3");
-                    if (headingEl) {
-                      startTransition(rel, headingEl, e.currentTarget.parentElement);
-                    }
-                  }}
-                  className="relative flex flex-col flex-1 justify-between"
-                >
-                  <div className="flex items-center justify-between mb-3.5">
-                    <span className="text-[9.5px] font-medium text-slate-400 bg-white/[0.04] border border-white/[0.08] px-2.5 py-0.5 rounded-full uppercase tracking-widest">
-                      {rel.category}
-                    </span>
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/[0.04] group-hover:bg-[#C79A4B] text-slate-400 group-hover:text-white transition-[background-color,color] duration-200">
-                      <ArrowUpRight className="w-3.5 h-3.5 stroke-[2] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </div>
-                  </div>
-                  <div className="flex-1 flex flex-col justify-start mb-4">
-                    <h3
-                      className={`text-base sm:text-[17px] font-bold text-white group-hover:text-[#E5C378] transition-colors duration-200 leading-snug tracking-tight ${
-                        isRelTransitioning ? "opacity-0 select-none" : "opacity-100"
-                      }`}
-                    >
-                      {rel.name}
-                    </h3>
-                  </div>
-                  <div className="pt-3 border-t border-white/[0.08] flex justify-between items-center text-[11px] text-slate-400 font-mono">
-                    <span>CAS: <span className="text-slate-200 font-medium">{rel.casNumber}</span></span>
-                    <span className="text-slate-200 font-semibold">{rel.purity}</span>
-                  </div>
-                </Link>
-              </motion.div>
-              );
-            })}
-          </div>
-
-          {/* See all link */}
-          <div className="pt-1">
-            <Link
-              href={`/products?category=${encodeURIComponent(currentProduct.category)}`}
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#5A7A8E] hover:text-[#C79A4B] transition-colors group cursor-pointer"
-            >
-              <span>Explore all {currentProduct.category} APIs</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform duration-200" />
-            </Link>
-          </div>
-        </motion.div>
-
-        {/* ================= 4. "CAN'T FIND WHAT YOU NEED?" CUSTOM SOURCING FORM (LIGHT THEME) ================= */}
+        {/* ================= 3. "CAN'T FIND WHAT YOU NEED?" CUSTOM SOURCING FORM (LIGHT THEME) ================= */}
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}

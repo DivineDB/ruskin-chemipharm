@@ -433,6 +433,7 @@ const SRLC_SLIDES = [
     title: "Multispeciality Hospital & Research Centre",
     description:
       "Providing world-class, charitable medical care to underserved tribal communities in South Gujarat across 10 holistic care pillars.",
+    objectPosition: "center 28%",
   },
   {
     image: "/srlc-hero-banner.jpg",
@@ -441,6 +442,7 @@ const SRLC_SLIDES = [
     title: "Empowering Lives Across 10 Care Pillars",
     description:
       "Impacting over 21 million lives worldwide through humanitarian relief, education, women empowerment, and environmental preservation.",
+    objectPosition: "center center",
   },
   {
     image: "/srlc-tmm-banner.png",
@@ -449,6 +451,7 @@ const SRLC_SLIDES = [
     title: "13× Highest Fundraising NGO",
     description:
       "Recognized repeatedly as the highest fundraising NGO at the Tata Mumbai Marathon, powered by unwavering selfless volunteerism.",
+    objectPosition: "center 22%",
   },
   {
     image: "/srlc-banner-bapa.jpg",
@@ -457,6 +460,7 @@ const SRLC_SLIDES = [
     title: "Service With Empathy & Integrity",
     description:
       "A global movement inspired by Shrimad Rajchandraji and guided by Pujya Gurudevshri Rakeshji, serving all living beings selflessly.",
+    objectPosition: "center top",
   },
 ];
 
@@ -1475,13 +1479,13 @@ export default function AboutPage() {
               }}
               onMouseEnter={() => setIsSrlcPaused(true)}
               onMouseLeave={() => setIsSrlcPaused(false)}
-              className="relative w-full h-[320px] sm:h-[400px] lg:h-[480px] overflow-hidden border border-[#12304A]/12 group shadow-xl bg-[#071521]"
+              className="relative w-full h-[380px] sm:h-[460px] md:h-[500px] lg:h-[540px] xl:h-[560px] overflow-hidden rounded-[24px] border border-[#12304A]/12 group shadow-xl bg-[#071521]"
             >
               {/* Carousel Slides */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentSrlcSlide}
-                  initial={{ opacity: 0, scale: 1.03 }}
+                  initial={{ opacity: 0, scale: 1.02 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -1492,15 +1496,20 @@ export default function AboutPage() {
                     alt={SRLC_SLIDES[currentSrlcSlide].alt}
                     fill
                     priority
-                    className="object-cover object-center group-hover:scale-105 transition-transform duration-1000 ease-out"
+                    style={{
+                      objectPosition:
+                        SRLC_SLIDES[currentSrlcSlide].objectPosition ||
+                        "center center",
+                    }}
+                    className="object-cover transition-transform duration-700 ease-out"
                     sizes="(max-width: 1280px) 100vw, 1280px"
                   />
                 </motion.div>
               </AnimatePresence>
 
-              {/* Gradient Vignette: anchored to bottom ~45% so top stays bright & visible */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071521] via-[#071521]/70 via-42% to-transparent pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#071521]/80 via-transparent to-transparent pointer-events-none hidden sm:block" />
+              {/* Gradient Vignette: anchored to bottom ~38% so top ~62% stays bright & visible */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#071521] via-[#071521]/70 via-38% to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#071521]/60 via-[#071521]/20 via-35% to-transparent pointer-events-none hidden sm:block" />
 
               {/* Top Right: Official SRLC White Logo Badge */}
               <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10 bg-[#0B1E2E]/85 backdrop-blur-md px-4 py-2.5 border border-white/15 flex items-center gap-3">

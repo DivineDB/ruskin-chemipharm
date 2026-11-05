@@ -113,7 +113,47 @@ const HEX_SLOTS = [
 	},
 ] as const;
 
-
+/* ───────────────────────────────────────────────────────────────────────────
+   Minimal Premium Slide Indicator (pill progress)
+   ─────────────────────────────────────────────────────────────────────────── */
+function SlideIndicator({
+	index,
+	active,
+	progress,
+	label,
+	onSelect,
+}: {
+	index: number;
+	active: boolean;
+	progress: MotionValue<number>;
+	label: string;
+	onSelect: (i: number) => void;
+}) {
+	const scaleX = useTransform(progress, (p) => (active ? p : 0));
+	return (
+		<button
+			id={`hero-slide-indicator-${index + 1}`}
+			type="button"
+			onClick={() => onSelect(index)}
+			aria-label={`Go to slide ${index + 1}: ${label}`}
+			aria-current={active ? "true" : undefined}
+			className="group relative py-2 cursor-pointer focus:outline-none"
+		>
+			<span
+				className={`block h-[3px] rounded-full overflow-hidden transition-all duration-300 ease-out ${
+					active
+						? "w-9 sm:w-11 bg-[#12304A]/12"
+						: "w-2.5 sm:w-3 bg-[#12304A]/20 group-hover:bg-[#C79A4B]/60 group-hover:w-4"
+				}`}
+			>
+				<motion.span
+					style={{ scaleX }}
+					className="block h-full w-full origin-left rounded-full bg-[#C79A4B]"
+				/>
+			</span>
+		</button>
+	);
+}
 
 /* ───────────────────────────────────────────────────────────────────────────
    HeroCarousel
@@ -323,6 +363,46 @@ export default function HeroCarousel({
 					>
 						<span>Request Quote &amp; COA</span>
 					</motion.button>
+				</motion.div>
+
+				{/* Minimal Premium Slideshow Control Strip */}
+				<motion.div
+					variants={{
+						hidden: { opacity: 0, y: 10 },
+						visible: {
+							opacity: 1,
+							y: 0,
+							transition: { duration: 0.5, ease: EASE_PREMIUM },
+						},
+					}}
+					className="flex items-center gap-3 sm:gap-4 pt-1 select-none"
+				>
+					<div className="flex items-center gap-2">
+						<span className="text-[11px] font-bold text-[#12304A] tabular-nums tracking-wider font-mono">
+							{String(active + 1).padStart(2, "0")}
+						</span>
+						<div className="flex items-center gap-1.5" role="tablist" aria-label="Hero Slideshow">
+							{SLIDES.map((s, i) => (
+								<SlideIndicator
+									key={s.id}
+									index={i}
+									active={i === active}
+									progress={progress}
+									label={s.eyebrow}
+									onSelect={goTo}
+								/>
+							))}
+						</div>
+						<span className="text-[11px] font-semibold text-[#94A3B8] tabular-nums tracking-wider font-mono">
+							{String(SLIDES.length).padStart(2, "0")}
+						</span>
+					</div>
+
+					<span className="w-px h-3.5 bg-[#12304A]/15 shrink-0" />
+
+					<div className="text-[11.5px] font-medium text-[#5A7A8E] truncate max-w-[200px] sm:max-w-xs transition-opacity duration-300">
+						{slide.eyebrow}
+					</div>
 				</motion.div>
 			</motion.div>
 

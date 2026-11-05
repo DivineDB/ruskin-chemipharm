@@ -8,7 +8,7 @@ import gsap from "gsap";
 import Footer from "../components/Footer";
 import CtaBanner from "../components/CtaBanner";
 import CustomSelect from "../components/CustomSelect";
-import { MolecularDecoration, hexPoints } from "../components/Hex";
+import { MolecularDecoration, hexPoints, HexIcon } from "../components/Hex";
 import SectionHeader from "../components/SectionHeader";
 import { ALL_PRODUCTS, PRODUCT_CATEGORIES, ApiProduct } from "@/lib/products";
 import { useScrollLock } from "@/lib/scrollLock";
@@ -26,6 +26,10 @@ import {
 	Check,
 	ShieldCheck,
 	Globe2,
+	Layers,
+	Pill,
+	FileText,
+	Sparkles,
 } from "lucide-react";
 
 // ─── Animated counter (Optimized zero-rerender direct DOM animation via GSAP) ─────────
@@ -73,8 +77,6 @@ const INQUIRY_OPTIONS = [
 	{ value: "Regulatory Dossier", label: "Regulatory Dossier (USDMF / CEP)" },
 	{ value: "Sample Request", label: "Sample Request & COA" },
 ];
-
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 // ─── Lightweight GPU-Accelerated Hex Badge for Background Floating Parallax ──
 function FloatingHex({
@@ -192,17 +194,65 @@ function ProductsContent() {
 	};
 
 	const initialSearch = searchParams.get("search") || searchParams.get("q") || "";
+	const initialType = searchParams.get("type");
+	const [productType, setProductType] = useState<"api" | "formulations">(
+		initialType === "formulations" || initialType === "formulation" ? "formulations" : "api"
+	);
 	const [searchQuery, setSearchQuery] = useState(initialSearch);
 	const [selectedCategory, setSelectedCategory] = useState<string>("All");
-	const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const pageSize = 16;
 
 	useEffect(() => {
 		if (initialCategory) {
 			setSelectedCategory(initialCategory);
+			setProductType("api");
+			setCurrentPage(1);
+			const timer = setTimeout(() => {
+				const el = document.getElementById("catalog-content");
+				if (el) {
+					if (typeof window !== "undefined" && (window as any).__lenis) {
+						(window as any).__lenis.scrollTo(el, { offset: -90 });
+					} else {
+						el.scrollIntoView({ behavior: "smooth" });
+					}
+				}
+			}, 120);
+			return () => clearTimeout(timer);
 		}
 	}, [initialCategory]);
+
+	useEffect(() => {
+		const handleSelectCategory = (e: any) => {
+			const cat = e.detail?.category;
+			if (cat) {
+				setSelectedCategory(cat);
+				setProductType("api");
+				setSearchQuery("");
+				setCurrentPage(1);
+				const el = document.getElementById("catalog-content");
+				if (el) {
+					if (typeof window !== "undefined" && (window as any).__lenis) {
+						(window as any).__lenis.scrollTo(el, { offset: -90 });
+					} else {
+						el.scrollIntoView({ behavior: "smooth" });
+					}
+				}
+			}
+		};
+		window.addEventListener("ruskin:select-category", handleSelectCategory);
+		return () =>
+			window.removeEventListener("ruskin:select-category", handleSelectCategory);
+	}, []);
+
+	useEffect(() => {
+		const t = searchParams.get("type");
+		if (t === "formulations" || t === "formulation") {
+			setProductType("formulations");
+		} else if (t === "api") {
+			setProductType("api");
+		}
+	}, [searchParams]);
 
 	useEffect(() => {
 		const s = searchParams.get("search") || searchParams.get("q");
@@ -241,22 +291,18 @@ function ProductsContent() {
 		return ALL_PRODUCTS.filter((product) => {
 			if (selectedCategory !== "All" && product.category !== selectedCategory)
 				return false;
-			if (
-				selectedLetter &&
-				!product.name.toUpperCase().startsWith(selectedLetter)
-			)
-				return false;
 			if (deferredSearchQuery.trim() !== "") {
 				const q = deferredSearchQuery.toLowerCase();
 				return (
 					product.name.toLowerCase().includes(q) ||
 					product.casNumber.toLowerCase().includes(q) ||
-					product.category.toLowerCase().includes(q)
+					product.category.toLowerCase().includes(q) ||
+					product.manufacturer.toLowerCase().includes(q)
 				);
 			}
 			return true;
 		});
-	}, [selectedCategory, selectedLetter, deferredSearchQuery]);
+	}, [selectedCategory, deferredSearchQuery]);
 
 	const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
 	const paginatedProducts = useMemo(() => {
@@ -264,18 +310,8 @@ function ProductsContent() {
 		return filteredProducts.slice(start, start + pageSize);
 	}, [filteredProducts, currentPage, pageSize]);
 
-	const availableLetters = useMemo(() => {
-		const set = new Set<string>();
-		ALL_PRODUCTS.forEach((p) => set.add(p.name.charAt(0).toUpperCase()));
-		return set;
-	}, []);
-
 	const handleCategoryChange = (cat: string) => {
 		setSelectedCategory(cat);
-		setCurrentPage(1);
-	};
-	const handleLetterChange = (letter: string) => {
-		setSelectedLetter(selectedLetter === letter ? null : letter);
 		setCurrentPage(1);
 	};
 	const handleOpenQuote = (productName?: string) => {
@@ -363,7 +399,7 @@ function ProductsContent() {
 				overwrite: "auto",
 			}
 		);
-	}, [selectedCategory, selectedLetter, currentPage, deferredSearchQuery]);
+	}, [selectedCategory, productType, currentPage, deferredSearchQuery]);
 
 	const handleCopyCas = (e: React.MouseEvent, cas: string) => {
 		e.preventDefault();
@@ -496,41 +532,58 @@ function ProductsContent() {
 								description={`Explore our catalog of ${ALL_PRODUCTS.length}+ high-purity APIs, veterinary actives, excipients, dietary nutrients, and nootropics sourced directly from audited global manufacturing partners.`}
 							/>
 
-							{/* Hero CTA Buttons matching Services Page */}
-							<div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
+							{/* Hero CTA Buttons: API Catalog / Finished Formulations */}
+							<div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
 								<motion.button
-									whileHover={{ scale: 1.025, y: -2 }}
+									id="banner-cta-api"
+									whileHover={{ scale: 1.02, y: -1 }}
 									whileTap={{ scale: 0.98 }}
 									onClick={() => {
-										searchInputRef.current?.focus();
-										if (typeof window !== "undefined" && (window as any).__lenis && searchInputRef.current) {
-											(window as any).__lenis.scrollTo(searchInputRef.current, { offset: -120 });
-										} else {
-											searchInputRef.current?.scrollIntoView({
-												behavior: "smooth",
-												block: "center",
-											});
+										setProductType("api");
+										setCurrentPage(1);
+										const el = document.getElementById("catalog-content");
+										if (el) {
+											if (typeof window !== "undefined" && (window as any).__lenis) {
+												(window as any).__lenis.scrollTo(el, { offset: -90 });
+											} else {
+												el.scrollIntoView({ behavior: "smooth" });
+											}
 										}
 									}}
-									className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-[#C79A4B] text-white font-bold text-sm shadow-xl hover:bg-[#B58A3E] transition-all cursor-pointer"
+									className={`w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm transition-colors cursor-pointer border ${
+										productType === "api"
+											? "bg-[#C79A4B] border-[#C79A4B] text-white hover:bg-[#B58A3E] hover:border-[#B58A3E]"
+											: "bg-transparent border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+									}`}
 								>
-									<Search className="w-4 h-4" />
-									<span>Search {ALL_PRODUCTS.length}+ Products</span>
+									<FlaskConical className="w-4 h-4" />
+									<span>API Catalog</span>
 								</motion.button>
 
-								<motion.div
-									whileHover={{ scale: 1.025, y: -2 }}
+								<motion.button
+									id="banner-cta-formulations"
+									whileHover={{ scale: 1.02, y: -1 }}
 									whileTap={{ scale: 0.98 }}
-									className="w-full sm:w-auto"
+									onClick={() => {
+										setProductType("formulations");
+										const el = document.getElementById("catalog-content");
+										if (el) {
+											if (typeof window !== "undefined" && (window as any).__lenis) {
+												(window as any).__lenis.scrollTo(el, { offset: -90 });
+											} else {
+												el.scrollIntoView({ behavior: "smooth" });
+											}
+										}
+									}}
+									className={`w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm transition-colors cursor-pointer border ${
+										productType === "formulations"
+											? "bg-[#C79A4B] border-[#C79A4B] text-white hover:bg-[#B58A3E] hover:border-[#B58A3E]"
+											: "bg-transparent border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+									}`}
 								>
-									<button
-										onClick={() => handleOpenQuote()}
-										className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-sm backdrop-blur-md transition-all cursor-pointer"
-									>
-										<span>Request Custom Quote</span>
-										<ArrowUpRight className="w-4 h-4 text-[#C79A4B]" />
-									</button>
-								</motion.div>
+									<Layers className="w-4 h-4" />
+									<span>Finished Formulations</span>
+								</motion.button>
 							</div>
 						</motion.div>
 
@@ -608,7 +661,9 @@ function ProductsContent() {
 			{/* ══════════════════════════════════════════════════════
           MAIN CONTENT
           ══════════════════════════════════════════════════════ */}
-			<main className="flex-1 py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full space-y-10">
+			<main id="catalog-content" className="flex-1 py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full space-y-10">
+				{productType === "api" ? (
+					<>
 				{/* Search + Filters with staggered entrance */}
 				<div className="space-y-5">
 					{/* Search Bar */}
@@ -702,52 +757,11 @@ function ProductsContent() {
 						})}
 					</motion.div>
 
-					{/* A-Z Filter — fills the entire pill from left to right */}
-					<motion.div
-						initial={{ opacity: 0, y: 14 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{
-							duration: 0.45,
-							delay: 0.42,
-							ease: [0.16, 1, 0.3, 1],
-						}}
-						className="bg-white border border-[#12304A]/10 rounded-full px-5 py-2.5 flex items-center shadow-[0_4px_20px_-6px_rgba(18,48,74,0.12)] w-full overflow-x-auto"
-					>
-						<span className="text-[11px] font-bold text-[#12304A] uppercase tracking-widest pr-3 shrink-0">
-							A–Z
-						</span>
-						<div className="w-px h-6 bg-[#12304A]/10 mr-3 shrink-0" />
-						<div className="flex items-center justify-between flex-1 min-w-[620px] gap-0.5 sm:gap-1">
-							{ALPHABET.map((letter) => {
-								const isAvailable = availableLetters.has(letter);
-								const isSelected = selectedLetter === letter;
-								return (
-									<motion.button
-										key={letter}
-										whileHover={isAvailable ? { scale: 1.15 } : undefined}
-										whileTap={isAvailable ? { scale: 0.9 } : undefined}
-										onClick={() => isAvailable && handleLetterChange(letter)}
-										disabled={!isAvailable}
-										className={`flex-1 aspect-square max-w-[34px] rounded-full flex items-center justify-center text-xs font-semibold transition-[background-color,color,box-shadow] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-											isSelected
-												? "bg-[#12304A] text-white shadow-md font-bold"
-												: isAvailable
-													? "text-[#5A7A8E] hover:text-[#12304A] hover:bg-[#12304A]/8"
-													: "text-slate-300 cursor-not-allowed"
-										}`}
-									>
-										{letter}
-									</motion.button>
-								);
-							})}
-						</div>
-					</motion.div>
-
 					{/* Active Filter Chips & Results Count */}
 					<motion.div
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
-						transition={{ duration: 0.4, delay: 0.46 }}
+						transition={{ duration: 0.4, delay: 0.42 }}
 						className="space-y-2 pt-1"
 					>
 						<div className="flex items-center justify-between">
@@ -766,25 +780,13 @@ function ProductsContent() {
 										</span>
 									</span>
 								)}
-								{selectedLetter && (
-									<span>
-										{" "}
-										starting with{" "}
-										<span className="text-[#C79A4B] font-bold">
-											"{selectedLetter}"
-										</span>
-									</span>
-								)}
 							</p>
-							{(selectedCategory !== "All" ||
-								selectedLetter ||
-								searchQuery) && (
+							{(selectedCategory !== "All" || searchQuery) && (
 								<motion.button
 									whileHover={{ scale: 1.04 }}
 									whileTap={{ scale: 0.96 }}
 									onClick={() => {
 										setSelectedCategory("All");
-										setSelectedLetter(null);
 										setSearchQuery("");
 									}}
 									className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#12304A]/6 hover:bg-[#12304A]/10 text-[#12304A] text-xs font-bold transition-all"
@@ -796,7 +798,7 @@ function ProductsContent() {
 						</div>
 
 						{/* Removable Active Chips */}
-						{(selectedCategory !== "All" || selectedLetter || searchQuery) && (
+						{(selectedCategory !== "All" || searchQuery) && (
 							<div className="flex flex-wrap items-center gap-2 pt-1">
 								<span className="text-xs font-semibold text-[#5A7A8E]">
 									Filters:
@@ -809,20 +811,6 @@ function ProductsContent() {
 										</span>
 										<button
 											onClick={() => setSelectedCategory("All")}
-											className="hover:text-[#C79A4B] transition-colors"
-										>
-											<X className="w-3 h-3" />
-										</button>
-									</span>
-								)}
-								{selectedLetter && (
-									<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#12304A]/10 text-[#12304A] text-xs font-semibold shadow-xs">
-										Letter:{" "}
-										<span className="text-[#C79A4B] font-bold">
-											"{selectedLetter}"
-										</span>
-										<button
-											onClick={() => setSelectedLetter(null)}
 											className="hover:text-[#C79A4B] transition-colors"
 										>
 											<X className="w-3 h-3" />
@@ -852,7 +840,7 @@ function ProductsContent() {
 				{paginatedProducts.length > 0 ? (
 					<AnimatePresence mode="wait">
 						<motion.div
-							key={`${selectedCategory}-${selectedLetter || "all"}-${currentPage}-${deferredSearchQuery}`}
+							key={`${selectedCategory}-${currentPage}-${deferredSearchQuery}`}
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							exit={{ opacity: 0 }}
@@ -1009,7 +997,6 @@ function ProductsContent() {
 							onClick={() => {
 								setSearchQuery("");
 								setSelectedCategory("All");
-								setSelectedLetter(null);
 							}}
 							className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#C79A4B] text-white text-xs font-bold hover:bg-[#B58A3E] transition-colors mt-2"
 						>
@@ -1273,6 +1260,22 @@ function ProductsContent() {
 						)}
 					</div>
 				</motion.div>
+					</>
+				) : (
+					/* Formulations: No content yet */
+					<div className="py-24 text-center space-y-3">
+						<p className="text-sm font-medium text-[#5A7A8E]">
+							Finished Formulations directory coming soon.
+						</p>
+						<button
+							type="button"
+							onClick={() => setProductType("api")}
+							className="text-xs font-bold text-[#C79A4B] hover:underline cursor-pointer"
+						>
+							&larr; Switch back to API Catalog
+						</button>
+					</div>
+				)}
 			</main>
 
 			{/* ══ PRODUCT DETAILS MODAL ══ */}
