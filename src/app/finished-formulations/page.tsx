@@ -197,6 +197,25 @@ export default function FinishedFormulationsPage() {
     setSearchQuery("");
   };
 
+  const handleScrollToSegment = (seg: "Human Healthcare" | "Animal Healthcare") => {
+    setSelectedSegment(seg);
+    setSelectedDivision("all");
+    setSelectedDosageForm("All");
+    setSearchQuery("");
+
+    setTimeout(() => {
+      const el = document.getElementById("formulations-catalog");
+      if (!el) return;
+
+      if (typeof window !== "undefined" && (window as any).__lenis) {
+        (window as any).__lenis.scrollTo(el, { offset: -90, duration: 1.2 });
+      } else {
+        const top = el.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }, 40);
+  };
+
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-[#5A7A8E] flex flex-col font-sans selection:bg-[#C79A4B] selection:text-white">
       <main className="flex-grow py-10 sm:py-14 lg:py-16">
@@ -247,11 +266,12 @@ export default function FinishedFormulationsPage() {
 
           {/* ─── 3. INTERACTIVE FILTERING & DISCOVERY CONTROLS ─── */}
           <motion.div
+            id="formulations-catalog"
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-            className="bg-white rounded-[24px] sm:rounded-[28px] border border-[#12304A]/10 p-5 sm:p-7 shadow-[0_12px_45px_rgb(18,48,74,0.05)] space-y-6"
+            className="bg-white rounded-[24px] sm:rounded-[28px] border border-[#12304A]/10 p-5 sm:p-7 shadow-[0_12px_45px_rgb(18,48,74,0.05)] space-y-6 scroll-mt-24"
           >
 
             {/* Row 1: Segment Switcher & Search Bar */}
@@ -603,14 +623,11 @@ export default function FinishedFormulationsPage() {
                   <span className="font-bold text-[#12304A]">17 Human Formulations Listed</span>
                   <button
                     type="button"
-                    onClick={() => {
-                      setSelectedSegment("Human Healthcare");
-                      window.scrollTo({ top: 350, behavior: "smooth" });
-                    }}
-                    className="font-bold text-[#C79A4B] hover:underline cursor-pointer flex items-center gap-1"
+                    onClick={() => handleScrollToSegment("Human Healthcare")}
+                    className="font-bold text-[#C79A4B] hover:text-[#B58A3E] cursor-pointer flex items-center gap-1.5 group/btn transition-colors"
                   >
                     <span>View Human Range</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </motion.div>
@@ -647,14 +664,11 @@ export default function FinishedFormulationsPage() {
                   <span className="font-bold text-slate-300">18 Veterinary Formulations Listed</span>
                   <button
                     type="button"
-                    onClick={() => {
-                      setSelectedSegment("Animal Healthcare");
-                      window.scrollTo({ top: 350, behavior: "smooth" });
-                    }}
-                    className="font-bold text-[#C79A4B] hover:underline cursor-pointer flex items-center gap-1"
+                    onClick={() => handleScrollToSegment("Animal Healthcare")}
+                    className="font-bold text-[#C79A4B] hover:text-[#E5C378] cursor-pointer flex items-center gap-1.5 group/btn transition-colors"
                   >
                     <span>View Veterinary Range</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </motion.div>
