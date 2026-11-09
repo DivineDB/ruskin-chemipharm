@@ -10,7 +10,6 @@ import {
 	useSpring,
 	useMotionValue,
 	useInView,
-	type Variants,
 } from "framer-motion";
 import gsap from "gsap";
 import {

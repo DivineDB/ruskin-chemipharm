@@ -6,9 +6,17 @@ import { motion } from "framer-motion";
 
 interface CtaBannerProps {
   onRequestQuote: () => void;
+  title?: React.ReactNode;
+  subtitle?: string;
+  buttonText?: string;
 }
 
-export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
+export default function CtaBanner({
+  onRequestQuote,
+  title,
+  subtitle,
+  buttonText = "Request API Quote",
+}: CtaBannerProps) {
   return (
     <section className="py-16 sm:py-20 bg-white relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,13 +44,17 @@ export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
 
               <div className="space-y-2">
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight">
-                  Ready to Secure High-Purity<br className="hidden sm:inline" /> APIs &amp; Intermediates?
+                  {title || (
+                    <>
+                      Ready to Secure High-Purity<br className="hidden sm:inline" /> APIs &amp; Intermediates?
+                    </>
+                  )}
                 </h2>
                 <div className="w-14 h-[2.5px] rounded-full bg-[#C79A4B]" />
               </div>
 
               <p className="text-sm sm:text-base text-slate-300 font-normal leading-relaxed max-w-lg">
-                Request custom pricing, COA verification, or schedule a technical consultation with our team.
+                {subtitle || "Request custom pricing, COA verification, or schedule a technical consultation with our team."}
               </p>
             </div>
 
@@ -54,7 +66,7 @@ export default function CtaBanner({ onRequestQuote }: CtaBannerProps) {
                 onClick={onRequestQuote}
                 className="flex items-center justify-center gap-2.5 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-7 py-3.5 sm:px-8 sm:py-3.5 rounded-xl text-sm font-bold transition-colors group w-full sm:w-auto cursor-pointer"
               >
-                <span>Request API Quote</span>
+                <span>{buttonText}</span>
                 <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform stroke-[2.5] duration-200" />
               </motion.button>
             </div>

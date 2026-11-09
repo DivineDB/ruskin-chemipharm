@@ -1,8 +1,6 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
 import { MolecularDecoration, FloatingHex, HEX_CLIP } from "./Hex";
 
 interface FooterProps {
@@ -194,8 +192,16 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
 									onClick={onOpenCatalog}
 									className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 text-left cursor-pointer inline-block"
 								>
-									Products Directory
+									Products Directory (APIs)
 								</button>
+							</li>
+							<li>
+								<Link
+									href="/finished-formulations"
+									className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block font-medium text-white"
+								>
+									Finished Formulations
+								</Link>
 							</li>
 							<li>
 								<Link

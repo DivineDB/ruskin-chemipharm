@@ -2,13 +2,13 @@
 
 import React, { useState, useMemo, useEffect, useRef, useDeferredValue, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
 import gsap from "gsap";
 import Footer from "../components/Footer";
 import CtaBanner from "../components/CtaBanner";
 import CustomSelect from "../components/CustomSelect";
-import { MolecularDecoration, hexPoints, HexIcon } from "../components/Hex";
+import { MolecularDecoration, hexPoints } from "../components/Hex";
 import SectionHeader from "../components/SectionHeader";
 import { ALL_PRODUCTS, PRODUCT_CATEGORIES, ApiProduct } from "@/lib/products";
 import { useScrollLock } from "@/lib/scrollLock";
@@ -24,12 +24,7 @@ import {
 	FlaskConical,
 	Copy,
 	Check,
-	ShieldCheck,
-	Globe2,
 	Layers,
-	Pill,
-	FileText,
-	Sparkles,
 } from "lucide-react";
 
 // ─── Animated counter (Optimized zero-rerender direct DOM animation via GSAP) ─────────
@@ -193,20 +188,23 @@ function ProductsContent() {
 		bannerMouseY.set(0);
 	};
 
+	const router = useRouter();
 	const initialSearch = searchParams.get("search") || searchParams.get("q") || "";
-	const initialType = searchParams.get("type");
-	const [productType, setProductType] = useState<"api" | "formulations">(
-		initialType === "formulations" || initialType === "formulation" ? "formulations" : "api"
-	);
 	const [searchQuery, setSearchQuery] = useState(initialSearch);
 	const [selectedCategory, setSelectedCategory] = useState<string>("All");
 	const [currentPage, setCurrentPage] = useState(1);
 	const pageSize = 16;
 
 	useEffect(() => {
+		const t = searchParams.get("type");
+		if (t === "formulations" || t === "formulation") {
+			router.replace("/finished-formulations");
+		}
+	}, [searchParams, router]);
+
+	useEffect(() => {
 		if (initialCategory) {
 			setSelectedCategory(initialCategory);
-			setProductType("api");
 			setCurrentPage(1);
 			const timer = setTimeout(() => {
 				const el = document.getElementById("catalog-content");
@@ -227,7 +225,6 @@ function ProductsContent() {
 			const cat = e.detail?.category;
 			if (cat) {
 				setSelectedCategory(cat);
-				setProductType("api");
 				setSearchQuery("");
 				setCurrentPage(1);
 				const el = document.getElementById("catalog-content");
@@ -244,15 +241,6 @@ function ProductsContent() {
 		return () =>
 			window.removeEventListener("ruskin:select-category", handleSelectCategory);
 	}, []);
-
-	useEffect(() => {
-		const t = searchParams.get("type");
-		if (t === "formulations" || t === "formulation") {
-			setProductType("formulations");
-		} else if (t === "api") {
-			setProductType("api");
-		}
-	}, [searchParams]);
 
 	useEffect(() => {
 		const s = searchParams.get("search") || searchParams.get("q");
@@ -277,10 +265,6 @@ function ProductsContent() {
 	const [selectedProduct, setSelectedProduct] = useState<ApiProduct | null>(
 		null,
 	);
-	const [quoteProduct, setQuoteProduct] = useState<string | null>(null);
-	const [quoteModalOpen, setQuoteModalOpen] = useState(false);
-	const [formSubmitted, setFormSubmitted] = useState(false);
-	const [isSubmittingQuote, setIsSubmittingQuote] = useState(false);
 	const [inquirySubmitted, setInquirySubmitted] = useState(false);
 	const [isSubmittingInquiry, setIsSubmittingInquiry] = useState(false);
 	const [inquiryType, setInquiryType] = useState("Product Enquiry");
@@ -315,9 +299,18 @@ function ProductsContent() {
 		setCurrentPage(1);
 	};
 	const handleOpenQuote = (productName?: string) => {
-		setQuoteProduct(productName || null);
-		setQuoteModalOpen(true);
-		setFormSubmitted(false);
+		if (typeof window !== "undefined") {
+			window.dispatchEvent(
+				new CustomEvent("ruskin:open-quote", {
+					detail: {
+						product: productName || "",
+						note: productName
+							? `Inquiry for ${productName}. Please provide batch COA and commercial quote.`
+							: "",
+					},
+				})
+			);
+		}
 	};
 
 	const [copiedCas, setCopiedCas] = useState<string | null>(null);
@@ -399,7 +392,7 @@ function ProductsContent() {
 				overwrite: "auto",
 			}
 		);
-	}, [selectedCategory, productType, currentPage, deferredSearchQuery]);
+	}, [selectedCategory, currentPage, deferredSearchQuery]);
 
 	const handleCopyCas = (e: React.MouseEvent, cas: string) => {
 		e.preventDefault();
@@ -409,17 +402,15 @@ function ProductsContent() {
 		setTimeout(() => setCopiedCas(null), 2000);
 	};
 
-	// Freeze background scroll & Lenis when any modal is open
-	useScrollLock(quoteModalOpen || selectedProduct !== null);
+	// Freeze background scroll & Lenis when detail modal is open
+	useScrollLock(selectedProduct !== null);
 
 	// Escape key handling for open modals
 	useEffect(() => {
-		const isModalOpen = quoteModalOpen || selectedProduct !== null;
-		if (!isModalOpen) return;
+		if (!selectedProduct) return;
 
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
-				setQuoteModalOpen(false);
 				setSelectedProduct(null);
 			}
 		};
@@ -427,10 +418,9 @@ function ProductsContent() {
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [quoteModalOpen, selectedProduct]);
+	}, [selectedProduct]);
 
 	useEffect(() => {
-		const handleQuote = () => handleOpenQuote();
 		const handleSearch = () => {
 			searchInputRef.current?.focus();
 			if (typeof window !== "undefined" && (window as any).__lenis && searchInputRef.current) {
@@ -442,10 +432,8 @@ function ProductsContent() {
 				});
 			}
 		};
-		window.addEventListener("ruskin:open-quote", handleQuote);
 		window.addEventListener("ruskin:open-search", handleSearch);
 		return () => {
-			window.removeEventListener("ruskin:open-quote", handleQuote);
 			window.removeEventListener("ruskin:open-search", handleSearch);
 		};
 	}, []);
@@ -539,7 +527,6 @@ function ProductsContent() {
 									whileHover={{ scale: 1.02, y: -1 }}
 									whileTap={{ scale: 0.98 }}
 									onClick={() => {
-										setProductType("api");
 										setCurrentPage(1);
 										const el = document.getElementById("catalog-content");
 										if (el) {
@@ -550,40 +537,21 @@ function ProductsContent() {
 											}
 										}
 									}}
-									className={`w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm transition-colors cursor-pointer border ${
-										productType === "api"
-											? "bg-[#C79A4B] border-[#C79A4B] text-white hover:bg-[#B58A3E] hover:border-[#B58A3E]"
-											: "bg-transparent border-white/20 text-white hover:bg-white/10 hover:border-white/30"
-									}`}
+									className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm transition-colors cursor-pointer bg-[#C79A4B] border border-[#C79A4B] text-white hover:bg-[#B58A3E] hover:border-[#B58A3E] shadow-sm"
 								>
 									<FlaskConical className="w-4 h-4" />
-									<span>API Catalog</span>
+									<span>Explore API Catalog</span>
 								</motion.button>
 
-								<motion.button
+								<Link
 									id="banner-cta-formulations"
-									whileHover={{ scale: 1.02, y: -1 }}
-									whileTap={{ scale: 0.98 }}
-									onClick={() => {
-										setProductType("formulations");
-										const el = document.getElementById("catalog-content");
-										if (el) {
-											if (typeof window !== "undefined" && (window as any).__lenis) {
-												(window as any).__lenis.scrollTo(el, { offset: -90 });
-											} else {
-												el.scrollIntoView({ behavior: "smooth" });
-											}
-										}
-									}}
-									className={`w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm transition-colors cursor-pointer border ${
-										productType === "formulations"
-											? "bg-[#C79A4B] border-[#C79A4B] text-white hover:bg-[#B58A3E] hover:border-[#B58A3E]"
-											: "bg-transparent border-white/20 text-white hover:bg-white/10 hover:border-white/30"
-									}`}
+									href="/finished-formulations"
+									className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm transition-all cursor-pointer border border-white/20 text-white hover:bg-white/10 hover:border-white/30 active:scale-[0.98] group"
 								>
-									<Layers className="w-4 h-4" />
+									<Layers className="w-4 h-4 text-[#C79A4B]" />
 									<span>Finished Formulations</span>
-								</motion.button>
+									<ArrowRight className="w-4 h-4 text-[#C79A4B] group-hover:translate-x-1 transition-transform" />
+								</Link>
 							</div>
 						</motion.div>
 
@@ -662,8 +630,6 @@ function ProductsContent() {
           MAIN CONTENT
           ══════════════════════════════════════════════════════ */}
 			<main id="catalog-content" className="flex-1 py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full space-y-10">
-				{productType === "api" ? (
-					<>
 				{/* Search + Filters with staggered entrance */}
 				<div className="space-y-5">
 					{/* Search Bar */}
@@ -1260,22 +1226,6 @@ function ProductsContent() {
 						)}
 					</div>
 				</motion.div>
-					</>
-				) : (
-					/* Formulations: No content yet */
-					<div className="py-24 text-center space-y-3">
-						<p className="text-sm font-medium text-[#5A7A8E]">
-							Finished Formulations directory coming soon.
-						</p>
-						<button
-							type="button"
-							onClick={() => setProductType("api")}
-							className="text-xs font-bold text-[#C79A4B] hover:underline cursor-pointer"
-						>
-							&larr; Switch back to API Catalog
-						</button>
-					</div>
-				)}
 			</main>
 
 			{/* ══ PRODUCT DETAILS MODAL ══ */}
@@ -1365,163 +1315,6 @@ function ProductsContent() {
 									Close
 								</button>
 							</div>
-						</motion.div>
-					</div>
-				)}
-			</AnimatePresence>
-
-			{/* ══ QUOTE MODAL ══ */}
-			<AnimatePresence>
-				{quoteModalOpen && (
-					<div
-						className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12304A]/30 backdrop-blur-[2px]"
-						onClick={() => setQuoteModalOpen(false)}
-						onTouchMove={(e) => e.stopPropagation()}
-						onWheel={(e) => e.stopPropagation()}
-					>
-						<motion.div
-							onClick={(e) => e.stopPropagation()}
-							initial={{ opacity: 0, scale: 0.92, y: 16 }}
-							animate={{ opacity: 1, scale: 1, y: 0 }}
-							exit={{ opacity: 0, scale: 0.94, y: 12 }}
-							transition={{ type: "spring", damping: 26, stiffness: 380 }}
-							data-lenis-prevent="true"
-							className="bg-white border border-[#C79A4B]/25 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-[0_25px_70px_rgba(18,48,74,0.35)] text-left space-y-5 max-h-[90vh] overflow-y-auto custom-scrollbar"
-						>
-							<button
-								onClick={() => setQuoteModalOpen(false)}
-								className="absolute top-5 right-5 text-[#5A7A8E] hover:text-[#12304A] p-1 rounded-full hover:bg-[#12304A]/5"
-							>
-								<X className="w-5 h-5" />
-							</button>
-							{!formSubmitted ? (
-								<div className="space-y-5">
-									<div>
-										<div className="text-xs uppercase font-bold text-[#C79A4B] tracking-widest mb-1">
-											REQUEST QUOTE &amp; TECHNICAL DOSSIER
-										</div>
-										<h3 className="text-2xl font-bold text-[#12304A]">
-											{quoteProduct
-												? `Quote for ${quoteProduct}`
-												: "Chemical Sourcing Inquiry"}
-										</h3>
-										<div className="w-12 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
-									</div>
-									<form
-										onSubmit={(e) => {
-											e.preventDefault();
-											setIsSubmittingQuote(true);
-											setTimeout(() => {
-												setIsSubmittingQuote(false);
-												setFormSubmitted(true);
-											}, 650);
-										}}
-										className="space-y-4"
-									>
-										<div>
-											<label className="block text-xs font-bold text-[#12304A] mb-1">
-												Full Name &amp; Designation
-											</label>
-											<input
-												required
-												type="text"
-												placeholder="e.g. Dr. Sarah Jenkins"
-												className="w-full px-4 py-2.5 bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl text-[#12304A] text-xs focus:outline-none transition-colors"
-											/>
-										</div>
-										<div className="grid grid-cols-2 gap-4">
-											<div>
-												<label className="block text-xs font-bold text-[#12304A] mb-1">
-													Corporate Email
-												</label>
-												<input
-													required
-													type="email"
-													placeholder="s.jenkins@pharma.com"
-													className="w-full px-4 py-2.5 bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl text-[#12304A] text-xs focus:outline-none transition-colors"
-												/>
-											</div>
-											<div>
-												<label className="block text-xs font-bold text-[#12304A] mb-1">
-													Estimated Quantity
-												</label>
-												<input
-													type="text"
-													placeholder="e.g. 500 Kg"
-													className="w-full px-4 py-2.5 bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl text-[#12304A] text-xs focus:outline-none transition-colors"
-												/>
-											</div>
-										</div>
-										<div>
-											<label className="block text-xs font-bold text-[#12304A] mb-1">
-												Requirement Details
-											</label>
-											<textarea
-												rows={3}
-												defaultValue={
-													quoteProduct ? `Inquiry for ${quoteProduct}.` : ""
-												}
-												className="w-full px-4 py-2.5 bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl text-[#12304A] text-xs focus:outline-none transition-colors resize-none"
-											/>
-										</div>
-										<motion.button
-											whileHover={{ scale: 1.01 }}
-											whileTap={{ scale: 0.98 }}
-											type="submit"
-											disabled={isSubmittingQuote}
-											className="w-full bg-[#12304A] hover:bg-[#0B1E2E] disabled:bg-[#12304A]/80 text-white py-3.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-md cursor-pointer gpu-smooth"
-										>
-											{isSubmittingQuote ? (
-												<span className="inline-flex items-center gap-2">
-													<span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-													<span>Transmitting Dossier Request...</span>
-												</span>
-											) : (
-												<>
-													<span>Submit Inquiry to Ruskin Team</span>
-													<ArrowRight className="w-4 h-4" />
-												</>
-											)}
-										</motion.button>
-									</form>
-								</div>
-							) : (
-								<motion.div
-									initial={{ opacity: 0, scale: 0.92 }}
-									animate={{ opacity: 1, scale: 1 }}
-									transition={{ type: "spring", damping: 24, stiffness: 350 }}
-									className="py-6 text-center space-y-4"
-								>
-									<motion.div
-										initial={{ scale: 0, rotate: -25 }}
-										animate={{ scale: [0, 1.2, 1], rotate: 0 }}
-										transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-										className="w-16 h-16 mx-auto flex items-center justify-center"
-										style={{
-											clipPath:
-												"polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%)",
-											background: "#12304A",
-										}}
-									>
-										<CheckCircle2 className="w-8 h-8 text-[#C79A4B] stroke-[2.2]" />
-									</motion.div>
-									<h3 className="text-xl font-bold text-[#12304A]">
-										Inquiry Submitted
-									</h3>
-									<p className="text-xs text-[#5A7A8E] max-w-xs mx-auto">
-										Our technical team will respond with full COA specifications
-										within 2 business hours.
-									</p>
-									<motion.button
-										whileHover={{ scale: 1.03 }}
-										whileTap={{ scale: 0.97 }}
-										onClick={() => setQuoteModalOpen(false)}
-										className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-xl text-sm font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
-									>
-										Close Window
-									</motion.button>
-								</motion.div>
-							)}
 						</motion.div>
 					</div>
 				)}

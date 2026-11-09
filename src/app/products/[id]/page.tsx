@@ -3,19 +3,16 @@
 import React, { useState, useEffect, use, useRef, useCallback } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Footer from "../../components/Footer";
 import CustomSelect from "../../components/CustomSelect";
 import Navbar from "../../components/Navbar";
 import { getProductBySlugOrId, ALL_PRODUCTS } from "@/lib/products";
-import { useScrollLock } from "@/lib/scrollLock";
 import { useProductTransition } from "../../context/ProductTransitionContext";
 import {
   ArrowLeft,
   ArrowRight,
-  ArrowUpRight,
   CheckCircle2,
-  X,
   Copy,
   Check,
   Loader2,
@@ -53,32 +50,20 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     [registerTarget]
   );
 
-  // Quote / Sample Modal state
-  const [quoteModalOpen, setQuoteModalOpen] = useState(false);
-  const [quoteSubject, setQuoteSubject] = useState("");
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const [isSubmittingQuote, setIsSubmittingQuote] = useState(false);
   const [copiedCas, setCopiedCas] = useState(false);
 
   // Bottom Custom Enquiry form state
   const [inquirySubmitted, setInquirySubmitted] = useState(false);
   const [isSubmittingInquiry, setIsSubmittingInquiry] = useState(false);
   const [inquiryType, setInquiryType] = useState("Product Enquiry");
-
-  // Freeze background scroll & Lenis when modal is open
-  useScrollLock(quoteModalOpen);
-
-  // Handle Escape key for modal
-  useEffect(() => {
-    if (!quoteModalOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setQuoteModalOpen(false);
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [quoteModalOpen]);
+  const [enqName, setEnqName] = useState("");
+  const [enqCompany, setEnqCompany] = useState("");
+  const [enqEmail, setEnqEmail] = useState("");
+  const [enqPhone, setEnqPhone] = useState("");
+  const [enqCountry, setEnqCountry] = useState("");
+  const [enqProduct, setEnqProduct] = useState(currentProduct.name);
+  const [enqDetails, setEnqDetails] = useState("");
+  const [enqRefId, setEnqRefId] = useState("");
 
   const handleCopyCas = (cas: string) => {
     navigator.clipboard.writeText(cas);
@@ -87,16 +72,17 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   };
 
   const handleOpenModal = (subject: string) => {
-    setQuoteSubject(subject);
-    setQuoteModalOpen(true);
-    setFormSubmitted(false);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("ruskin:open-quote", {
+          detail: {
+            product: currentProduct.name,
+            note: `${subject}. CAS Number: ${currentProduct.casNumber}. Grade: ${currentProduct.grade || "Pharma/USP/BP"}.`,
+          },
+        })
+      );
+    }
   };
-
-  useEffect(() => {
-    const handleQuote = () => handleOpenModal(`Quote Inquiry for ${currentProduct.name}`);
-    window.addEventListener("ruskin:open-quote", handleQuote);
-    return () => window.removeEventListener("ruskin:open-quote", handleQuote);
-  }, [currentProduct.name]);
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-[#5A7A8E] flex flex-col font-sans selection:bg-[#C79A4B] selection:text-white">
@@ -275,13 +261,39 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
             {!inquirySubmitted ? (
               <form
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
                   setIsSubmittingInquiry(true);
-                  setTimeout(() => {
+                  try {
+                    const res = await fetch("/api/inquiries", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        name: enqName,
+                        company: enqCompany,
+                        email: enqEmail,
+                        phone: enqPhone,
+                        country: enqCountry,
+                        product: enqProduct || currentProduct.name,
+                        casNumber: currentProduct.casNumber,
+                        category: inquiryType,
+                        message: enqDetails,
+                        source: `Product Page (${currentProduct.name})`,
+                      }),
+                    });
+                    const data = await res.json();
+                    if (data.success && data.referenceId) {
+                      setEnqRefId(data.referenceId);
+                    } else {
+                      setEnqRefId(`RUS-${Math.floor(1000 + Math.random() * 9000)}`);
+                    }
+                  } catch (err) {
+                    console.error("Enquiry submission error:", err);
+                    setEnqRefId(`RUS-${Math.floor(1000 + Math.random() * 9000)}`);
+                  } finally {
                     setIsSubmittingInquiry(false);
                     setInquirySubmitted(true);
-                  }, 650);
+                  }
                 }}
                 className="space-y-5"
               >
@@ -294,6 +306,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <input
                       required
                       type="text"
+                      value={enqName}
+                      onChange={(e) => setEnqName(e.target.value)}
                       placeholder="Enter your name..."
                       className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                     />
@@ -302,6 +316,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <label className="block text-xs font-bold text-[#12304A] mb-1.5">Company Name</label>
                     <input
                       type="text"
+                      value={enqCompany}
+                      onChange={(e) => setEnqCompany(e.target.value)}
                       placeholder="Company Name"
                       className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                     />
@@ -317,6 +333,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <input
                       required
                       type="email"
+                      value={enqEmail}
+                      onChange={(e) => setEnqEmail(e.target.value)}
                       placeholder="Email Address"
                       className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                     />
@@ -328,6 +346,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <input
                       required
                       type="tel"
+                      value={enqPhone}
+                      onChange={(e) => setEnqPhone(e.target.value)}
                       placeholder="Phone Number"
                       className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                     />
@@ -340,6 +360,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                     <label className="block text-xs font-bold text-[#12304A] mb-1.5">Country</label>
                     <input
                       type="text"
+                      value={enqCountry}
+                      onChange={(e) => setEnqCountry(e.target.value)}
                       placeholder="Country"
                       className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                     />
@@ -364,7 +386,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   <input
                     required
                     type="text"
-                    defaultValue={currentProduct.name}
+                    value={enqProduct}
+                    onChange={(e) => setEnqProduct(e.target.value)}
                     placeholder="Enter compound name, CAS number, or specification..."
                     className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors shadow-sm"
                   />
@@ -375,6 +398,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   <label className="block text-xs font-bold text-[#12304A] mb-1.5">Additional Details</label>
                   <textarea
                     rows={4}
+                    value={enqDetails}
+                    onChange={(e) => setEnqDetails(e.target.value)}
                     placeholder="Provide estimated batch volume, target compliance specs (USDMF, CEP, IP/BP), or required delivery timeline..."
                     className="w-full bg-white border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl px-4 py-3 text-[#12304A] text-xs placeholder-[#5A7A8E]/60 focus:outline-none transition-colors resize-none shadow-sm"
                   />
@@ -423,6 +448,12 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                   Thank you. Your request for <span className="text-[#C79A4B] font-semibold">{currentProduct.name}</span> has been logged and assigned to our regulatory technical team.
                 </p>
                 <div className="bg-[#FAF7F2] border border-[#12304A]/8 rounded-xl p-4 max-w-md mx-auto text-xs text-left space-y-2">
+                  {enqRefId && (
+                    <div className="flex justify-between border-b border-[#12304A]/6 pb-1.5">
+                      <span className="text-[#5A7A8E]">Tracking Reference:</span>
+                      <span className="font-mono text-[#12304A] font-bold">{enqRefId}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between border-b border-[#12304A]/6 pb-1.5">
                     <span className="text-[#5A7A8E]">Inquiry Type:</span>
                     <span className="text-[#12304A] font-semibold">{inquiryType}</span>
@@ -450,115 +481,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
         </motion.div>
 
       </main>
-
-      {/* ================= 5. REQUEST MODAL ================= */}
-      <AnimatePresence>
-        {quoteModalOpen && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12304A]/30 backdrop-blur-[2px]"
-            onClick={() => setQuoteModalOpen(false)}
-            onTouchMove={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
-          >
-            <motion.div
-              onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, scale: 0.92, y: 18 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 12 }}
-              transition={{ type: "spring", damping: 26, stiffness: 380 }}
-              data-lenis-prevent="true"
-              className="bg-white border border-[#C79A4B]/25 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl text-left space-y-5 max-h-[90vh] overflow-y-auto custom-scrollbar"
-            >
-              <button onClick={() => setQuoteModalOpen(false)}
-                className="absolute top-5 right-5 text-[#5A7A8E] hover:text-[#12304A] p-1 rounded-full hover:bg-[#12304A]/5">
-                <X className="w-5 h-5" />
-              </button>
-              {!formSubmitted ? (
-                <div className="space-y-5">
-                  <div>
-                    <div className="text-xs uppercase font-bold text-[#C79A4B] tracking-widest mb-1">TECHNICAL DOSSIER REQUEST</div>
-                    <h3 className="text-2xl font-bold text-[#12304A]">{quoteSubject || `Inquiry for ${currentProduct.name}`}</h3>
-                    <div className="w-12 h-[2px] bg-[#C79A4B] mt-2 rounded-full" />
-                  </div>
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      setIsSubmittingQuote(true);
-                      setTimeout(() => {
-                        setIsSubmittingQuote(false);
-                        setFormSubmitted(true);
-                      }, 650);
-                    }}
-                    className="space-y-4"
-                  >
-                    <div>
-                      <label className="block text-xs font-bold text-[#12304A] mb-1">Full Name &amp; Designation</label>
-                      <input required type="text" placeholder="e.g. Dr. Sarah Jenkins"
-                        className="w-full px-4 py-2.5 bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl text-[#12304A] text-xs focus:outline-none" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-[#12304A] mb-1">Corporate Email</label>
-                        <input required type="email" placeholder="s.jenkins@pharma.com"
-                          className="w-full px-4 py-2.5 bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl text-[#12304A] text-xs focus:outline-none" />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-[#12304A] mb-1">Estimated Quantity</label>
-                        <input type="text" placeholder="e.g. 500 Kg"
-                          className="w-full px-4 py-2.5 bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl text-[#12304A] text-xs focus:outline-none" />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-[#12304A] mb-1">Requirement Details</label>
-                      <textarea rows={3} defaultValue={`Inquiry for ${currentProduct.name} (CAS: ${currentProduct.casNumber}).`}
-                        className="w-full px-4 py-2.5 bg-[#FAF7F2] border border-[#12304A]/10 focus:border-[#C79A4B] rounded-xl text-[#12304A] text-xs focus:outline-none" />
-                    </div>
-                    <motion.button
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.98 }}
-                      disabled={isSubmittingQuote}
-                      type="submit"
-                      className="w-full bg-[#12304A] hover:bg-[#0B1E2E] disabled:opacity-75 text-white py-3.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2 shadow-md shadow-[#12304A]/20"
-                    >
-                      {isSubmittingQuote ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin text-[#C79A4B]" />
-                          <span>Transmitting Dossier Request...</span>
-                        </>
-                      ) : (
-                        <span>Submit Technical Request</span>
-                      )}
-                    </motion.button>
-                  </form>
-                </div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.94, y: 10 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  transition={{ type: "spring", damping: 25, stiffness: 360 }}
-                  className="py-6 text-center space-y-4"
-                >
-                  <motion.div
-                    initial={{ scale: 0, rotate: -25 }}
-                    animate={{ scale: [0, 1.25, 1], rotate: [-25, 5, 0] }}
-                    transition={{ duration: 0.52, ease: "easeOut" }}
-                    className="w-14 h-14 mx-auto flex items-center justify-center shadow-md shadow-[#12304A]/20"
-                    style={{ clipPath: "polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%)", background: "#12304A" }}
-                  >
-                    <CheckCircle2 className="w-7 h-7 text-[#C79A4B] stroke-[2.5]" />
-                  </motion.div>
-                  <h3 className="text-xl font-bold text-[#12304A]">Request Submitted</h3>
-                  <p className="text-xs text-[#5A7A8E] max-w-xs mx-auto">Our regulatory team will provide batch COA and technical specifications within 2 business hours.</p>
-                  <button onClick={() => setQuoteModalOpen(false)}
-                    className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-xl text-sm font-bold transition-colors">
-                    Close Window
-                  </button>
-                </motion.div>
-              )}
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       {/* ================= 6. FOOTER ================= */}
       <Footer

@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import BackToTop from "./components/BackToTop";
 import FloatingScrollbar from "./components/FloatingScrollbar";
 import SearchModal from "./components/SearchModal";
+import QuoteModal from "./components/QuoteModal";
 import SmoothScroll from "./components/SmoothScroll";
 import { ProductTransitionProvider } from "./context/ProductTransitionContext";
 import "./globals.css";
@@ -58,6 +59,7 @@ export default function RootLayout({
 			>
 				<SmoothScroll>
 					<SearchModal />
+					<QuoteModal />
 					<FloatingScrollbar />
 					<Navbar />
 					<ProductTransitionProvider>

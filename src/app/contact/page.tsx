@@ -9,14 +9,12 @@ import {
 	MapPin,
 	Phone,
 	Mail,
-	Clock,
 	CheckCircle2,
 	Copy,
 	Check,
 	ExternalLink,
 	ArrowRight,
 	Send,
-	MessageCircle,
 	Loader2,
 	ShieldCheck,
 	Building2,
@@ -60,18 +58,40 @@ export default function ContactPage() {
 		setTimeout(() => setCopiedField(null), 2000);
 	};
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsSubmitting(true);
 
-		const randomNum = Math.floor(1000 + Math.random() * 9000);
-		const newRefId = `RUS-${randomNum}`;
+		try {
+			const res = await fetch("/api/inquiries", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					name: fullName,
+					email,
+					phone,
+					company,
+					message,
+					source: "Contact Page",
+					category: "General Technical Inquiry",
+				}),
+			});
 
-		setTimeout(() => {
+			const data = await res.json();
+			if (data.success && data.referenceId) {
+				setReferenceId(data.referenceId);
+			} else {
+				const randomNum = Math.floor(1000 + Math.random() * 9000);
+				setReferenceId(`RUS-${randomNum}`);
+			}
+		} catch (err) {
+			console.error("Error submitting contact inquiry:", err);
+			const randomNum = Math.floor(1000 + Math.random() * 9000);
+			setReferenceId(`RUS-${randomNum}`);
+		} finally {
 			setIsSubmitting(false);
-			setReferenceId(newRefId);
 			setFormSubmitted(true);
-		}, 550);
+		}
 	};
 
 	const resetForm = () => {

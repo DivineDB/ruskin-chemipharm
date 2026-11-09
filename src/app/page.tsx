@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
 import gsap from "gsap";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,54 +10,26 @@ import CtaBanner from "./components/CtaBanner";
 import Footer from "./components/Footer";
 import GlobalEvents from "./components/GlobalEvents";
 import Navbar from "./components/Navbar";
-import CustomSelect from "./components/CustomSelect";
 import InteractiveHexNetwork from "./components/InteractiveHexNetwork";
 import SupplierBand from "./components/SupplierBand";
 import HeroCarousel from "./components/HeroCarousel";
 import SectionHeader from "./components/SectionHeader";
 import TherapeuticCategoriesGrid from "./components/TherapeuticCategories";
 import {
-	HexImage,
-	HexBadge,
 	HexIcon,
 	MolecularDecoration,
-	HEX_CLIP,
 } from "./components/Hex";
 import {
-	ALL_PRODUCTS,
-	PRODUCT_CATEGORIES,
-	ApiProduct,
-} from "@/lib/products";
-import { useScrollLock } from "@/lib/scrollLock";
-import {
-	Search,
-	ArrowRight,
 	ArrowUpRight,
-	ArrowDown,
 	ShieldCheck,
 	FileCheck,
-	Truck,
 	FlaskConical,
-	Download,
-	X,
-	CheckCircle2,
 	Globe,
-	Building2,
-	TestTube2,
-	Check,
 	HeartPulse,
 	Pill,
-	Syringe,
 	Layers,
 	Brain,
 	TrendingUp,
-	Award,
-	ChevronLeft,
-	ChevronRight,
-	ChevronDown,
-	ChevronUp,
-	FileText,
-	ExternalLink,
 } from "lucide-react";
 
 
@@ -242,13 +214,6 @@ const WORLD_PINS = [
 
 export default function HomePage() {
 	const router = useRouter();
-	const [searchQuery, setSearchQuery] = useState("");
-	const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>("All");
-	const [quoteModalOpen, setQuoteModalOpen] = useState(false);
-	const [catalogModalOpen, setCatalogModalOpen] = useState(false);
-	const [quoteProduct, setQuoteProduct] = useState<string | null>(null);
-	const [formSubmitted, setFormSubmitted] = useState(false);
-	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [hoveredPin, setHoveredPin] = useState<string | null>(null);
 	const [hoveredServiceCard, setHoveredServiceCard] = useState<number | null>(null);
 
@@ -296,64 +261,25 @@ export default function HomePage() {
 	};
 
 	const handleOpenQuote = (productOrService?: string) => {
-		setQuoteProduct(productOrService || null);
-		setQuoteModalOpen(true);
-		setFormSubmitted(false);
+		if (typeof window !== "undefined") {
+			window.dispatchEvent(
+				new CustomEvent("ruskin:open-quote", {
+					detail: {
+						product: productOrService || "",
+						note: productOrService
+							? `Inquiry for ${productOrService}. Please provide batch COA and commercial quote.`
+							: "",
+					},
+				})
+			);
+		}
 	};
-
-	// Freeze background scroll & Lenis when any modal is open
-	useScrollLock(quoteModalOpen || catalogModalOpen);
-
-	// Escape key handling for open modals
-	useEffect(() => {
-		const isAnyModalOpen = quoteModalOpen || catalogModalOpen;
-		if (!isAnyModalOpen) return;
-
-		const handleKeyDown = (e: KeyboardEvent) => {
-			if (e.key === "Escape") {
-				setQuoteModalOpen(false);
-				setCatalogModalOpen(false);
-			}
-		};
-
-		window.addEventListener("keydown", handleKeyDown);
-		return () => {
-			window.removeEventListener("keydown", handleKeyDown);
-		};
-	}, [quoteModalOpen, catalogModalOpen]);
 
 	const handleDownloadPdf = () => {
 		alert("Downloading Ruskin Chemipharm 2026 Technical Product Directory (PDF)...");
 	};
 
-	// Memoized filtered catalog list for modal from real 46 ALL_PRODUCTS
-	const filteredCatalog = React.useMemo(() => {
-		return ALL_PRODUCTS.filter((p) => {
-			if (selectedCategoryFilter !== "All" && p.category !== selectedCategoryFilter) {
-				return false;
-			}
-			if (searchQuery.trim() !== "") {
-				const q = searchQuery.toLowerCase();
-				return (
-					p.name.toLowerCase().includes(q) ||
-					p.casNumber.toLowerCase().includes(q) ||
-					p.category.toLowerCase().includes(q)
-				);
-			}
-			return true;
-		});
-	}, [selectedCategoryFilter, searchQuery]);
 
-	React.useEffect(() => {
-		const handleOpenQuoteEvent = (e?: Event) => {
-			const customEvent = e as CustomEvent<{ product?: string }>;
-			handleOpenQuote(customEvent?.detail?.product || "General Technical Inquiry");
-		};
-		window.addEventListener("ruskin:open-quote", handleOpenQuoteEvent);
-		return () => {
-			window.removeEventListener("ruskin:open-quote", handleOpenQuoteEvent);
-		};
-	}, []);
 
 	return (
 		<div className="min-h-screen bg-white text-[#5A7A8E] flex flex-col font-sans selection:bg-[#C79A4B] selection:text-white">
@@ -903,318 +829,6 @@ export default function HomePage() {
           9. FOOTER
           ══════════════════════════════════════════════════════════ */}
 			<Footer onOpenCatalog={() => handleOpenCatalog()} />
-
-			{/* ══════════════════════════════════════════════════════════
-          TECHNICAL CATALOG MODAL (Searches all 46 real ALL_PRODUCTS)
-          ══════════════════════════════════════════════════════════ */}
-			<AnimatePresence>
-				{catalogModalOpen && (
-					<>
-						<motion.div
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							exit={{ opacity: 0 }}
-							className="fixed inset-0 z-50 bg-[#12304A]/35 backdrop-blur-[3px]"
-							onClick={() => setCatalogModalOpen(false)}
-							onTouchMove={(e) => e.stopPropagation()}
-							onWheel={(e) => e.stopPropagation()}
-						/>
-						<motion.div
-							initial={{ opacity: 0, scale: 0.94, y: 16 }}
-							animate={{ opacity: 1, scale: 1, y: 0 }}
-							exit={{ opacity: 0, scale: 0.94, y: 12 }}
-							transition={{ type: "spring", damping: 28, stiffness: 380 }}
-							data-lenis-prevent="true"
-							className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(620px,calc(100vw-32px))] flex flex-col rounded-3xl overflow-hidden bg-white shadow-2xl border border-[#12304A]/10 max-h-[85vh]"
-						>
-							{/* Header */}
-							<div className="px-6 pt-6 pb-4 border-b border-[#12304A]/8 flex items-start justify-between shrink-0 text-left">
-								<div>
-									<div className="text-[10px] font-bold text-[#C79A4B] uppercase tracking-widest mb-0.5">
-										TECHNICAL PRODUCT DIRECTORY
-									</div>
-									<h3 className="text-lg font-bold text-[#12304A] leading-snug">
-										Search Specifications &amp; Regulatory Status
-									</h3>
-								</div>
-								<button
-									onClick={() => setCatalogModalOpen(false)}
-									className="p-1 rounded-full text-[#5A7A8E] hover:text-[#12304A] hover:bg-[#12304A]/5 transition-colors shrink-0"
-								>
-									<X className="w-5 h-5" />
-								</button>
-							</div>
-
-							{/* Search & Filter Bar */}
-							<div className="px-5 py-3 border-b border-[#12304A]/8 flex gap-2.5 shrink-0 bg-[#FAF7F2]">
-								<div className="relative flex-1">
-									<Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#5A7A8E]" />
-									<input
-										type="text"
-										placeholder="Search by API compound name or CAS No..."
-										value={searchQuery}
-										onChange={(e) => setSearchQuery(e.target.value)}
-										className="w-full pl-9 pr-3 py-2 rounded-xl text-[#12304A] placeholder-[#5A7A8E]/60 focus:outline-none text-xs bg-white border border-[#12304A]/10 focus:border-[#C79A4B]"
-									/>
-								</div>
-								<CustomSelect
-									variant="light"
-									size="sm"
-									value={selectedCategoryFilter}
-									onChange={(val) => setSelectedCategoryFilter(val)}
-									options={[
-										{ value: "All", label: `All Categories (${ALL_PRODUCTS.length})` },
-										...PRODUCT_CATEGORIES.map((c) => ({
-											value: c.name,
-											label: `${c.name} (${c.count})`,
-										})),
-									]}
-									className="w-[190px] shrink-0"
-								/>
-							</div>
-
-							{/* Results List */}
-							<div
-								data-lenis-prevent="true"
-								className="p-5 overflow-y-auto flex-1 space-y-3 custom-scrollbar text-left"
-							>
-								{filteredCatalog.length > 0 ? (
-									filteredCatalog.map((product) => (
-										<div
-											key={product.id}
-											className="rounded-2xl p-4 border border-[#12304A]/8 bg-white hover:border-[#C79A4B]/40 hover:shadow-md transition-[border-color,box-shadow] duration-200 flex flex-col gap-2"
-										>
-											<div className="flex items-center justify-between">
-												<span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#C79A4B]/15 text-[#C79A4B] uppercase tracking-wide">
-													{product.category}
-												</span>
-												<span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
-													{product.dmfStatus}
-												</span>
-											</div>
-											<div>
-												<h4 className="text-sm font-bold text-[#12304A]">{product.name}</h4>
-												<div className="text-[11px] text-[#5A7A8E] mt-0.5 font-mono">
-													CAS: <span className="text-[#12304A] font-semibold">{product.casNumber}</span>
-													{" · "}
-													Purity: <span className="stat-num text-emerald-600 font-bold">{product.purity}</span>
-													{" · "}
-													Grade: <span className="text-slate-600">{product.grade}</span>
-												</div>
-											</div>
-											<p className="text-[11px] text-[#5A7A8E] line-clamp-2 leading-relaxed">
-												{product.description}
-											</p>
-											<div className="flex items-center justify-between pt-2 border-t border-[#12304A]/6">
-												<Link
-													href={`/products/${product.slug}`}
-													onClick={() => setCatalogModalOpen(false)}
-													className="text-[11px] font-bold text-[#12304A] hover:text-[#C79A4B] flex items-center gap-1 transition-colors"
-												>
-													View Molecule Details <ArrowUpRight className="w-3 h-3" />
-												</Link>
-												<button
-													onClick={() => {
-														setCatalogModalOpen(false);
-														handleOpenQuote(product.name);
-													}}
-													className="gold-btn px-3 py-1.5 rounded-lg text-[11px] font-bold flex items-center gap-1"
-												>
-													Request COA &amp; Quote
-												</button>
-											</div>
-										</div>
-									))
-								) : (
-									<div className="py-12 text-center text-slate-500 text-xs">
-										No products found matching your search.
-									</div>
-								)}
-							</div>
-						</motion.div>
-					</>
-				)}
-			</AnimatePresence>
-
-			{/* ══════════════════════════════════════════════════════════
-          QUOTE & TECHNICAL DOSSIER MODAL
-          ══════════════════════════════════════════════════════════ */}
-			<AnimatePresence>
-				{quoteModalOpen && (
-					<>
-						<motion.div
-							initial={{ opacity: 0 }}
-							animate={{ opacity: 1 }}
-							exit={{ opacity: 0 }}
-							className="fixed inset-0 z-50 bg-[#12304A]/35 backdrop-blur-[3px]"
-							onClick={() => setQuoteModalOpen(false)}
-							onTouchMove={(e) => e.stopPropagation()}
-							onWheel={(e) => e.stopPropagation()}
-						/>
-						<motion.div
-							initial={{ opacity: 0, scale: 0.92, y: 16 }}
-							animate={{ opacity: 1, scale: 1, y: 0 }}
-							exit={{ opacity: 0, scale: 0.94, y: 12 }}
-							transition={{ type: "spring", damping: 26, stiffness: 380 }}
-							data-lenis-prevent="true"
-							className="fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(480px,calc(100vw-32px))] max-h-[90vh] overflow-y-auto custom-scrollbar rounded-3xl bg-white shadow-[0_25px_70px_rgba(18,48,74,0.35)] border border-[#12304A]/10 text-left"
-						>
-							<button
-								onClick={() => setQuoteModalOpen(false)}
-								className="absolute top-4 right-4 text-[#5A7A8E] hover:text-[#12304A] p-1.5 rounded-full hover:bg-[#12304A]/5 z-10 transition-colors"
-							>
-								<X className="w-5 h-5" />
-							</button>
-
-							{!formSubmitted ? (
-								<div className="p-6 sm:p-8 space-y-5">
-									<div>
-										<div className="text-[10px] uppercase font-bold text-[#C79A4B] tracking-widest mb-1">
-											REQUEST QUOTE &amp; TECHNICAL DOSSIER
-										</div>
-										<h3 className="text-xl font-extrabold text-[#12304A]">
-											{quoteProduct ? `Inquiry for ${quoteProduct}` : "Chemical Sourcing Inquiry"}
-										</h3>
-										<p className="text-xs text-[#5A7A8E] mt-1">
-											Submit your batch specification requirement to receive certified COA and pricing.
-										</p>
-									</div>
-
-									<form
-										onSubmit={(e) => {
-											e.preventDefault();
-											setIsSubmitting(true);
-											setTimeout(() => {
-												setIsSubmitting(false);
-												setFormSubmitted(true);
-											}, 650);
-										}}
-										className="space-y-3.5"
-									>
-										<div>
-											<label className="block text-[11px] font-bold text-[#12304A] mb-1">
-												Full Name &amp; Designation <span className="text-[#C79A4B]">*</span>
-											</label>
-											<input
-												required
-												type="text"
-												placeholder="e.g. Dr. Sarah Jenkins (Head of Procurement)"
-												className="w-full px-4 py-2.5 rounded-xl text-[#12304A] text-xs focus:outline-none placeholder-[#5A7A8E]/60 border border-[#12304A]/10 focus:border-[#C79A4B] bg-[#FAF7F2]"
-											/>
-										</div>
-
-										<div className="grid grid-cols-2 gap-3">
-											<div>
-												<label className="block text-[11px] font-bold text-[#12304A] mb-1">
-													Corporate Email <span className="text-[#C79A4B]">*</span>
-												</label>
-												<input
-													required
-													type="email"
-													placeholder="s.jenkins@pharma.com"
-													className="w-full px-4 py-2.5 rounded-xl text-[#12304A] text-xs focus:outline-none placeholder-[#5A7A8E]/60 border border-[#12304A]/10 focus:border-[#C79A4B] bg-[#FAF7F2]"
-												/>
-											</div>
-											<div>
-												<label className="block text-[11px] font-bold text-[#12304A] mb-1">
-													Estimated Quantity
-												</label>
-												<input
-													type="text"
-													placeholder="e.g. 500 Kg / 1 MT"
-													className="w-full px-4 py-2.5 rounded-xl text-[#12304A] text-xs focus:outline-none placeholder-[#5A7A8E]/60 border border-[#12304A]/10 focus:border-[#C79A4B] bg-[#FAF7F2]"
-												/>
-											</div>
-										</div>
-
-										<div>
-											<label className="block text-[11px] font-bold text-[#12304A] mb-1">
-												Requirements &amp; Pharmacopoeia (USP / BP / IP)
-											</label>
-											<textarea
-												rows={3}
-												defaultValue={
-													quoteProduct
-														? `Inquiry for ${quoteProduct}. Please provide batch COA and commercial quote.`
-														: ""
-												}
-												placeholder="Specify purity thresholds, regulatory requirements (USDMF, CEP), delivery schedule..."
-												className="w-full px-4 py-2.5 rounded-xl text-[#12304A] text-xs focus:outline-none resize-none placeholder-[#5A7A8E]/60 border border-[#12304A]/10 focus:border-[#C79A4B] bg-[#FAF7F2]"
-											/>
-										</div>
-
-										<motion.button
-											whileHover={{ scale: 1.01 }}
-											whileTap={{ scale: 0.98 }}
-											type="submit"
-											disabled={isSubmitting}
-											className="w-full bg-[#12304A] hover:bg-[#0B1E2E] disabled:bg-[#12304A]/80 text-white py-3.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-md cursor-pointer gpu-smooth"
-										>
-											{isSubmitting ? (
-												<span className="inline-flex items-center gap-2">
-													<span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-													<span>Transmitting Dossier Request...</span>
-												</span>
-											) : (
-												<>
-													<span>Submit Inquiry to Ruskin Team</span>
-													<ArrowRight className="w-4 h-4" />
-												</>
-											)}
-										</motion.button>
-									</form>
-								</div>
-							) : (
-								<motion.div
-									initial={{ opacity: 0, scale: 0.92 }}
-									animate={{ opacity: 1, scale: 1 }}
-									transition={{ type: "spring", damping: 24, stiffness: 350 }}
-									className="p-8 text-center space-y-4"
-								>
-									<motion.div
-										initial={{ scale: 0, rotate: -25 }}
-										animate={{ scale: [0, 1.2, 1], rotate: 0 }}
-										transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-										className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto shadow-sm"
-									>
-										<CheckCircle2 className="w-8 h-8 stroke-[2.2]" />
-									</motion.div>
-									<motion.h3
-										initial={{ opacity: 0, y: 6 }}
-										animate={{ opacity: 1, y: 0 }}
-										transition={{ delay: 0.12 }}
-										className="text-xl font-bold text-[#12304A]"
-									>
-										Inquiry Submitted Successfully
-									</motion.h3>
-									<motion.p
-										initial={{ opacity: 0, y: 6 }}
-										animate={{ opacity: 1, y: 0 }}
-										transition={{ delay: 0.18 }}
-										className="text-xs text-[#5A7A8E] leading-relaxed max-w-sm mx-auto"
-									>
-										Thank you. Our regulatory and commercial sourcing specialists will follow up with full COA specifications within 2 business hours.
-									</motion.p>
-									<motion.div
-										initial={{ opacity: 0, y: 6 }}
-										animate={{ opacity: 1, y: 0 }}
-										transition={{ delay: 0.24 }}
-									>
-										<motion.button
-											whileHover={{ scale: 1.03 }}
-											whileTap={{ scale: 0.97 }}
-											onClick={() => setQuoteModalOpen(false)}
-											className="inline-flex items-center gap-2 bg-[#C79A4B] hover:bg-[#B58A3E] text-white px-8 py-2.5 rounded-xl text-xs font-bold transition-colors shadow-md cursor-pointer gpu-smooth"
-										>
-											Done
-										</motion.button>
-									</motion.div>
-								</motion.div>
-							)}
-						</motion.div>
-					</>
-				)}
-			</AnimatePresence>
 		</div>
 	);
 }

@@ -73,6 +73,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
 
   const isHome = pathname === "/";
   const isProducts = pathname === "/products";
+  const isFinishedFormulations = pathname.startsWith("/finished-formulations");
   const isServices = pathname.startsWith("/services");
   const isAbout = pathname.startsWith("/about");
   const isContact = pathname.startsWith("/contact");
@@ -130,6 +131,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
   const navLinks = [
     { id: "home", href: "/", label: "Home", subtitle: "Overview & Sourcing Hub", active: isHome },
     { id: "products", href: "/products", label: "Products", subtitle: "46+ DCGI APIs & Intermediates", active: isProducts },
+    { id: "finished-formulations", href: "/finished-formulations", label: "Formulations", subtitle: "Finished Formulations & Therapeutic Divisions", active: isFinishedFormulations },
     { id: "industries", href: "/products", label: "Industries", subtitle: "5 Therapeutic Segments", isDropdown: true, active: false },
     { id: "services", href: "/services", label: "Services", subtitle: "CDMO & Regulatory Dossiers", active: isServices },
     { id: "about", href: "/about", label: "About", subtitle: "40+ Years Heritage & Credibility", active: isAbout },
@@ -147,9 +149,9 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
     const el = linkRefs.current[tabToUse];
     if (el) {
       setIndicator({
-        x: el.offsetLeft + 14,
-        width: Math.max(0, el.offsetWidth - 28),
-        top: el.offsetTop + el.offsetHeight,
+        x: el.offsetLeft + 12,
+        width: Math.max(0, el.offsetWidth - 24),
+        top: el.offsetTop + el.offsetHeight - 2,
       });
     }
   }, [activeTab]);
@@ -178,17 +180,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
       return;
     }
     window.dispatchEvent(new CustomEvent("ruskin:open-quote"));
-    if (pathname === "/contact") {
-      const formEl = document.getElementById("contact-form");
-      if (formEl) {
-        if (typeof window !== "undefined" && (window as any).__lenis) {
-          (window as any).__lenis.scrollTo(formEl, { offset: -90 });
-        } else {
-          formEl.scrollIntoView({ behavior: "smooth" });
-        }
-      }
-    }
-  }, [onOpenQuote, pathname]);
+  }, [onOpenQuote]);
 
   const handleSearchClick = useCallback(() => {
     if (onOpenSearch) {
@@ -285,7 +277,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
 
           {/* Desktop nav with physics-aware continuous active underline */}
           <LayoutGroup id="desktop-nav">
-            <nav className="hidden md:flex items-center space-x-1 sm:space-x-2 relative py-2">
+            <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2.5 relative py-2">
               {navLinks.map((link) => {
                 const linkKey = link.id || link.href;
                 const isCurrentActive = activeTab === linkKey;
@@ -305,7 +297,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
                           setIndustriesOpen((prev) => !prev);
                         }}
                         aria-expanded={industriesOpen}
-                        className="relative px-3.5 py-1.5 text-sm font-semibold transition-colors duration-150 select-none inline-flex items-center gap-1 text-[#5A7A8E] hover:text-[#12304A] cursor-pointer"
+                        className="relative px-3 xl:px-4 py-2 text-xs xl:text-sm font-semibold transition-colors duration-150 select-none inline-flex items-center gap-1.5 text-[#5A7A8E] hover:text-[#12304A] cursor-pointer whitespace-nowrap"
                       >
                         <span>{link.label}</span>
                         <ChevronDown
@@ -327,8 +319,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
                           >
                             <div className="bg-white rounded-2xl shadow-[0_20px_50px_-10px_rgba(18,48,74,0.16),0_0_0_1px_rgba(18,48,74,0.08)] p-2.5 overflow-hidden">
                               <div className="px-3.5 pt-2.5 pb-2 border-b border-[#12304A]/6 flex items-center justify-between">
-                                <span className="text-[11px] font-bold uppercase tracking-wider text-[#C79A4B] flex items-center gap-2">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#C79A4B]" />
+                                <span className="text-[11px] font-bold uppercase tracking-wider text-[#C79A4B] block">
                                   Therapeutic Segments
                                 </span>
                                 <span className="text-[11px] font-semibold text-[#5A7A8E]">
@@ -393,7 +384,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
                       setActiveTab(linkKey);
                       updateIndicator(linkKey);
                     }}
-                    className={`relative px-3.5 py-1.5 text-sm font-semibold transition-colors duration-150 select-none ${
+                    className={`relative px-3 xl:px-4 py-2 text-xs xl:text-sm font-semibold transition-colors duration-150 select-none whitespace-nowrap ${
                       isCurrentActive
                         ? "text-[#12304A]"
                         : "text-[#5A7A8E] hover:text-[#12304A]"
@@ -401,7 +392,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
                   >
                     <span>{link.label}</span>
                     {!isMounted && isCurrentActive && (
-                      <div className="absolute -bottom-0.5 left-3.5 right-3.5 h-[2px] bg-[#C79A4B] rounded-full pointer-events-none" />
+                      <div className="absolute -bottom-0.5 left-3 right-3 xl:left-4 xl:right-4 h-[2px] bg-[#C79A4B] rounded-full pointer-events-none" />
                     )}
                   </Link>
                 );
@@ -447,7 +438,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               onClick={handleQuoteClick}
-              className="hidden sm:flex items-center justify-center bg-[#12304A] text-white px-5 sm:px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#0B1E2E] transition-colors shadow-sm cursor-pointer gpu-smooth"
+              className="hidden sm:flex items-center justify-center bg-[#12304A] text-white px-4 xl:px-6 py-2 xl:py-2.5 rounded-xl text-xs xl:text-sm font-semibold hover:bg-[#0B1E2E] transition-colors shadow-sm cursor-pointer gpu-smooth"
             >
               Request Quote
             </motion.button>
@@ -455,7 +446,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
             {/* Mobile menu toggle */}
             <motion.button
               whileTap={{ scale: 0.92 }}
-              className={`md:hidden w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
+              className={`lg:hidden w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer ${
                 mobileOpen
                   ? "bg-[#12304A] text-white shadow-sm"
                   : "bg-[#12304A]/5 text-[#12304A] hover:bg-[#C79A4B]/10 hover:text-[#C79A4B] border border-[#12304A]/8"
@@ -479,7 +470,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => setMobileOpen(false)}
-            className="md:hidden fixed inset-x-0 bottom-0 top-[72px] sm:top-[76px] bg-[#071521]/40 backdrop-blur-xs z-40"
+            className="lg:hidden fixed inset-x-0 bottom-0 top-[72px] sm:top-[76px] bg-[#071521]/40 backdrop-blur-xs z-40"
             aria-hidden="true"
           />
         )}
@@ -493,7 +484,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden relative z-50 overflow-hidden border-t border-[#12304A]/10 bg-white/98 backdrop-blur-xl shadow-2xl max-h-[calc(100vh-76px)] overflow-y-auto"
+            className="lg:hidden relative z-50 overflow-hidden border-t border-[#12304A]/10 bg-white/98 backdrop-blur-xl shadow-2xl max-h-[calc(100vh-76px)] overflow-y-auto"
           >
             <div className="px-4 sm:px-6 py-4 space-y-3">
               {/* Brand Eyebrow strip */}
