@@ -15,6 +15,9 @@ export function lockScroll(): void {
 		document.documentElement.style.overflow = "hidden";
 		document.documentElement.classList.add("lenis-stopped");
 
+		// Dispatch scroll lock state
+		window.dispatchEvent(new CustomEvent("ruskin:scroll-lock", { detail: { locked: true } }));
+
 		// Dispatch Lenis stop event handled by SmoothScroll
 		window.dispatchEvent(new CustomEvent("ruskin:lenis-stop"));
 
@@ -37,6 +40,9 @@ export function unlockScroll(): void {
 		document.body.style.overflow = "";
 		document.documentElement.style.overflow = "";
 		document.documentElement.classList.remove("lenis-stopped");
+
+		// Dispatch scroll unlock state
+		window.dispatchEvent(new CustomEvent("ruskin:scroll-lock", { detail: { locked: false } }));
 
 		// Dispatch Lenis start event handled by SmoothScroll
 		window.dispatchEvent(new CustomEvent("ruskin:lenis-start"));

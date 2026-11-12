@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, use, useRef, useCallback } from "react";
+import React, { useState, use, useCallback } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { motion } from "framer-motion";
 import Footer from "../../components/Footer";
 import CustomSelect from "../../components/CustomSelect";
-import Navbar from "../../components/Navbar";
 import { getProductBySlugOrId, ALL_PRODUCTS } from "@/lib/products";
 import { useProductTransition } from "../../context/ProductTransitionContext";
 import {
@@ -28,18 +27,11 @@ const INQUIRY_OPTIONS = [
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const product = getProductBySlugOrId(resolvedParams.id);
-
-  if (!product) {
-    // If not found in dataset fallback to first product or 404
-    const fallback = ALL_PRODUCTS[0];
-    if (!fallback) return notFound();
-  }
-
   const currentProduct = product || ALL_PRODUCTS[0];
 
   // Cross-page seamless title growth transition
-  const { isTransitioningFor, registerTarget, startTransition } = useProductTransition();
-  const isTransitioning = isTransitioningFor(currentProduct.name);
+  const { isTransitioningFor, registerTarget } = useProductTransition();
+  const isTransitioning = isTransitioningFor(currentProduct?.name || "");
 
   const handleTitleRef = useCallback(
     (node: HTMLHeadingElement | null) => {
@@ -61,9 +53,13 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
   const [enqEmail, setEnqEmail] = useState("");
   const [enqPhone, setEnqPhone] = useState("");
   const [enqCountry, setEnqCountry] = useState("");
-  const [enqProduct, setEnqProduct] = useState(currentProduct.name);
+  const [enqProduct, setEnqProduct] = useState(currentProduct?.name || "");
   const [enqDetails, setEnqDetails] = useState("");
   const [enqRefId, setEnqRefId] = useState("");
+
+  if (!currentProduct) {
+    return notFound();
+  }
 
   const handleCopyCas = (cas: string) => {
     navigator.clipboard.writeText(cas);

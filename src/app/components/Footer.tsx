@@ -197,7 +197,7 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
 							</li>
 							<li>
 								<Link
-									href="/finished-formulations"
+									href="/formulations"
 									className="hover:text-[#C79A4B] hover:translate-x-1 transition-all duration-200 inline-block font-medium text-white"
 								>
 									Finished Formulations

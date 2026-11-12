@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import CtaBanner from "./components/CtaBanner";
 import Footer from "./components/Footer";
 import GlobalEvents from "./components/GlobalEvents";
-import Navbar from "./components/Navbar";
 import InteractiveHexNetwork from "./components/InteractiveHexNetwork";
 import SupplierBand from "./components/SupplierBand";
 import HeroCarousel from "./components/HeroCarousel";

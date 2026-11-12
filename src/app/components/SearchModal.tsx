@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useRef, useDeferredValue } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, ArrowUpRight } from "lucide-react";
 import CustomSelect from "./CustomSelect";
@@ -13,7 +13,6 @@ import { useScrollLock } from "@/lib/scrollLock";
 
 export default function SearchModal() {
 	const pathname = usePathname();
-	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -110,7 +109,7 @@ export default function SearchModal() {
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
 						transition={{ duration: 0.2 }}
-						className="fixed inset-0 z-[100] bg-[#12304A]/40 backdrop-blur-sm"
+						className="fixed inset-0 z-[1000] bg-[#071521]/60 backdrop-blur-sm"
 						onClick={() => setIsOpen(false)}
 						onTouchMove={(e) => e.stopPropagation()}
 						onWheel={(e) => e.stopPropagation()}
@@ -123,7 +122,7 @@ export default function SearchModal() {
 						exit={{ opacity: 0, scale: 0.95, y: 12 }}
 						transition={{ type: "spring", damping: 28, stiffness: 380 }}
 						data-lenis-prevent="true"
-						className="fixed z-[101] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(640px,calc(100vw-32px))] flex flex-col rounded-3xl overflow-hidden bg-white shadow-[0_25px_70px_rgba(18,48,74,0.3)] border border-[#12304A]/10 max-h-[85vh] text-left"
+						className="fixed z-[1001] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(640px,calc(100vw-32px))] flex flex-col rounded-3xl overflow-hidden bg-white shadow-[0_25px_70px_rgba(18,48,74,0.3)] border border-[#12304A]/10 max-h-[85vh] text-left"
 					>
 						{/* Header */}
 						<div className="px-6 pt-6 pb-4 border-b border-[#12304A]/8 flex items-start justify-between shrink-0 bg-white">
@@ -187,7 +186,7 @@ export default function SearchModal() {
 						{/* Results List */}
 						<div
 							data-lenis-prevent="true"
-							className="p-5 overflow-y-auto flex-1 space-y-3 custom-scrollbar text-left bg-[#FAF7F2]/40"
+							className="p-5 overflow-y-auto flex-1 space-y-3 no-scrollbar text-left bg-[#FAF7F2]/40"
 						>
 							{filteredProducts.length > 0 ? (
 								filteredProducts.map((product) => (

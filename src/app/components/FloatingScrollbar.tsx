@@ -6,6 +6,7 @@ export default function FloatingScrollbar() {
 	const [thumbHeight, setThumbHeight] = useState(0);
 	const [mounted, setMounted] = useState(false);
 	const [isDragging, setIsDragging] = useState(false);
+	const [isScrollLocked, setIsScrollLocked] = useState(false);
 
 	const thumbRef = useRef<HTMLDivElement>(null);
 	const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -207,11 +208,20 @@ export default function FloatingScrollbar() {
 		};
 	}, [isDragging]);
 
-	if (!mounted || thumbHeight === 0) return null;
+	useEffect(() => {
+		const handleLock = (e: Event) => {
+			const customEvent = e as CustomEvent<{ locked: boolean }>;
+			setIsScrollLocked(!!customEvent.detail?.locked);
+		};
+		window.addEventListener("ruskin:scroll-lock", handleLock);
+		return () => window.removeEventListener("ruskin:scroll-lock", handleLock);
+	}, []);
+
+	if (!mounted || thumbHeight === 0 || isScrollLocked) return null;
 
 	return (
 		<div
-			className="fixed right-0 top-0 bottom-0 w-3 z-[9999] pointer-events-none select-none"
+			className="fixed right-0 top-0 bottom-0 w-3 z-40 pointer-events-none select-none"
 			aria-hidden="true"
 		>
 			{/* Floating 4px Gold Pill — never touches top, ZERO track box */}

@@ -9,54 +9,10 @@ import {
   Menu,
   X,
   ChevronRight,
-  ChevronDown,
   ArrowRight,
-  Pill,
-  HeartPulse,
-  Layers,
-  FlaskConical,
-  Brain,
 } from "lucide-react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { useScrollLock } from "@/lib/scrollLock";
-
-const INDUSTRY_CATEGORIES = [
-  {
-    name: "Pharma",
-    href: "/products?category=Pharma",
-    count: "30 APIs",
-    subtitle: "Contrast Media, Anesthetics & Oncology",
-    icon: Pill,
-  },
-  {
-    name: "Veterinary",
-    href: "/products?category=Veterinary",
-    count: "9 Actives",
-    subtitle: "Veterinary Actives & Herd Health",
-    icon: HeartPulse,
-  },
-  {
-    name: "Neutra",
-    href: "/products?category=Neutra",
-    count: "7 Actives",
-    subtitle: "Cognitive Enhancers & Neuro-Actives",
-    icon: Brain,
-  },
-  {
-    name: "Excipients",
-    href: "/products?category=Excipients",
-    count: "8 Polymers",
-    subtitle: "Binders, Disintegrants & Polymers",
-    icon: Layers,
-  },
-  {
-    name: "Nutraceuticals",
-    href: "/products?category=Nutraceuticals",
-    count: "12 Nutrients",
-    subtitle: "CoQ10, Dietary Nutrients & Vitamins",
-    icon: FlaskConical,
-  },
-];
 
 interface NavbarProps {
   onOpenSearch?: () => void;
@@ -73,85 +29,77 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
 
   const isHome = pathname === "/";
   const isProducts = pathname === "/products";
-  const isFinishedFormulations = pathname.startsWith("/finished-formulations");
+  const isFormulations =
+    pathname.startsWith("/formulations") ||
+    pathname.startsWith("/finished-formulations");
   const isServices = pathname.startsWith("/services");
   const isAbout = pathname.startsWith("/about");
   const isContact = pathname.startsWith("/contact");
 
-  const [industriesOpen, setIndustriesOpen] = useState(false);
-  const [mobileIndustriesOpen, setMobileIndustriesOpen] = useState(false);
-  const industriesTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const industriesDropdownRef = useRef<HTMLDivElement>(null);
-
-  const handleIndustriesMouseEnter = () => {
-    if (industriesTimerRef.current) clearTimeout(industriesTimerRef.current);
-    setIndustriesOpen(true);
-  };
-
-  const handleIndustriesMouseLeave = () => {
-    industriesTimerRef.current = setTimeout(() => {
-      setIndustriesOpen(false);
-    }, 220);
-  };
-
-  const handleIndustrySelect = (catName: string) => {
-    setIndustriesOpen(false);
-    if (pathname === "/products") {
-      window.dispatchEvent(
-        new CustomEvent("ruskin:select-category", {
-          detail: { category: catName },
-        })
-      );
-    }
-  };
-
-  // Close dropdown on outside click or escape key
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        industriesDropdownRef.current &&
-        !industriesDropdownRef.current.contains(e.target as Node)
-      ) {
-        setIndustriesOpen(false);
-      }
-    };
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIndustriesOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
   const navLinks = [
-    { id: "home", href: "/", label: "Home", subtitle: "Overview & Sourcing Hub", active: isHome },
-    { id: "products", href: "/products", label: "Products", subtitle: "46+ DCGI APIs & Intermediates", active: isProducts },
-    { id: "finished-formulations", href: "/finished-formulations", label: "Formulations", subtitle: "Finished Formulations & Therapeutic Divisions", active: isFinishedFormulations },
-    { id: "industries", href: "/products", label: "Industries", subtitle: "5 Therapeutic Segments", isDropdown: true, active: false },
-    { id: "services", href: "/services", label: "Services", subtitle: "CDMO & Regulatory Dossiers", active: isServices },
-    { id: "about", href: "/about", label: "About", subtitle: "40+ Years Heritage & Credibility", active: isAbout },
-    { id: "contact", href: "/contact", label: "Contact", subtitle: "Direct Inquiries & Support", active: isContact },
+    {
+      id: "home",
+      href: "/",
+      label: "Home",
+      subtitle: "Overview & Sourcing Hub",
+      active: isHome,
+    },
+    {
+      id: "products",
+      href: "/products",
+      label: "Products",
+      subtitle: "46+ DCGI APIs & Intermediates",
+      active: isProducts,
+    },
+    {
+      id: "formulations",
+      href: "/formulations",
+      label: "Formulations",
+      subtitle: "Finished Formulations & Therapeutic Divisions",
+      active: isFormulations,
+      badge: "New",
+    },
+    {
+      id: "services",
+      href: "/services",
+      label: "Services",
+      subtitle: "CDMO & Regulatory Dossiers",
+      active: isServices,
+    },
+    {
+      id: "about",
+      href: "/about",
+      label: "About",
+      subtitle: "40+ Years Heritage & Credibility",
+      active: isAbout,
+    },
+    {
+      id: "contact",
+      href: "/contact",
+      label: "Contact",
+      subtitle: "Direct Inquiries & Support",
+      active: isContact,
+    },
   ];
 
   const currentActiveKey = navLinks.find((link) => link.active)?.id || "home";
   const [activeTab, setActiveTab] = useState(currentActiveKey);
-  const linkRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+  const navRef = useRef<HTMLElement>(null);
+  const labelRefs = useRef<{ [key: string]: HTMLElement | null }>({});
   const [indicator, setIndicator] = useState<{ x: number; width: number; top: number } | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   const updateIndicator = useCallback((targetTab?: string) => {
     const tabToUse = targetTab || activeTab;
-    const el = linkRefs.current[tabToUse];
-    if (el) {
+    const labelEl = labelRefs.current[tabToUse];
+    const navEl = navRef.current;
+    if (labelEl && navEl) {
+      const labelRect = labelEl.getBoundingClientRect();
+      const navRect = navEl.getBoundingClientRect();
       setIndicator({
-        x: el.offsetLeft + 12,
-        width: Math.max(0, el.offsetWidth - 24),
-        top: el.offsetTop + el.offsetHeight - 2,
+        x: labelRect.left - navRect.left,
+        width: labelRect.width,
+        top: navRect.height - 2,
       });
     }
   }, [activeTab]);
@@ -277,122 +225,40 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
 
           {/* Desktop nav with physics-aware continuous active underline */}
           <LayoutGroup id="desktop-nav">
-            <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2.5 relative py-2">
+            <nav ref={navRef} className="hidden lg:flex items-center space-x-1 xl:space-x-2.5 relative py-2">
               {navLinks.map((link) => {
                 const linkKey = link.id || link.href;
                 const isCurrentActive = activeTab === linkKey;
 
-                if (link.id === "industries") {
-                  return (
-                    <div
-                      key={linkKey}
-                      ref={industriesDropdownRef}
-                      className="relative"
-                      onMouseEnter={handleIndustriesMouseEnter}
-                      onMouseLeave={handleIndustriesMouseLeave}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIndustriesOpen((prev) => !prev);
-                        }}
-                        aria-expanded={industriesOpen}
-                        className="relative px-3 xl:px-4 py-2 text-xs xl:text-sm font-semibold transition-colors duration-150 select-none inline-flex items-center gap-1.5 text-[#5A7A8E] hover:text-[#12304A] cursor-pointer whitespace-nowrap"
-                      >
-                        <span>{link.label}</span>
-                        <ChevronDown
-                          className={`w-3.5 h-3.5 transition-transform duration-250 ease-out ${
-                            industriesOpen ? "rotate-180 text-[#C79A4B]" : "text-[#5A7A8E]"
-                          }`}
-                        />
-                      </button>
-
-                      {/* Desktop Industries Dropdown */}
-                      <AnimatePresence>
-                        {industriesOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 6, scale: 0.985 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 4, scale: 0.985 }}
-                            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                            className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-[430px] z-50 pointer-events-auto"
-                          >
-                            <div className="bg-white rounded-2xl shadow-[0_20px_50px_-10px_rgba(18,48,74,0.16),0_0_0_1px_rgba(18,48,74,0.08)] p-2.5 overflow-hidden">
-                              <div className="px-3.5 pt-2.5 pb-2 border-b border-[#12304A]/6 flex items-center justify-between">
-                                <span className="text-[11px] font-bold uppercase tracking-wider text-[#C79A4B] block">
-                                  Therapeutic Segments
-                                </span>
-                                <span className="text-[11px] font-semibold text-[#5A7A8E]">
-                                  5 Categories
-                                </span>
-                              </div>
-                              <div className="py-1.5 space-y-1">
-                                {INDUSTRY_CATEGORIES.map((cat) => {
-                                  const Icon = cat.icon;
-                                  return (
-                                    <Link
-                                      key={cat.name}
-                                      href={cat.href}
-                                      onClick={() => handleIndustrySelect(cat.name)}
-                                      className="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl hover:bg-[#FAF7F2] transition-colors group text-left"
-                                    >
-                                      <div className="w-9 h-9 rounded-xl bg-[#FAF7F2] border border-[#12304A]/8 group-hover:border-[#C79A4B]/40 group-hover:bg-[#C79A4B]/10 flex items-center justify-center shrink-0 transition-colors">
-                                        <Icon className="w-4 h-4 text-[#12304A] group-hover:text-[#C79A4B] transition-colors" />
-                                      </div>
-                                      <div className="flex-1 min-w-0">
-                                        <div className="text-sm font-bold text-[#12304A] group-hover:text-[#C79A4B] transition-colors leading-tight">
-                                          {cat.name}
-                                        </div>
-                                        <p className="text-xs text-[#5A7A8E] group-hover:text-[#12304A]/70 truncate mt-0.5 leading-normal">
-                                          {cat.subtitle}
-                                        </p>
-                                      </div>
-                                      <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#C79A4B] group-hover:translate-x-1 transition-all duration-200 shrink-0 ml-auto opacity-0 group-hover:opacity-100" />
-                                    </Link>
-                                  );
-                                })}
-                              </div>
-                              <div className="pt-2 border-t border-[#12304A]/6 px-1">
-                                <Link
-                                  href="/products"
-                                  onClick={() => handleIndustrySelect("All")}
-                                  className="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-[#FAF7F2]/60 hover:bg-[#FAF7F2] text-xs font-bold text-[#12304A] hover:text-[#C79A4B] transition-colors group"
-                                >
-                                  <span className="flex items-center gap-2">
-                                    <FlaskConical className="w-3.5 h-3.5 text-[#C79A4B]" />
-                                    <span>Browse All 66+ DCGI Products</span>
-                                  </span>
-                                  <ArrowRight className="w-3.5 h-3.5 text-[#C79A4B] group-hover:translate-x-1 transition-transform" />
-                                </Link>
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                }
-
                 return (
                   <Link
                     key={linkKey}
-                    ref={(el) => {
-                      linkRefs.current[linkKey] = el;
-                    }}
                     href={link.href}
                     onClick={() => {
                       setActiveTab(linkKey);
                       updateIndicator(linkKey);
                     }}
-                    className={`relative px-3 xl:px-4 py-2 text-xs xl:text-sm font-semibold transition-colors duration-150 select-none whitespace-nowrap ${
+                    className={`relative px-3 xl:px-4 py-2 text-xs xl:text-sm font-semibold transition-colors duration-150 select-none whitespace-nowrap inline-flex items-center gap-1.5 ${
                       isCurrentActive
                         ? "text-[#12304A]"
                         : "text-[#5A7A8E] hover:text-[#12304A]"
                     }`}
                   >
-                    <span>{link.label}</span>
-                    {!isMounted && isCurrentActive && (
-                      <div className="absolute -bottom-0.5 left-3 right-3 xl:left-4 xl:right-4 h-[2px] bg-[#C79A4B] rounded-full pointer-events-none" />
+                    <span
+                      ref={(el) => {
+                        labelRefs.current[linkKey] = el;
+                      }}
+                      className="relative inline-block"
+                    >
+                      {link.label}
+                      {!isMounted && isCurrentActive && (
+                        <div className="absolute -bottom-2 left-0 right-0 h-[2px] bg-[#C79A4B] rounded-full pointer-events-none" />
+                      )}
+                    </span>
+                    {link.badge && (
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 leading-none shadow-xs">
+                        {link.badge}
+                      </span>
                     )}
                   </Link>
                 );
@@ -518,67 +384,6 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
               {/* Nav links list */}
               <div className="space-y-1.5">
                 {navLinks.map((link) => {
-                  if (link.id === "industries") {
-                    return (
-                      <div key="mobile-industries" className="rounded-xl overflow-hidden border border-[#12304A]/8 bg-white/70">
-                        <button
-                          type="button"
-                          onClick={() => setMobileIndustriesOpen(!mobileIndustriesOpen)}
-                          className="w-full flex items-center justify-between px-3.5 py-3 text-left hover:bg-[#FAF7F2] transition-colors"
-                        >
-                          <div className="flex flex-col">
-                            <span className="text-sm font-bold text-[#12304A]">
-                              {link.label}
-                            </span>
-                            <span className="text-[11px] text-[#5A7A8E]">
-                              {link.subtitle}
-                            </span>
-                          </div>
-                          <ChevronDown
-                            className={`w-4 h-4 text-[#94A3B8] transition-transform duration-200 ${
-                              mobileIndustriesOpen ? "rotate-180 text-[#C79A4B]" : ""
-                            }`}
-                          />
-                        </button>
-
-                        <AnimatePresence>
-                          {mobileIndustriesOpen && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="bg-[#FAF7F2]/70 px-2.5 py-2 space-y-1 border-t border-[#12304A]/6"
-                            >
-                              {INDUSTRY_CATEGORIES.map((cat) => {
-                                const Icon = cat.icon;
-                                return (
-                                  <Link
-                                    key={cat.name}
-                                    href={cat.href}
-                                    onClick={() => setMobileOpen(false)}
-                                    className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white transition-colors group"
-                                  >
-                                    <div className="flex items-center gap-3 min-w-0">
-                                      <div className="w-8 h-8 rounded-lg bg-[#FAF7F2] border border-[#12304A]/8 flex items-center justify-center shrink-0">
-                                        <Icon className="w-4 h-4 text-[#C79A4B]" />
-                                      </div>
-                                      <div className="truncate">
-                                        <div className="text-xs font-bold text-[#12304A] group-hover:text-[#C79A4B] transition-colors">{cat.name}</div>
-                                        <div className="text-[11px] text-[#5A7A8E] truncate">{cat.subtitle}</div>
-                                      </div>
-                                    </div>
-                                    <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-[#C79A4B] shrink-0 ml-2 transition-colors" />
-                                  </Link>
-                                );
-                              })}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    );
-                  }
-
                   return (
                     <Link
                       key={link.id || link.href}
@@ -591,14 +396,33 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
                       }`}
                     >
                       <div className="flex flex-col">
-                        <span className={`text-sm font-bold ${link.active ? "text-white" : "text-[#12304A]"}`}>
-                          {link.label}
-                        </span>
-                        <span className={`text-[11px] ${link.active ? "text-slate-300" : "text-[#5A7A8E]"}`}>
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`text-sm font-bold ${
+                              link.active ? "text-white" : "text-[#12304A]"
+                            }`}
+                          >
+                            {link.label}
+                          </span>
+                          {link.badge && (
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 leading-none shadow-xs">
+                              {link.badge}
+                            </span>
+                          )}
+                        </div>
+                        <span
+                          className={`text-[11px] ${
+                            link.active ? "text-slate-300" : "text-[#5A7A8E]"
+                          }`}
+                        >
                           {link.subtitle}
                         </span>
                       </div>
-                      <ChevronRight className={`w-4 h-4 ${link.active ? "text-white/80" : "text-[#94A3B8]"}`} />
+                      <ChevronRight
+                        className={`w-4 h-4 ${
+                          link.active ? "text-white/80" : "text-[#94A3B8]"
+                        }`}
+                      />
                     </Link>
                   );
                 })}

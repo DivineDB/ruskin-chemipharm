@@ -10,6 +10,8 @@ export default function QuoteModal() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [quoteProduct, setQuoteProduct] = useState<string>("");
+  const [quoteDescription, setQuoteDescription] = useState<string>("");
+  const [quoteComposition, setQuoteComposition] = useState<string>("");
   const [quoteName, setQuoteName] = useState("");
   const [quoteEmail, setQuoteEmail] = useState("");
   const [quoteCompany, setQuoteCompany] = useState("");
@@ -26,11 +28,20 @@ export default function QuoteModal() {
   // Listen to global "ruskin:open-quote" event from navbar or any page CTA
   useEffect(() => {
     const handleOpenQuote = (e?: Event) => {
-      const customEvent = e as CustomEvent<{ product?: string; note?: string }>;
+      const customEvent = e as CustomEvent<{
+        product?: string;
+        note?: string;
+        description?: string;
+        composition?: string;
+      }>;
       const product = customEvent?.detail?.product || "";
       const note = customEvent?.detail?.note || "";
+      const description = customEvent?.detail?.description || "";
+      const composition = customEvent?.detail?.composition || "";
 
       setQuoteProduct(product);
+      setQuoteDescription(description);
+      setQuoteComposition(composition);
       if (note) setQuoteSpecs(note);
       setFormSubmitted(false);
       setIsOpen(true);
@@ -104,7 +115,7 @@ export default function QuoteModal() {
     <AnimatePresence>
       {isOpen && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#12304A]/50 backdrop-blur-xs"
+          className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-[#071521]/60 backdrop-blur-sm"
           onClick={handleClose}
           onTouchMove={(e) => e.stopPropagation()}
           onWheel={(e) => e.stopPropagation()}
@@ -116,20 +127,22 @@ export default function QuoteModal() {
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ type: "spring", damping: 28, stiffness: 380 }}
             data-lenis-prevent="true"
-            className="w-[min(520px,calc(100vw-32px))] max-h-[90vh] overflow-y-auto custom-scrollbar rounded-3xl bg-white shadow-[0_25px_70px_rgba(18,48,74,0.35)] border border-[#12304A]/10 text-left relative"
+            className="w-[min(520px,calc(100vw-32px))] max-h-[90vh] flex flex-col rounded-3xl overflow-hidden bg-white shadow-[0_25px_70px_rgba(18,48,74,0.35)] border border-[#12304A]/10 text-left relative"
           >
             {/* Close Button */}
             <button
               type="button"
               onClick={handleClose}
-              className="absolute top-4 right-4 text-[#5A7A8E] hover:text-[#12304A] p-2 rounded-full hover:bg-[#12304A]/5 z-10 transition-colors cursor-pointer"
+              className="absolute top-4 right-4 text-[#5A7A8E] hover:text-[#12304A] p-2 rounded-full hover:bg-[#12304A]/5 z-20 transition-colors cursor-pointer"
               aria-label="Close quote modal"
             >
               <X className="w-5 h-5" />
             </button>
 
-            {!formSubmitted ? (
-              <div className="p-6 sm:p-8 space-y-5">
+            {/* Scrollable Form Body — no-scrollbar prevents protruding native scrollbars */}
+            <div className="overflow-y-auto no-scrollbar flex-1 p-6 sm:p-8">
+              {!formSubmitted ? (
+                <div className="space-y-5">
                 <div>
                   <div className="text-[10px] uppercase font-bold text-[#C79A4B] tracking-widest mb-1">
                     REQUEST QUOTE &amp; TECHNICAL DOSSIER
@@ -142,6 +155,25 @@ export default function QuoteModal() {
                     Submit your batch specification requirement to receive certified COA and pricing from our regulatory specialists.
                   </p>
                 </div>
+
+                {(quoteComposition || quoteDescription) && (
+                  <div className="p-3.5 rounded-2xl bg-[#FAF7F2] border border-[#12304A]/8 space-y-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#C79A4B] block">
+                      Product Overview
+                    </span>
+                    {quoteComposition && (
+                      <div className="text-xs text-[#12304A] font-semibold leading-relaxed">
+                        <span className="text-[#5A7A8E] font-medium">Composition: </span>
+                        {quoteComposition}
+                      </div>
+                    )}
+                    {quoteDescription && (
+                      <p className="text-xs text-[#5A7A8E] leading-relaxed">
+                        {quoteDescription}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-3.5">
                   <div>
@@ -304,6 +336,7 @@ export default function QuoteModal() {
                 </motion.div>
               </motion.div>
             )}
+            </div>
           </motion.div>
         </div>
       )}
