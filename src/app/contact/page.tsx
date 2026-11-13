@@ -114,7 +114,7 @@ export default function ContactPage() {
 						eyebrow="Get In Touch"
 						lead="Connect with Our"
 						highlight="Commercial Desk"
-						description="Direct access to Ruskin Chemipharm's Mumbai headquarters. Send your API requirements, regulatory dossier inquiries, or custom synthesis specifications below."
+						description="Direct access to Ruskin Chemipharm's Mumbai headquarters. Send your API requirements or regulatory dossier inquiries below."
 					/>
 
 					{/* ─── 2. BALANCED 2-COLUMN MAIN MODULE (EQUAL HEIGHT, CLEAN ARCHITECTURE) ─── */}

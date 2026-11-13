@@ -7,7 +7,6 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
-  Quote,
   ArrowRight,
   ArrowUpRight,
   ChevronLeft,
@@ -1029,13 +1028,32 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              {/* ── Right Column: Bottom-Aligned to Bottom of Photo Frame (4 cols) ── */}
+              {/* ── Right Column: Paragraph aligned horizontally with Left Paragraph (4 cols) ── */}
               <div
                 ref={rightColRef}
-                className="lg:col-span-4 flex flex-col justify-end lg:pb-7 xl:pb-8 space-y-3.5 sm:space-y-4 text-left lg:-translate-x-2 xl:-translate-x-3 2xl:-translate-x-4"
+                className="lg:col-span-4 flex flex-col justify-start space-y-3.5 sm:space-y-4 text-left lg:-translate-x-2 xl:-translate-x-3 2xl:-translate-x-4"
               >
-                {/* Global Mission & Spiritual Lineage */}
-                <div className="insp-right-p1 font-body text-[14px] sm:text-[14.5px] lg:text-[15px] xl:text-[15.5px] leading-[1.65] font-normal text-[#3E586D]">
+                {/* Invisible matching header spacer on desktop so right para aligns with left para */}
+                <div
+                  className="hidden lg:inline-flex items-center gap-2.5 text-xs sm:text-[12.5px] font-bold tracking-[0.22em] uppercase font-sans invisible select-none pointer-events-none"
+                  aria-hidden="true"
+                >
+                  <div className="w-8 h-[2px] shrink-0" />
+                  <span>OUR INSPIRATION</span>
+                </div>
+                <div
+                  className="hidden lg:block text-3xl sm:text-4xl lg:text-[38px] xl:text-[42px] font-extrabold leading-[1.12] tracking-tight font-sans invisible select-none pointer-events-none"
+                  aria-hidden="true"
+                >
+                  Guided by <span>Timeless Values</span>
+                </div>
+                <div
+                  className="hidden lg:block w-16 h-[3px] invisible select-none pointer-events-none"
+                  aria-hidden="true"
+                />
+
+                {/* Global Mission & Spiritual Lineage (aligned with left para) */}
+                <div className="insp-right-p1 pt-1 font-body text-[14px] sm:text-[14.5px] lg:text-[15px] xl:text-[15.5px] leading-[1.65] font-normal text-[#3E586D]">
                   <p>
                     Our work is guided by the teachings of{" "}
                     <strong className="font-bold text-[#12304A]">Pujya Gurudevshri Rakeshji</strong>, an enlightened spiritual master, visionary, and the founder of Shrimad Rajchandra Mission Dharampur (www.srmd.org), a global spiritual organization with over 206 centers across six continents.

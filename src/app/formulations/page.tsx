@@ -184,6 +184,7 @@ export default function FormulationsPage() {
               eyebrow="Commercial Formulation Portfolio"
               lead="Commercial Finished Formulations &"
               highlight="Therapeutic Divisions"
+              hideAccentBar
               description={`Explore Ruskin Chemipharm's portfolio of ${ACTUAL_FORMULATIONS_COUNT}+ commercial formulations across human pharmaceuticals, wellness supplements, veterinary therapeutics, feed supplements, and specialized ectoparasiticide blocks.`}
             />
 
@@ -350,18 +351,18 @@ export default function FormulationsPage() {
                     <div className="space-y-6">
                       {/* Top Header Row with HexIcon and Minimal Labels */}
                       <div className="flex items-center justify-between gap-4">
-                        <HexIcon size={46} bg="rgba(199,154,75,0.08)" className="group-hover:scale-105 transition-transform duration-200">
-                          <Icon className="w-5 h-5 text-[#C79A4B]" />
-                        </HexIcon>
-
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
+                          <HexIcon size={46} bg="rgba(199,154,75,0.08)" className="group-hover:scale-105 transition-transform duration-200">
+                            <Icon className="w-5 h-5 text-[#C79A4B]" />
+                          </HexIcon>
                           <span className="text-[11px] font-bold tracking-wider uppercase text-[#C79A4B]">
                             {card.tag}
                           </span>
-                          <span className="text-xs font-medium text-[#5A7A8E] bg-[#12304A]/[0.03] px-2.5 py-0.5 rounded-md">
-                            {card.badge}
-                          </span>
                         </div>
+
+                        <span className="text-xs font-medium text-[#5A7A8E] bg-[#12304A]/[0.03] px-2.5 py-0.5 rounded-md shrink-0">
+                          {card.badge}
+                        </span>
                       </div>
 
                       {/* Title */}
@@ -464,18 +465,18 @@ export default function FormulationsPage() {
                     <div className="space-y-5">
                       {/* Top Header Row with HexIcon and Minimal Labels (No Dot) */}
                       <div className="flex items-center justify-between gap-3">
-                        <HexIcon size={44} bg="rgba(199,154,75,0.08)" className="group-hover:scale-105 transition-transform duration-200">
-                          <Icon className="w-5 h-5 text-[#C79A4B]" />
-                        </HexIcon>
-
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2.5 sm:gap-3">
+                          <HexIcon size={44} bg="rgba(199,154,75,0.08)" className="group-hover:scale-105 transition-transform duration-200">
+                            <Icon className="w-5 h-5 text-[#C79A4B]" />
+                          </HexIcon>
                           <span className="text-[11px] font-bold tracking-wider uppercase text-[#C79A4B]">
                             {card.tag}
                           </span>
-                          <span className="text-xs font-medium text-[#5A7A8E] bg-[#12304A]/[0.03] px-2.5 py-0.5 rounded-md">
-                            {card.badge}
-                          </span>
                         </div>
+
+                        <span className="text-xs font-medium text-[#5A7A8E] bg-[#12304A]/[0.03] px-2.5 py-0.5 rounded-md shrink-0">
+                          {card.badge}
+                        </span>
                       </div>
 
                       {/* Title */}

@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import ReactDOM from "react-dom";
 import { motion, useInView, useMotionValue, useSpring, useTransform } from "framer-motion";
+
+// Preload critical hero LCP image
+ReactDOM.preload("/images/hero-image.webp", {
+	as: "image",
+	type: "image/webp",
+	fetchPriority: "high",
+});
 import gsap from "gsap";
 import Link from "next/link";
 import Image from "next/image";
@@ -447,7 +455,7 @@ export default function HomePage() {
 							onClick={() => router.push("/products")}
 							className="flex items-center gap-2.5 px-8 py-3.5 rounded-xl bg-[#12304A] hover:bg-[#0B1E2E] text-white font-bold text-sm shadow-md hover:shadow-xl transition-all group cursor-pointer gpu-smooth"
 						>
-							<span>Explore All 66+ APIs</span>
+							<span>Explore All 46+ APIs</span>
 							<ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
 						</motion.button>
 					</div>

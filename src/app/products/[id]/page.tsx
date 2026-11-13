@@ -19,7 +19,6 @@ import {
 
 const INQUIRY_OPTIONS = [
   { value: "Product Enquiry", label: "Product Enquiry" },
-  { value: "Custom Synthesis", label: "Custom Synthesis" },
   { value: "Regulatory Dossier", label: "Regulatory Dossier (USDMF / CEP)" },
   { value: "Sample Request", label: "Sample Request & COA" },
 ];

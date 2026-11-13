@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import dynamic from "next/dynamic";
 import Navbar from "./components/Navbar";
-import BackToTop from "./components/BackToTop";
-import FloatingScrollbar from "./components/FloatingScrollbar";
-import SearchModal from "./components/SearchModal";
-import QuoteModal from "./components/QuoteModal";
 import SmoothScroll from "./components/SmoothScroll";
 import { ProductTransitionProvider } from "./context/ProductTransitionContext";
 import "./globals.css";
+
+// Deferred non-critical client UI overlays
+const SearchModal = dynamic(() => import("./components/SearchModal"));
+const QuoteModal = dynamic(() => import("./components/QuoteModal"));
+const FloatingScrollbar = dynamic(() => import("./components/FloatingScrollbar"));
+const BackToTop = dynamic(() => import("./components/BackToTop"));
 
 const plusJakartaSans = Plus_Jakarta_Sans({
 	subsets: ["latin"],

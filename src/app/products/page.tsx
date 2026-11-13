@@ -135,7 +135,6 @@ function CountUp({
 
 const INQUIRY_OPTIONS = [
 	{ value: "Product Enquiry", label: "Product Enquiry" },
-	{ value: "Custom Synthesis", label: "Custom Synthesis" },
 	{ value: "Regulatory Dossier", label: "Regulatory Dossier (USDMF / CEP)" },
 	{ value: "Sample Request", label: "Sample Request & COA" },
 ];
@@ -257,7 +256,7 @@ function ProductsContent() {
 
 	const initialSearch = searchParams.get("search") || searchParams.get("q") || "";
 	const [searchQuery, setSearchQuery] = useState(initialSearch);
-	const [typeFilter, setTypeFilter] = useState<"all" | "api" | "formulation">("all");
+	const [typeFilter, setTypeFilter] = useState<"api" | "formulation">("api");
 	const [selectedCategory, setSelectedCategory] = useState<string>("All");
 	const [currentPage, setCurrentPage] = useState(1);
 	const pageSize = 16;
@@ -267,7 +266,7 @@ function ProductsContent() {
 		const t = searchParams.get("type")?.toLowerCase();
 		const catParam = searchParams.get("category");
 
-		let resolvedType: "all" | "api" | "formulation" = "all";
+		let resolvedType: "api" | "formulation" = "api";
 		let resolvedCat: string = "All";
 
 		if (t === "formulation" || t === "formulations") {
@@ -404,36 +403,9 @@ function ProductsContent() {
 			];
 		}
 
-		if (typeFilter === "formulation") {
-			return [
-				{ name: "All", count: FINISHED_PRODUCTS.length },
-				{
-					name: "Human Pharmaceuticals",
-					count: FINISHED_PRODUCTS.filter((p) => p.division === "human-pharma").length,
-				},
-				{
-					name: "Human Supplements",
-					count: FINISHED_PRODUCTS.filter((p) => p.division === "human-nutra").length,
-				},
-				{
-					name: "Veterinary Pharmaceuticals",
-					count: FINISHED_PRODUCTS.filter((p) => p.division === "vet-pharma").length,
-				},
-				{
-					name: "Veterinary Feed Supplements",
-					count: FINISHED_PRODUCTS.filter((p) => p.division === "vet-supplements").length,
-				},
-				{
-					name: "Ectoparasiticides",
-					count: FINISHED_PRODUCTS.filter((p) => p.division === "ectoparasiticides").length,
-				},
-			];
-		}
-
-		// typeFilter === "all"
+		// typeFilter === "formulation"
 		return [
-			{ name: "All", count: UNIFIED_CATALOG_PRODUCTS.length },
-			{ name: "APIs", count: ALL_PRODUCTS.length },
+			{ name: "All", count: FINISHED_PRODUCTS.length },
 			{
 				name: "Human Pharmaceuticals",
 				count: FINISHED_PRODUCTS.filter((p) => p.division === "human-pharma").length,
@@ -525,18 +497,14 @@ function ProductsContent() {
 		return filteredProducts.slice(start, start + pageSize);
 	}, [filteredProducts, currentPage, pageSize]);
 
-	const handleTypeFilterChange = (type: "all" | "api" | "formulation") => {
+	const handleTypeFilterChange = (type: "api" | "formulation") => {
 		setTypeFilter(type);
 		setSelectedCategory("All");
 		setCurrentPage(1);
 
 		if (typeof window !== "undefined") {
 			const url = new URL(window.location.href);
-			if (type === "all") {
-				url.searchParams.delete("type");
-			} else {
-				url.searchParams.set("type", type);
-			}
+			url.searchParams.set("type", type);
 			url.searchParams.delete("category");
 			window.history.replaceState(null, "", url.toString());
 		}
@@ -846,32 +814,26 @@ function ProductsContent() {
 							animate={{ opacity: 1, y: 0 }}
 							transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
 							style={{ transform: "translateZ(0)" }}
-							className="lg:col-span-5 grid grid-cols-2 gap-x-6 gap-y-6 sm:gap-x-8 sm:gap-y-7 pl-0 lg:pl-8 lg:border-l lg:border-white/10 text-left gpu-smooth"
+							className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-6 pl-0 lg:pl-8 lg:border-l lg:border-white/10 text-left gpu-smooth"
 						>
 							{[
 								{
-									val: ALL_PRODUCTS.length,
+									val: 46,
 									suffix: "+",
-									label: "Registered Products",
-									sub: "Active DCGI Catalog",
+									label: "DCGI Approved APIs",
+									sub: "Active Molecule Catalog",
+								},
+								{
+									val: 500,
+									suffix: "+",
+									label: "Metric Tonne Shipments",
+									sub: "Annual Bulk Supply",
 								},
 								{
 									val: 250,
 									suffix: "+",
-									label: "Audited Facilities",
-									sub: "Global cGMP Sites",
-								},
-								{
-									val: 30,
-									suffix: "+",
-									label: "Export Markets",
-									sub: "Worldwide Network",
-								},
-								{
-									val: 40,
-									suffix: "+",
-									label: "Years in Market",
-									sub: "Founded in 1984",
+									label: "Sourcing Partners",
+									sub: "Audited Global Network",
 								},
 							].map((stat) => (
 								<div
@@ -976,10 +938,9 @@ function ProductsContent() {
 					transition={{ duration: 0.45, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
 					className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3.5 pt-1"
 				>
-					{/* Segmented Control Tabs: [ All Products | APIs | Formulations ] */}
+					{/* Segmented Control Tabs: [ APIs | Formulations ] */}
 					<div className="inline-flex p-1.5 rounded-2xl bg-white border border-[#12304A]/10 shadow-xs max-w-full overflow-x-auto custom-scrollbar">
 						{[
-							{ id: "all", label: "All Products", count: UNIFIED_CATALOG_PRODUCTS.length },
 							{ id: "api", label: "APIs", count: ALL_PRODUCTS.length },
 							{ id: "formulation", label: "Formulations", count: FINISHED_PRODUCTS.length },
 						].map((tab) => {
@@ -988,7 +949,7 @@ function ProductsContent() {
 								<button
 									key={tab.id}
 									type="button"
-									onClick={() => handleTypeFilterChange(tab.id as "all" | "api" | "formulation")}
+									onClick={() => handleTypeFilterChange(tab.id as "api" | "formulation")}
 									className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap ${
 										isActive
 											? "bg-[#12304A] text-white shadow-sm"
@@ -1017,9 +978,7 @@ function ProductsContent() {
 							<span className="text-[#12304A] font-bold">
 								{filteredProducts.length}
 							</span>{" "}
-							{typeFilter === "all"
-								? "products"
-								: typeFilter === "api"
+							{typeFilter === "api"
 								? "API products"
 								: "formulations"}
 							{selectedCategory !== "All" && (

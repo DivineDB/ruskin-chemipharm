@@ -23,6 +23,7 @@ export interface SectionHeaderProps {
 	dark?: boolean;
 	as?: "h1" | "h2";
 	className?: string;
+	hideAccentBar?: boolean;
 }
 
 /**
@@ -38,6 +39,7 @@ export default function SectionHeader({
 	dark = false,
 	as: Heading = "h2",
 	className = "",
+	hideAccentBar = false,
 }: SectionHeaderProps) {
 	return (
 		<motion.div
@@ -70,12 +72,14 @@ export default function SectionHeader({
 				</Heading>
 			</motion.div>
 
-			{/* 3. SIGNATURE GOLD ACCENT BAR (MANDATORY RULE: NEVER OMIT) */}
-			<motion.div
-				variants={fadeUp}
-				custom={2}
-				className={`w-16 h-[3px] rounded-full bg-[#C79A4B] ${centered ? "mx-auto" : ""}`}
-			/>
+			{/* 3. SIGNATURE GOLD ACCENT BAR */}
+			{!hideAccentBar && (
+				<motion.div
+					variants={fadeUp}
+					custom={2}
+					className={`w-16 h-[3px] rounded-full bg-[#C79A4B] ${centered ? "mx-auto" : ""}`}
+				/>
+			)}
 
 			{/* 4. Descriptive Subtitle */}
 			{description && (
