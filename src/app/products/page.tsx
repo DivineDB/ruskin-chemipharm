@@ -768,7 +768,11 @@ function ProductsContent() {
 								as="h1"
 								dark
 								eyebrow="Commercial Sourcing Catalog"
-								lead="APIs & Finished"
+								lead={
+									<>
+										APIs &amp; Finished <br className="hidden sm:inline" />
+									</>
+								}
 								highlight="Dosage Formulations"
 								description={`Explore our comprehensive catalog of ${UNIFIED_CATALOG_PRODUCTS.length}+ high-purity APIs, veterinary actives, finished dosage formulations, and specialty intermediates sourced directly from audited global manufacturing partners.`}
 							/>
@@ -820,8 +824,8 @@ function ProductsContent() {
 								{
 									val: 46,
 									suffix: "+",
-									label: "DCGI Approved APIs",
-									sub: "Active Molecule Catalog",
+									label: "Registered Products",
+									sub: "Active DCGI Catalog",
 								},
 								{
 									val: 500,

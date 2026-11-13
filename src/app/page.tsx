@@ -437,7 +437,11 @@ export default function HomePage() {
 					<SectionHeader
 						centered
 						eyebrow="API Portfolio"
-						lead="Active Molecules &"
+						lead={
+							<>
+								Active Molecules &amp; <br className="hidden sm:inline" />
+							</>
+						}
 						highlight="Therapeutic Categories"
 						description="Direct factory indenting across 16 core therapeutic segments — high-purity APIs, approved dossiers, and certified global supply corridors."
 					/>

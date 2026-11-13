@@ -17,22 +17,22 @@ import SectionHeader from "./SectionHeader";
 
 const EVENT_SLIDES: Record<string, string[]> = {
   cphi_india: [
-    "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=720&q=75",
-    "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=720&q=75",
-    "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=720&q=75",
-    "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=720&q=75",
+    "/images/events/india-1.webp",
+    "/images/events/india-2.webp",
+    "/images/events/india-3.webp",
+    "/images/events/india-4.webp",
   ],
   cphi_worldwide: [
-    "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=720&q=75",
-    "https://images.unsplash.com/photo-1551818255-e6e10975bc17?auto=format&fit=crop&w=720&q=75",
-    "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=720&q=75",
-    "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=720&q=75",
+    "/images/events/worldwide-1.webp",
+    "/images/events/worldwide-2.webp",
+    "/images/events/worldwide-3.webp",
+    "/images/events/worldwide-4.webp",
   ],
   cphi_china: [
-    "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=720&q=75",
-    "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=720&q=75",
-    "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=720&q=75",
-    "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=720&q=75",
+    "/images/events/china-1.webp",
+    "/images/events/china-2.webp",
+    "/images/events/china-3.webp",
+    "/images/events/china-4.webp",
   ],
 };
 
@@ -96,7 +96,7 @@ const EVENTS: EventItem[] = [
   },
 ];
 
-/* ─── Self-Contained Event Carousel Card ─── */
+/* ─── Self-Contained Event Carousel Card (Optimized 120 FPS Performance) ─── */
 function EventCard({
   event,
   idx,
@@ -110,6 +110,25 @@ function EventCard({
   const slides = EVENT_SLIDES[event.key];
   const cardRef = React.useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
+  const isScrollingRef = React.useRef(false);
+  const scrollTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  // Monitor scroll activity so auto-rotations pause during user scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      isScrollingRef.current = true;
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 500);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const el = cardRef.current;
@@ -118,7 +137,7 @@ function EventCard({
       ([entry]) => {
         setIsInView(entry.isIntersecting);
       },
-      { threshold: 0.1 }
+      { threshold: 0.15 }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -127,8 +146,10 @@ function EventCard({
   useEffect(() => {
     if (!isInView) return;
     const timer = setInterval(() => {
+      // Pause slide transitions while user is actively scrolling
+      if (isScrollingRef.current) return;
       setPhotoSlide((s) => (s + 1) % slides.length);
-    }, 4500);
+    }, 3200);
     return () => clearInterval(timer);
   }, [isInView, slides.length]);
 
@@ -142,34 +163,41 @@ function EventCard({
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={{ y: -4 }}
-      className="bg-[#0B1E2E] border border-white/10 rounded-[28px] overflow-hidden shadow-xl hover:shadow-2xl hover:border-white/20 transition-[border-color,box-shadow] duration-300 group gpu-smooth text-left"
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className="bg-[#0B1E2E] border border-white/10 rounded-[28px] overflow-hidden shadow-xl hover:shadow-2xl hover:border-white/20 transition-all duration-300 group text-left hover:-translate-y-1 contain-paint"
+      style={{
+        contentVisibility: "auto",
+        containIntrinsicSize: "0 490px",
+      }}
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:h-[490px]">
-        {/* Image carousel (7 cols on large) */}
+        {/* Image carousel (7 cols on large) — Fast, snappy zero-jank crossfade */}
         <div className="lg:col-span-7 h-[280px] sm:h-[340px] lg:h-full overflow-hidden relative group/slider">
-          <div
-            className="flex w-full h-full transition-transform duration-700 ease-out will-change-transform"
-            style={{ transform: `translate3d(-${photoSlide * 100}%, 0, 0)` }}
-          >
-            {slides.map((src, i) => (
-              <div key={i} className="w-full h-full shrink-0 relative">
-                <img
-                  src={src}
-                  alt={`${event.title} exhibition view ${i + 1}`}
-                  width={720}
-                  height={480}
-                  className="w-full h-full object-cover"
-                  loading={idx === 0 && i === 0 ? "eager" : "lazy"}
-                  fetchPriority={idx === 0 && i === 0 ? "high" : "auto"}
-                  decoding="async"
-                />
-              </div>
-            ))}
+          <div className="relative w-full h-full">
+            {slides.map((src, i) => {
+              const isActive = i === photoSlide;
+              return (
+                <div
+                  key={i}
+                  className={`absolute inset-0 transition-opacity duration-350 ease-out ${
+                    isActive ? "opacity-100 z-1" : "opacity-0 z-0 pointer-events-none"
+                  }`}
+                >
+                  <img
+                    src={src}
+                    alt={`${event.title} exhibition view ${i + 1}`}
+                    width={1080}
+                    height={700}
+                    className="w-full h-full object-cover object-center"
+                    loading={idx === 0 && i === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                </div>
+              );
+            })}
           </div>
 
           {/* Gentle gradient overlay */}
@@ -322,8 +350,12 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
         {/* Section Header with luxury scroll-reveal */}
         <SectionHeader
           eyebrow="Global Exhibitions & Industry Summits"
-          lead="Meet Our Leadership & Technical Team"
-          highlight="Worldwide"
+          lead={
+            <>
+              Meet Our Leadership &amp; <br className="hidden sm:inline" />
+            </>
+          }
+          highlight="Technical Team Worldwide"
           description="Ruskin Chemipharm regularly anchors official delegations at the world's leading pharmaceutical expos. Pre-book a dedicated technical session with our regulatory and commercial leadership."
         />
 

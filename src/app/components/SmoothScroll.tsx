@@ -60,7 +60,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 			lenis.raf(time * 1000);
 		};
 		gsap.ticker.add(tickerUpdate);
-		gsap.ticker.lagSmoothing(0);
+		gsap.ticker.lagSmoothing(500, 33);
 
 		// 3. Global anchor link smooth scroll interceptor (e.g., #capabilities, #hero)
 		const handleAnchorClick = (e: MouseEvent) => {

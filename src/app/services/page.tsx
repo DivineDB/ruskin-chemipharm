@@ -72,7 +72,7 @@ const SERVICES: Service[] = [
 		number: "02",
 		title: "Indenting & Global Sourcing",
 		category: "Direct Sourcing",
-		highlight: "45+ Source Jurisdictions",
+		highlight: "30+ Global Corridors",
 		description:
 			"Connecting Indian formulation leaders directly with audited international chemical synthesis plants through transparent indenting contracts and multi-stage batch validation.",
 		scope: [
@@ -630,8 +630,12 @@ export default function ServicesPage() {
 									as="h1"
 									dark
 									eyebrow="Specialized Capabilities"
-									lead="Full-Lifecycle"
-									highlight="Global Sourcing & Pharmaceutical Solutions"
+									lead={
+										<>
+											Full-Lifecycle Global Sourcing &amp; <br className="hidden sm:inline" />
+										</>
+									}
+									highlight="Pharmaceutical Solutions"
 									description="Bridging vetted global chemical synthesis plants with India's formulation leaders — streamlining CDSCO regulatory registration, direct factory indenting, temperature-controlled distribution, and custom synthesis."
 								/>
 							</motion.div>
@@ -664,10 +668,10 @@ export default function ServicesPage() {
 										sub: "Form 40 / 41 Licensing",
 									},
 									{
-										val: 45,
+										val: 30,
 										suffix: "+",
-										label: "Global Sourcing Hubs",
-										sub: "Direct Representation",
+										label: "Countries Served",
+										sub: "Global Supply Reach",
 									},
 								].map((stat) => (
 									<div key={stat.label} className="group cursor-default">
@@ -710,8 +714,8 @@ export default function ServicesPage() {
 						<SectionHeader
 							centered
 							eyebrow="Service Enquiry"
-							lead="Let's Discuss Your"
-							highlight="Requirements"
+							lead="Let's Discuss"
+							highlight="Your Sourcing Requirements"
 							description="Tell us about your registration, sourcing or distribution needs and our team will respond with the right next steps."
 						/>
 

@@ -225,7 +225,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
 
           {/* Desktop nav with physics-aware continuous active underline */}
           <LayoutGroup id="desktop-nav">
-            <nav ref={navRef} className="hidden lg:flex items-center space-x-1 xl:space-x-2.5 relative py-2">
+            <nav ref={navRef} className="hidden lg:flex items-center space-x-2 xl:space-x-4 relative py-2">
               {navLinks.map((link) => {
                 const linkKey = link.id || link.href;
                 const isCurrentActive = activeTab === linkKey;
@@ -238,7 +238,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
                       setActiveTab(linkKey);
                       updateIndicator(linkKey);
                     }}
-                    className={`relative px-3 xl:px-4 py-2 text-xs xl:text-sm font-semibold transition-colors duration-150 select-none whitespace-nowrap inline-flex items-center gap-1.5 ${
+                    className={`relative px-3.5 xl:px-4 py-2 text-xs xl:text-sm font-semibold transition-colors duration-150 select-none whitespace-nowrap inline-flex items-center gap-1.5 ${
                       isCurrentActive
                         ? "text-[#12304A]"
                         : "text-[#5A7A8E] hover:text-[#12304A]"
@@ -286,7 +286,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
           </LayoutGroup>
 
           {/* Right actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-3 sm:gap-3.5 shrink-0">
             {/* Search Trigger */}
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -304,7 +304,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               onClick={handleQuoteClick}
-              className="hidden sm:flex items-center justify-center bg-[#12304A] text-white px-4 xl:px-6 py-2 xl:py-2.5 rounded-xl text-xs xl:text-sm font-semibold hover:bg-[#0B1E2E] transition-colors shadow-sm cursor-pointer gpu-smooth"
+              className="hidden sm:inline-flex items-center justify-center bg-[#12304A] text-white px-5 xl:px-6 py-2.5 rounded-xl text-xs xl:text-sm font-semibold hover:bg-[#0B1E2E] transition-colors shadow-sm cursor-pointer gpu-smooth"
             >
               Request Quote
             </motion.button>

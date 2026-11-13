@@ -685,7 +685,11 @@ export default function AboutPage() {
                 centered
                 as="h1"
                 eyebrow="Company Legacy"
-                lead="Four Decades of"
+                lead={
+                  <>
+                    Four Decades of <br className="hidden sm:inline" />
+                  </>
+                }
                 highlight="Global Sourcing Excellence"
                 description="Founded in Mumbai in 1984, Ruskin Chemipharm bridges global bulk drug synthesizers with India's formulation leaders through direct factory representation, landmark DCGI approvals, and uncompromised regulatory trust."
               />
@@ -980,8 +984,9 @@ export default function AboutPage() {
                 </span>
 
                 {/* 2. Main Heading with Gold Span Highlight */}
-                <h2 className="insp-left-heading text-3xl sm:text-4xl lg:text-[38px] xl:text-[42px] font-extrabold leading-[1.12] tracking-tight font-sans text-[#12304A]">
-                  Guided by <span className="text-[#C79A4B]">Timeless Values</span>
+                <h2 className="insp-left-heading text-3xl sm:text-4xl lg:text-[38px] xl:text-[42px] font-extrabold leading-[1.12] tracking-tight font-sans text-[#12304A] text-balance">
+                  Guided by <br className="hidden sm:inline" />
+                  <span className="text-[#C79A4B]">Timeless Values</span>
                 </h2>
 
                 {/* 3. SIGNATURE GOLD ACCENT BAR */}
@@ -1042,10 +1047,11 @@ export default function AboutPage() {
                   <span>OUR INSPIRATION</span>
                 </div>
                 <div
-                  className="hidden lg:block text-3xl sm:text-4xl lg:text-[38px] xl:text-[42px] font-extrabold leading-[1.12] tracking-tight font-sans invisible select-none pointer-events-none"
+                  className="hidden lg:block text-3xl sm:text-4xl lg:text-[38px] xl:text-[42px] font-extrabold leading-[1.12] tracking-tight font-sans invisible select-none pointer-events-none text-balance"
                   aria-hidden="true"
                 >
-                  Guided by <span>Timeless Values</span>
+                  Guided by <br className="hidden sm:inline" />
+                  <span>Timeless Values</span>
                 </div>
                 <div
                   className="hidden lg:block w-16 h-[3px] invisible select-none pointer-events-none"
@@ -1307,7 +1313,7 @@ export default function AboutPage() {
                 LEADERSHIP & EXECUTIVE TEAM
               </span>
 
-              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#12304A] leading-tight tracking-tight">
+              <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-extrabold text-[#12304A] leading-tight tracking-tight text-balance text-pretty">
                 The Faces of <span className="text-[#C79A4B]">Ruskin Chemipharm</span>
               </h2>
 
@@ -1448,8 +1454,9 @@ export default function AboutPage() {
                   />
                 </div>
 
-                <h2 className="text-3xl sm:text-4xl lg:text-[42px] xl:text-[44px] font-extrabold text-[#12304A] font-sans leading-[1.14] tracking-tight">
-                  A Commitment to <span className="text-[#C79A4B]">Community & Care</span>
+                <h2 className="text-3xl sm:text-4xl lg:text-[42px] xl:text-[44px] font-extrabold text-[#12304A] font-sans leading-[1.14] tracking-tight text-balance text-pretty">
+                  A Commitment to <br className="hidden sm:inline" />
+                  <span className="text-[#C79A4B]">Community & Care</span>
                 </h2>
 
                 <div className="w-16 h-[3px] rounded-full bg-[#C79A4B]" />

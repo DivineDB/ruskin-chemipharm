@@ -16,8 +16,8 @@ const fadeUp: Variants = {
 
 export interface SectionHeaderProps {
 	eyebrow: string;
-	lead: string;
-	highlight: string;
+	lead: React.ReactNode;
+	highlight: React.ReactNode;
 	description?: string;
 	centered?: boolean;
 	dark?: boolean;
@@ -64,7 +64,7 @@ export default function SectionHeader({
 			{/* 2. Main Heading with Gold Span Highlight */}
 			<motion.div variants={fadeUp} custom={1}>
 				<Heading
-					className={`text-3xl sm:text-4xl lg:text-[44px] font-extrabold leading-tight tracking-tight ${
+					className={`text-3xl sm:text-4xl lg:text-[44px] font-extrabold leading-tight tracking-tight text-balance text-pretty ${
 						dark ? "text-white" : "text-[#12304A]"
 					}`}
 				>
@@ -86,7 +86,7 @@ export default function SectionHeader({
 				<motion.p
 					variants={fadeUp}
 					custom={3}
-					className={`text-base font-normal max-w-2xl lg:max-w-3xl leading-relaxed ${
+					className={`text-base font-normal max-w-2xl lg:max-w-3xl leading-relaxed text-pretty ${
 						dark ? "text-slate-300" : "text-[#5A7A8E]"
 					} ${centered ? "mx-auto" : ""}`}
 				>

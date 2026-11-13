@@ -182,7 +182,11 @@ export default function FormulationsPage() {
               centered
               as="h1"
               eyebrow="Commercial Formulation Portfolio"
-              lead="Commercial Finished Formulations &"
+              lead={
+                <>
+                  Commercial Finished Formulations &amp; <br className="hidden sm:inline" />
+                </>
+              }
               highlight="Therapeutic Divisions"
               hideAccentBar
               description={`Explore Ruskin Chemipharm's portfolio of ${ACTUAL_FORMULATIONS_COUNT}+ commercial formulations across human pharmaceuticals, wellness supplements, veterinary therapeutics, feed supplements, and specialized ectoparasiticide blocks.`}
@@ -261,10 +265,10 @@ export default function FormulationsPage() {
                   className="border-l border-[#12304A]/10 pl-4 sm:pl-8"
                 >
                   <div className="text-3xl sm:text-4xl font-extrabold font-mono text-[#12304A] tracking-tight">
-                    <StatCountUp end={40} suffix="+" />
+                    <StatCountUp end={30} suffix="+" />
                   </div>
                   <div className="text-xs text-[#5A7A8E] font-medium mt-1">
-                    Export Markets
+                    Countries Served
                   </div>
                 </motion.div>
               </div>
@@ -320,7 +324,11 @@ export default function FormulationsPage() {
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-4 border-b border-[#12304A]/10">
               <SectionHeader
                 eyebrow="Human Healthcare"
-                lead="Finished Formulations for"
+                lead={
+                  <>
+                    Finished Formulations for <br className="hidden sm:inline" />
+                  </>
+                }
                 highlight="Patient Care &amp; Wellness"
                 description="Essential solid and liquid oral pharmaceuticals alongside daily wellness nutraceuticals developed for clinical effectiveness and international distribution."
               />
@@ -434,7 +442,11 @@ export default function FormulationsPage() {
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-4 border-b border-[#12304A]/10">
               <SectionHeader
                 eyebrow="Animal Healthcare &amp; Nutrition"
-                lead="Therapeutics &amp; Supplements for"
+                lead={
+                  <>
+                    Therapeutics &amp; Supplements for <br className="hidden sm:inline" />
+                  </>
+                }
                 highlight="Livestock &amp; Herd Health"
                 description="Specialized veterinary medicines, high-absorption dairy and poultry feed supplements, and dedicated ectoparasiticide acaricide solutions."
               />
