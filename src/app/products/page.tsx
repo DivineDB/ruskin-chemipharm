@@ -834,7 +834,7 @@ function ProductsContent() {
 									sub: "Annual Bulk Supply",
 								},
 								{
-									val: 250,
+									val: 35,
 									suffix: "+",
 									label: "Sourcing Partners",
 									sub: "Audited Global Network",

@@ -106,12 +106,12 @@ const SERVICES = [
 		],
 		desc: "Complete procurement and reliable supply chain management tailored to your production demands.",
 		points: [
-			"250+ audited & qualified partner facilities",
+			"35+ audited & qualified partner facilities",
 			"Physical site quality inspections & vendor qualification",
 			"Transparent volume pricing & direct manufacturer contracts",
 		],
-		specs: ["cGMP Qualified", "250+ Facilities", "Direct Factory Price", "Batch Traceability"],
-		metric: { val: "250+", label: "Audited Facilities" },
+		specs: ["cGMP Qualified", "35+ Sourcing Partners", "Direct Factory Price", "Batch Traceability"],
+		metric: { val: "35+", label: "Sourcing Partners" },
 		icon: Globe,
 		img: "/images/sourcing.webp",
 	},
@@ -135,8 +135,8 @@ const SERVICES = [
 			"New Drug application filing & expert CDSCO query resolution",
 			"Complete local agent representation for global bulk manufacturers",
 		],
-		specs: ["Form 41 & Form 10", "50+ Registrations", "SEC Presentations", "Official Local Agent"],
-		metric: { val: "50+", label: "Active Registrations" },
+		specs: ["Form 41 & Form 10", "46+ Registered Products", "SEC Presentations", "Official Local Agent"],
+		metric: { val: "46+", label: "Registered Products" },
 		icon: FileCheck,
 		img: "/images/registration.webp",
 	},
@@ -377,9 +377,9 @@ export default function HomePage() {
 					<div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
 						{[
 							{ val: 40, suffix: "+", label: "Years Industry Expertise" },
-							{ val: 250, suffix: "+", label: "Global Sourcing Partners" },
-							{ val: 46, suffix: "+", label: "DCGI Approved APIs" },
-							{ val: 200, suffix: "+", label: "Formulator Network" },
+							{ val: 35, suffix: "+", label: "Sourcing Partners" },
+							{ val: 46, suffix: "+", label: "Registered Products" },
+							{ val: 10, suffix: "+", label: "Global Reach" },
 						].map((s, idx) => (
 							<motion.div
 								key={s.label}
@@ -459,7 +459,7 @@ export default function HomePage() {
 							onClick={() => router.push("/products")}
 							className="flex items-center gap-2.5 px-8 py-3.5 rounded-xl bg-[#12304A] hover:bg-[#0B1E2E] text-white font-bold text-sm shadow-md hover:shadow-xl transition-all group cursor-pointer gpu-smooth"
 						>
-							<span>Explore All 46+ APIs</span>
+							<span>Explore All 46+ Registered Products</span>
 							<ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
 						</motion.button>
 					</div>
@@ -658,7 +658,7 @@ export default function HomePage() {
 						eyebrow="Global Reach"
 						lead="Ruskin’s"
 						highlight="Global Sourcing Network"
-						description="Supplying pharmaceutical formulators in 30+ countries across 5 continents with certified, compliant APIs."
+						description="Supplying pharmaceutical formulators across 10+ countries with certified, compliant APIs."
 					/>
 
 					<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
@@ -757,7 +757,7 @@ export default function HomePage() {
 									</div>
 								</div>
 								<span className="text-xs font-bold text-[#C79A4B]">
-									30+ Countries Served
+									10+ Countries Served
 								</span>
 							</div>
 						</div>
@@ -777,9 +777,9 @@ export default function HomePage() {
 							{/* Unified Metrics List with Hairline Dividers */}
 							<div className="divide-y divide-white/10 my-auto">
 								{[
-									{ label: "Export Destinations", value: "30+", sub: "Verified Global Corridors" },
-									{ label: "Partner Facilities", value: "250+", sub: "Audited Synthesis Reactors" },
-									{ label: "DCGI Molecules", value: "46+", sub: "Form 41 & Form 10 Approved" },
+									{ label: "Global Reach", value: "10+", sub: "Verified Global Corridors" },
+									{ label: "Sourcing Partners", value: "35+", sub: "Audited Synthesis Reactors" },
+									{ label: "Registered Products", value: "46+", sub: "Form 41 & Form 10 Approved" },
 									{ label: "Quality Standard", value: "cGMP", sub: "COA & Batch Verification" },
 									{ label: "Annual Supply Volume", value: "500+ MT", sub: "Bulk API & Intermediates" },
 								].map((s) => (

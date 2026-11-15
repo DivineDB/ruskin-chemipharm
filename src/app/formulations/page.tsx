@@ -265,10 +265,10 @@ export default function FormulationsPage() {
                   className="border-l border-[#12304A]/10 pl-4 sm:pl-8"
                 >
                   <div className="text-3xl sm:text-4xl font-extrabold font-mono text-[#12304A] tracking-tight">
-                    <StatCountUp end={30} suffix="+" />
+                    <StatCountUp end={10} suffix="+" />
                   </div>
                   <div className="text-xs text-[#5A7A8E] font-medium mt-1">
-                    Countries Served
+                    Global Reach
                   </div>
                 </motion.div>
               </div>

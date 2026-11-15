@@ -48,7 +48,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
       id: "products",
       href: "/products",
       label: "Products",
-      subtitle: "46+ DCGI APIs & Intermediates",
+      subtitle: "46+ Registered Products",
       active: isProducts,
     },
     {
@@ -377,7 +377,7 @@ export default function Navbar({ onOpenSearch, onOpenQuote }: NavbarProps) {
                   className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] border border-[#12304A]/10 text-xs font-semibold text-[#5A7A8E] hover:border-[#C79A4B]/40 active:bg-white transition-colors text-left"
                 >
                   <Search className="w-4 h-4 text-[#C79A4B] shrink-0" />
-                  <span className="truncate">Search 46+ DCGI APIs &amp; CAS...</span>
+                  <span className="truncate">Search 46+ Registered Products &amp; CAS...</span>
                 </button>
               </div>
 

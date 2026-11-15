@@ -72,7 +72,7 @@ const SERVICES: Service[] = [
 		number: "02",
 		title: "Indenting & Global Sourcing",
 		category: "Direct Sourcing",
-		highlight: "30+ Global Corridors",
+		highlight: "10+ Global Corridors",
 		description:
 			"Connecting Indian formulation leaders directly with audited international chemical synthesis plants through transparent indenting contracts and multi-stage batch validation.",
 		scope: [
@@ -656,22 +656,22 @@ export default function ServicesPage() {
 										sub: "Founded in 1984",
 									},
 									{
-										val: 4,
-										suffix: "",
-										label: "Core Capabilities",
-										sub: "Integrated Solutions",
-									},
-									{
-										val: 100,
-										suffix: "%",
-										label: "CDSCO Compliant",
-										sub: "Form 40 / 41 Licensing",
-									},
-									{
-										val: 30,
+										val: 35,
 										suffix: "+",
-										label: "Countries Served",
-										sub: "Global Supply Reach",
+										label: "Sourcing Partners",
+										sub: "Audited Global Network",
+									},
+									{
+										val: 46,
+										suffix: "+",
+										label: "Registered Products",
+										sub: "DCGI & CDSCO Catalog",
+									},
+									{
+										val: 10,
+										suffix: "+",
+										label: "Global Reach",
+										sub: "International Corridors",
 									},
 								].map((stat) => (
 									<div key={stat.label} className="group cursor-default">
