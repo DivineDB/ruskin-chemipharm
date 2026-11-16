@@ -177,6 +177,24 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                 </div>
               </div>
 
+              {/* Technical / Monograph Specifications from Document / Dossier */}
+              {currentProduct.specs?.map((item, sIdx) => {
+                if (
+                  (item.label.toLowerCase() === "cas number" || item.label.toLowerCase() === "cas registry number") &&
+                  item.value.trim() === currentProduct.casNumber.trim()
+                ) {
+                  return null;
+                }
+                return (
+                  <div key={sIdx} className="grid grid-cols-1 sm:grid-cols-12 px-5 py-3.5 items-start sm:items-center">
+                    <div className="sm:col-span-4 font-bold text-[#12304A]">{item.label}</div>
+                    <div className="sm:col-span-8 text-[#5A7A8E] mt-1 sm:mt-0 leading-relaxed break-words font-normal">
+                      {item.value}
+                    </div>
+                  </div>
+                );
+              })}
+
               {/* Row 2: Pharmacopoeial Grades */}
               <div className="grid grid-cols-1 sm:grid-cols-12 px-5 py-3.5 items-center">
                 <div className="sm:col-span-4 font-bold text-[#12304A]">Pharmacopoeial Grades</div>
