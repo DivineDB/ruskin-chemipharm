@@ -193,30 +193,26 @@ const SERVICES = [
 ];
 
 
-// ─── Global World Pins & Supply Route Arcs (Equirectangular System) ─────────
+// ─── Global World Pins & Supply Route Arcs (950x620 Equirectangular Space) ─────────
 const TRADE_ROUTES = [
-	{ d: "M 680 218 Q 445 100 210 182", id: "route-usa" },
-	{ d: "M 680 218 Q 580 130 480 135", id: "route-uk" },
-	{ d: "M 680 218 Q 595 145 510 140", id: "route-germany" },
-	{ d: "M 680 218 Q 645 195 610 208", id: "route-uae" },
-	{ d: "M 680 218 Q 720 185 760 187", id: "route-china" },
-	{ d: "M 680 218 Q 765 150 850 177", id: "route-japan" },
-	{ d: "M 680 218 Q 725 240 770 265", id: "route-singapore" },
-	{ d: "M 680 218 Q 770 290 850 374", id: "route-australia" },
-	{ d: "M 680 218 Q 500 280 320 348", id: "route-brazil" },
+	{ d: "M 658 275 Q 430 130 206 208", id: "route-usa" },
+	{ d: "M 658 275 Q 480 340 305 378", id: "route-brazil" },
+	{ d: "M 658 275 Q 630 180 590 120", id: "route-russia" },
+	{ d: "M 658 275 Q 630 268 601 264", id: "route-uae" },
+	{ d: "M 658 275 Q 690 230 720 215", id: "route-china" },
+	{ d: "M 658 275 Q 725 210 790 206", id: "route-korea" },
+	{ d: "M 658 275 Q 710 320 755 360", id: "route-indonesia" },
 ];
 
 const WORLD_PINS = [
-	{ id: "india", label: "Mumbai HQ", top: "42%", left: "68%", primary: true, desc: "Global Headquarters & Central Distribution Hub" },
-	{ id: "usa", label: "USA", top: "35%", left: "21%", primary: false, desc: "Formulation Partners & CDSCO Import Network" },
-	{ id: "uk", label: "UK", top: "26%", left: "48%", primary: false, desc: "European Regulatory & CEP Compliance Link" },
-	{ id: "germany", label: "Germany", top: "27%", left: "51%", primary: false, desc: "Specialty Intermediate & Synthesis Sourcing" },
-	{ id: "uae", label: "UAE", top: "40%", left: "61%", primary: false, desc: "Middle East Logistics & Transshipment" },
-	{ id: "china", label: "China", top: "36%", left: "76%", primary: false, desc: "Audited Reactor Partner Manufacturing" },
-	{ id: "japan", label: "Japan", top: "34%", left: "85%", primary: false, desc: "High-Purity Oncology & Contrast Media Partners" },
-	{ id: "brazil", label: "Brazil", top: "67%", left: "32%", primary: false, desc: "LATAM Pharmaceutical Export Operations" },
-	{ id: "australia", label: "Australia", top: "72%", left: "85%", primary: false, desc: "Oceania Hospital & Bulk Formulation Supply" },
-	{ id: "singapore", label: "Singapore", top: "51%", left: "77%", primary: false, desc: "Southeast Asia Cold-Chain Transshipment Hub" },
+	{ id: "india", label: "Mumbai HQ", top: "44.4%", left: "69.3%", primary: true, desc: "Global Headquarters & Central Distribution Hub" },
+	{ id: "korea", label: "Korea", top: "33.2%", left: "83.2%", primary: false, desc: "High-Purity Synthesis & Commercial API Partners" },
+	{ id: "brazil", label: "Brazil", top: "61.0%", left: "32.1%", primary: false, desc: "LATAM Pharmaceutical Export Operations" },
+	{ id: "russia", label: "Russia", top: "19.4%", left: "62.1%", primary: false, desc: "Direct Bulk Sourcing & Formulation Network" },
+	{ id: "usa", label: "USA", top: "33.5%", left: "21.7%", primary: false, desc: "Formulation Partners & CDSCO Import Network" },
+	{ id: "china", label: "China", top: "34.7%", left: "75.8%", primary: false, desc: "Audited Reactor Partner Manufacturing" },
+	{ id: "indonesia", label: "Indonesia", top: "58.1%", left: "79.5%", primary: false, desc: "Southeast Asia Pharmaceutical Distribution" },
+	{ id: "uae", label: "UAE", top: "42.6%", left: "63.3%", primary: false, desc: "Middle East Logistics & Transshipment" },
 ];
 
 export default function HomePage() {
@@ -673,12 +669,12 @@ export default function HomePage() {
 							</div>
 
 							{/* Map Visual Container */}
-							<div className="relative w-full my-auto" style={{ paddingBottom: "52%" }}>
+							<div className="relative w-full my-auto" style={{ paddingBottom: "65.26%" }}>
 								{/* Map Base Graphic (Local SVG, White fill, zero filter computation) */}
 								<img
 									src="/images/world-map.svg"
 									alt="World Sourcing Map"
-									className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none opacity-25"
+									className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none opacity-25"
 									loading="lazy"
 									decoding="async"
 								/>
@@ -686,7 +682,7 @@ export default function HomePage() {
 								{/* Trade Corridors SVG Overlay */}
 								<svg
 									className="absolute inset-0 w-full h-full pointer-events-none select-none z-10"
-									viewBox="0 0 1000 520"
+									viewBox="0 0 950 620"
 									fill="none"
 								>
 									{/* Static ambient dashed tracks */}

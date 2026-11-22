@@ -11,33 +11,12 @@ import {
   Video,
   CheckCircle2,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { MolecularDecoration, HexIcon } from "./Hex";
 import SectionHeader from "./SectionHeader";
 
-const EVENT_SLIDES: Record<string, string[]> = {
-  cphi_india: [
-    "/images/events/india-1.webp",
-    "/images/events/india-2.webp",
-    "/images/events/india-3.webp",
-    "/images/events/india-4.webp",
-  ],
-  cphi_worldwide: [
-    "/images/events/worldwide-1.webp",
-    "/images/events/worldwide-2.webp",
-    "/images/events/worldwide-3.webp",
-    "/images/events/worldwide-4.webp",
-  ],
-  cphi_china: [
-    "/images/events/china-1.webp",
-    "/images/events/china-2.webp",
-    "/images/events/china-3.webp",
-    "/images/events/china-4.webp",
-  ],
-};
-
-interface EventItem {
-  key: "cphi_india" | "cphi_worldwide" | "cphi_china";
+interface EventSlide {
+  image: string;
   title: string;
   location: string;
   date: string;
@@ -48,50 +27,69 @@ interface EventItem {
   agenda: string[];
 }
 
-const EVENTS: EventItem[] = [
+interface EventCardConfig {
+  key: "cphi_india" | "cphi_china";
+  slides: EventSlide[];
+}
+
+const CHINA_BASE = {
+  title: "CPHI China 2027",
+  location: "Shanghai New Int'l Expo Centre (SNIEC), China",
+  date: "June 22–24, 2027",
+  hall: "Hall 2 — Stand 2W16",
+  zone: "Direct Bulk Synthesis Pavilion",
+  badge: "Direct Manufacturer Summit",
+  badgeColor: "#059669",
+  agenda: [
+    "Audited cGMP Synthesizer Sourcing",
+    "High-Volume Indenting Contracts",
+    "Bulk Price Stability Agreements",
+  ],
+};
+
+const EVENTS: EventCardConfig[] = [
   {
     key: "cphi_india",
-    title: "CPHI India 2026",
-    location: "India Expo Centre, Greater Noida, Delhi NCR",
-    date: "November 25–27, 2026",
-    hall: "Hall 2 — Stand 2C24",
-    zone: "API & Intermediates Pavilion",
-    badge: "Flagship Indian Expo",
-    badgeColor: "#C79A4B",
-    agenda: [
-      "Commercial API Procurement Contracts",
-      "DCGI & CDSCO Regulatory Filings",
-      "Strategic Direct Factory Sourcing",
-    ],
-  },
-  {
-    key: "cphi_worldwide",
-    title: "CPHI Worldwide 2027",
-    location: "Fira Barcelona Gran Via, Barcelona, Spain",
-    date: "October 19–21, 2027",
-    hall: "Hall 2 — Stand 2E40",
-    zone: "International Ingredients Pavilion",
-    badge: "Global Flagship Summit",
-    badgeColor: "#2563EB",
-    agenda: [
-      "Global Bulk API Supply Agreements",
-      "USDMF & CEP Dossier Roadmaps",
-      "Cross-Border Logistics Corridors",
+    slides: [
+      {
+        image: "/images/events/india-1.webp",
+        title: "CPHI India 2026",
+        location: "India Expo Centre, Greater Noida, Delhi NCR",
+        date: "November 25–27, 2026",
+        hall: "Hall 2 — Stand 2C24",
+        zone: "Global & Indian API Pavilion",
+        badge: "Flagship Indian & Global Expo",
+        badgeColor: "#C79A4B",
+        agenda: [
+          "Global & Indian API Supply Contracts",
+          "DCGI, CDSCO & USDMF/CEP Roadmaps",
+          "Strategic Direct Factory Sourcing",
+        ],
+      },
+      {
+        image: "/images/events/india-2.webp",
+        title: "CPHI India 2027",
+        location: "India Expo Centre, Greater Noida, Delhi NCR",
+        date: "November 2027",
+        hall: "Hall & Stand TBA",
+        zone: "Global & Indian API Pavilion",
+        badge: "Upcoming 2027 Edition",
+        badgeColor: "#C79A4B",
+        agenda: [
+          "Long-Term API Supply Partnerships",
+          "2027 Regulatory & Dossier Pipeline",
+          "Direct Factory Indenting Allocations",
+        ],
+      },
     ],
   },
   {
     key: "cphi_china",
-    title: "CPHI China 2027",
-    location: "Shanghai New Int'l Expo Centre (SNIEC), China",
-    date: "June 22–24, 2027",
-    hall: "Hall 2 — Stand 2W16",
-    zone: "Direct Bulk Synthesis Pavilion",
-    badge: "Direct Manufacturer Summit",
-    badgeColor: "#059669",
-    agenda: [
-      "Audited cGMP Synthesizer Sourcing",
-      "High-Volume Indenting Contracts",
-      "Bulk Price Stability Agreements",
+    slides: [
+      { image: "/images/events/china-1.webp", ...CHINA_BASE },
+      { image: "/images/events/china-2.webp", ...CHINA_BASE },
+      { image: "/images/events/china-3.webp", ...CHINA_BASE },
+      { image: "/images/events/china-4.webp", ...CHINA_BASE },
     ],
   },
 ];
@@ -102,12 +100,13 @@ function EventCard({
   idx,
   onScheduleMeeting,
 }: {
-  event: EventItem;
+  event: EventCardConfig;
   idx: number;
   onScheduleMeeting: (meetingName: string) => void;
 }) {
   const [photoSlide, setPhotoSlide] = useState(0);
-  const slides = EVENT_SLIDES[event.key];
+  const slides = event.slides;
+  const activeSlide = slides[photoSlide] || slides[0];
   const cardRef = React.useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
   const isScrollingRef = React.useRef(false);
@@ -167,7 +166,7 @@ function EventCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className="bg-[#0B1E2E] border border-white/10 rounded-[28px] overflow-hidden shadow-xl hover:shadow-2xl hover:border-white/20 transition-all duration-300 group text-left hover:-translate-y-1 contain-paint"
+      className="bg-[#0B1E2E] border border-white/10 rounded-[28px] overflow-hidden shadow-xl text-left contain-paint"
       style={{
         contentVisibility: "auto",
         containIntrinsicSize: "0 490px",
@@ -177,7 +176,7 @@ function EventCard({
         {/* Image carousel (7 cols on large) — Fast, snappy zero-jank crossfade */}
         <div className="lg:col-span-7 h-[280px] sm:h-[340px] lg:h-full overflow-hidden relative group/slider">
           <div className="relative w-full h-full">
-            {slides.map((src, i) => {
+            {slides.map((slide, i) => {
               const isActive = i === photoSlide;
               return (
                 <div
@@ -187,8 +186,8 @@ function EventCard({
                   }`}
                 >
                   <img
-                    src={src}
-                    alt={`${event.title} exhibition view ${i + 1}`}
+                    src={slide.image}
+                    alt={`${slide.title} exhibition view ${i + 1}`}
                     width={1080}
                     height={700}
                     className="w-full h-full object-cover object-center"
@@ -206,16 +205,16 @@ function EventCard({
           {/* Top Badges */}
           <div className="absolute top-4 inset-x-4 flex items-center justify-between z-10 pointer-events-none">
             <div
-              className="px-3.5 py-1.5 rounded-full text-[11px] font-bold text-white flex items-center gap-1.5 shadow-md pointer-events-auto border border-white/15"
-              style={{ background: event.badgeColor }}
+              className="px-3.5 py-1.5 rounded-full text-[11px] font-bold text-white flex items-center gap-1.5 shadow-md pointer-events-auto border border-white/15 transition-colors duration-300"
+              style={{ background: activeSlide.badgeColor }}
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>{event.badge}</span>
+              <span>{activeSlide.badge}</span>
             </div>
 
             <div className="px-3 py-1.5 rounded-full bg-[#071521]/95 border border-white/15 text-slate-200 text-xs font-semibold flex items-center gap-1.5 shadow-sm">
               <MapPin className="w-3.5 h-3.5 text-[#C79A4B]" />
-              <span>{event.location.split(",")[0]}</span>
+              <span>{activeSlide?.location ? activeSlide.location.split(",")[0] : ""}</span>
             </div>
           </div>
 
@@ -223,7 +222,7 @@ function EventCard({
           <div className="absolute bottom-4 left-4 z-10 hidden sm:block">
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#071521]/95 border border-white/15 text-white text-xs font-mono">
               <Building2 className="w-3.5 h-3.5 text-[#C79A4B]" />
-              {event.hall}
+              {activeSlide.hall}
             </span>
           </div>
 
@@ -254,7 +253,7 @@ function EventCard({
                 key={i}
                 onClick={() => setPhotoSlide(i)}
                 aria-label={`Jump to slide ${i + 1}`}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
+                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                   i === photoSlide ? "w-6 bg-[#C79A4B]" : "w-1.5 bg-white/50 hover:bg-white"
                 }`}
               />
@@ -264,57 +263,66 @@ function EventCard({
 
         {/* Event Information Panel (5 cols on large) */}
         <div className="lg:col-span-5 p-6 sm:p-7 lg:p-8 flex flex-col justify-between text-white lg:h-full">
-          <div className="space-y-3.5 sm:space-y-4">
-            {/* Stand & Zone Pill */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C79A4B]/15 border border-[#C79A4B]/30 text-[#E5C378] text-xs font-semibold">
-                <Building2 className="w-3.5 h-3.5 text-[#C79A4B]" />
-                {event.hall}
-              </span>
-              <span className="text-xs text-slate-400 font-normal">
-                {event.zone}
-              </span>
-            </div>
-
-            {/* Title */}
-            <div>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight group-hover:text-[#E5C378] transition-colors">
-                {event.title}
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-300 flex items-center gap-1.5 mt-1.5">
-                <MapPin className="w-4 h-4 text-[#C79A4B] shrink-0" />
-                <span>{event.location}</span>
-              </p>
-            </div>
-
-            {/* Date Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-white text-xs font-semibold">
-              <Calendar className="w-3.5 h-3.5 text-[#C79A4B]" />
-              {event.date}
-            </div>
-
-            {/* Agenda Highlights */}
-            <div className="space-y-2 pt-2 border-t border-white/10">
-              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                Delegation Focus &amp; Consultations:
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSlide.title}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="space-y-3.5 sm:space-y-4"
+            >
+              {/* Stand & Zone Pill */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C79A4B]/15 border border-[#C79A4B]/30 text-[#E5C378] text-xs font-semibold">
+                  <Building2 className="w-3.5 h-3.5 text-[#C79A4B]" />
+                  {activeSlide.hall}
+                </span>
+                <span className="text-xs text-slate-400 font-normal">
+                  {activeSlide.zone}
+                </span>
               </div>
-              <div className="space-y-1.5">
-                {event.agenda.map((item, i) => (
-                  <div key={i} className="flex items-center gap-2 text-xs text-slate-300">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span className="truncate">{item}</span>
-                  </div>
-                ))}
+
+              {/* Title */}
+              <div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+                  {activeSlide.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 flex items-center gap-1.5 mt-1.5">
+                  <MapPin className="w-4 h-4 text-[#C79A4B] shrink-0" />
+                  <span>{activeSlide.location}</span>
+                </p>
               </div>
-            </div>
-          </div>
+
+              {/* Date Pill */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-white text-xs font-semibold">
+                <Calendar className="w-3.5 h-3.5 text-[#C79A4B]" />
+                {activeSlide.date}
+              </div>
+
+              {/* Agenda Highlights */}
+              <div className="space-y-2 pt-2 border-t border-white/10">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                  Delegation Focus &amp; Consultations:
+                </div>
+                <div className="space-y-1.5">
+                  {activeSlide.agenda.map((item, i) => (
+                    <div key={i} className="flex items-center gap-2 text-xs text-slate-300">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span className="truncate">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
           {/* Action Area */}
           <div className="pt-3">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => onScheduleMeeting(`Schedule Meeting at ${event.title} (${event.hall})`)}
+              onClick={() => onScheduleMeeting(`Schedule Meeting at ${activeSlide.title} (${activeSlide.hall})`)}
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[#C79A4B] text-white text-sm font-bold hover:bg-[#B58A3E] transition-colors shadow-lg group/btn w-full cursor-pointer"
             >
               <span>Schedule Booth Meeting</span>
@@ -359,7 +367,7 @@ export default function GlobalEvents({ onScheduleMeeting }: GlobalEventsProps) {
           description="Ruskin Chemipharm regularly anchors official delegations at the world's leading pharmaceutical expos. Pre-book a dedicated technical session with our regulatory and commercial leadership."
         />
 
-        {/* ═══ 3 Event Carousel Cards Stacked Vertically ═══ */}
+        {/* ═══ 2 Event Carousel Cards Stacked Vertically ═══ */}
         <div className="space-y-8 sm:space-y-10">
           {EVENTS.map((event, idx) => (
             <EventCard

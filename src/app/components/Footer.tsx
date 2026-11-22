@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { MolecularDecoration, FloatingHex, HEX_CLIP } from "./Hex";
+import { MolecularDecoration, FloatingHex } from "./Hex";
 
 interface FooterProps {
 	onOpenCatalog: () => void;
@@ -71,7 +71,7 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
 				{/* Top layout: 3 well-balanced columns with clean, open typography */}
 				<div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12 items-start text-left w-full">
-					{/* Column 1: Brand & Headquarters */}
+					{/* Column 1: Brand Logo Only */}
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						whileInView={{ opacity: 1, y: 0 }}
@@ -87,87 +87,6 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
 								height={68}
 								className="h-12 sm:h-14 lg:h-[56px] w-auto object-contain drop-shadow-sm"
 							/>
-						</div>
-
-						{/* Contact info with hex icons */}
-						<div className="space-y-4">
-							<div className="flex gap-3 items-start group">
-								<div
-									className="w-7 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 bg-[#C79A4B] shadow-sm group-hover:scale-105 transition-transform"
-									style={{ clipPath: HEX_CLIP }}
-								>
-									<span
-										className="w-2 h-2.5 bg-white"
-										style={{ clipPath: HEX_CLIP }}
-									/>
-								</div>
-								<div>
-									<p className="text-sm font-bold text-white">Mumbai, India</p>
-									<p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
-										4/A, Bhangwadi Shopping Arcade,
-										<br />
-										Kalbadevi Road, Mumbai – 400 002.
-									</p>
-								</div>
-							</div>
-
-							<div className="flex gap-3 items-start group">
-								<div
-									className="w-7 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 bg-[#C79A4B] shadow-sm group-hover:scale-105 transition-transform"
-									style={{ clipPath: HEX_CLIP }}
-								>
-									<span
-										className="w-2 h-2.5 bg-white"
-										style={{ clipPath: HEX_CLIP }}
-									/>
-								</div>
-								<div>
-									<p className="text-sm font-bold text-white">Phone</p>
-									<div className="flex flex-col text-xs text-slate-300 mt-0.5 leading-relaxed">
-										<a
-											href="tel:+912222059494"
-											className="hover:text-[#C79A4B] transition-colors py-0.5"
-										>
-											+91 22 22059494
-										</a>
-										<a
-											href="tel:+912222068330"
-											className="hover:text-[#C79A4B] transition-colors py-0.5"
-										>
-											+91 22 22068330
-										</a>
-									</div>
-								</div>
-							</div>
-
-							<div className="flex gap-3 items-start group">
-								<div
-									className="w-7 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 bg-[#C79A4B] shadow-sm group-hover:scale-105 transition-transform"
-									style={{ clipPath: HEX_CLIP }}
-								>
-									<span
-										className="w-2 h-2.5 bg-white"
-										style={{ clipPath: HEX_CLIP }}
-									/>
-								</div>
-								<div>
-									<p className="text-sm font-bold text-white">Email</p>
-									<div className="flex flex-col text-xs text-slate-300 mt-0.5 leading-relaxed">
-										<a
-											href="mailto:sourcing@ruskinchemipharm.in"
-											className="hover:text-[#C79A4B] transition-colors py-0.5"
-										>
-											sourcing@ruskinchemipharm.in
-										</a>
-										<a
-											href="mailto:sales@ruskinchemipharm.in"
-											className="hover:text-[#C79A4B] transition-colors py-0.5"
-										>
-											sales@ruskinchemipharm.in
-										</a>
-									</div>
-								</div>
-							</div>
 						</div>
 					</motion.div>
 
@@ -255,37 +174,53 @@ export default function Footer({ onOpenCatalog }: FooterProps) {
 
 						<div className="space-y-4 text-xs text-slate-300 leading-relaxed">
 							<div>
-								<p className="font-semibold text-slate-400 text-[11px] uppercase tracking-wide mb-2">
-									Direct Contacts
+								<p className="text-[11px] font-bold text-[#C79A4B] uppercase tracking-wider mb-1">
+									Mumbai, India
 								</p>
-								<div className="space-y-2">
-									<p>
-										<span className="text-slate-400">Yash:</span>{" "}
-										<a
-											href="tel:+919819826611"
-											className="text-slate-200 hover:text-[#C79A4B] transition-colors font-medium"
-										>
-											+91 98198 26611
-										</a>
-									</p>
-									<p>
-										<span className="text-slate-400">Krishna:</span>{" "}
-										<a
-											href="tel:+919322226307"
-											className="text-slate-200 hover:text-[#C79A4B] transition-colors font-medium"
-										>
-											+91 93222 26307
-										</a>
-									</p>
-									<p>
-										<span className="text-slate-400">Atman:</span>{" "}
-										<a
-											href="tel:+919967155543"
-											className="text-slate-200 hover:text-[#C79A4B] transition-colors font-medium"
-										>
-											+91 99671 55543
-										</a>
-									</p>
+								<p className="text-xs text-slate-300 leading-relaxed">
+									4/A, Bhangwadi Shopping Arcade,
+									<br />
+									Kalbadevi Road, Mumbai – 400 002.
+								</p>
+							</div>
+
+							<div>
+								<p className="text-[11px] font-bold text-[#C79A4B] uppercase tracking-wider mb-1">
+									Contact
+								</p>
+								<div className="flex flex-col text-xs text-slate-300 leading-relaxed space-y-1">
+									<a
+										href="tel:+919819826611"
+										className="hover:text-[#C79A4B] transition-colors py-0.5 inline-block"
+									>
+										+91 98198 26611
+									</a>
+									<a
+										href="tel:+919967155543"
+										className="hover:text-[#C79A4B] transition-colors py-0.5 inline-block"
+									>
+										+91 99671 55543
+									</a>
+								</div>
+							</div>
+
+							<div>
+								<p className="text-[11px] font-bold text-[#C79A4B] uppercase tracking-wider mb-1">
+									Email
+								</p>
+								<div className="flex flex-col text-xs text-slate-300 leading-relaxed space-y-1">
+									<a
+										href="mailto:sourcing@ruskinchemipharm.in"
+										className="hover:text-[#C79A4B] transition-colors py-0.5 inline-block"
+									>
+										sourcing@ruskinchemipharm.in
+									</a>
+									<a
+										href="mailto:sales@ruskinchemipharm.in"
+										className="hover:text-[#C79A4B] transition-colors py-0.5 inline-block"
+									>
+										sales@ruskinchemipharm.in
+									</a>
 								</div>
 							</div>
 						</div>

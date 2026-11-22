@@ -7,8 +7,6 @@ import { HexIcon } from "../components/Hex";
 import SectionHeader from "../components/SectionHeader";
 import {
 	MapPin,
-	Phone,
-	Mail,
 	CheckCircle2,
 	Copy,
 	Check,
@@ -465,100 +463,6 @@ export default function ContactPage() {
 								</AnimatePresence>
 							</div>
 						</motion.div>
-					</div>
-
-					{/* ─── 3. SIMPLIFIED QUICK-CONTACT CARDS (AIRY & CLEAN BELOW MAIN SECTION) ─── */}
-					<div className="pt-2 sm:pt-4">
-						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 max-w-5xl mx-auto">
-							{/* Card 1: Reception PBX */}
-							<motion.a
-								initial={{ opacity: 0, y: 12 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.45,
-									delay: 0.28,
-									ease: [0.16, 1, 0.3, 1],
-								}}
-								whileHover={{ y: -2, transition: { duration: 0.2 } }}
-								href="tel:+912222059494"
-								className="bg-white rounded-2xl p-5 border border-[#12304A]/10 hover:border-[#C79A4B]/40 hover:shadow-sm transition-[border-color,box-shadow] duration-200 flex items-center gap-4 group cursor-pointer"
-							>
-								<HexIcon size={34} bg="#C79A4B" className="text-white shrink-0">
-									<Phone className="w-4 h-4" />
-								</HexIcon>
-								<div className="min-w-0">
-									<div className="text-[10px] font-bold uppercase tracking-wider text-[#C79A4B]">
-										Reception &amp; PBX
-									</div>
-									<div className="text-xs sm:text-sm font-bold text-[#12304A] group-hover:text-[#C79A4B] transition-colors truncate">
-										+91 22 22059494
-									</div>
-									<div className="text-[11px] text-[#5A7A8E]">
-										Alt: +91 9322226307
-									</div>
-								</div>
-							</motion.a>
-
-							{/* Card 2: Commercial Email */}
-							<motion.a
-								initial={{ opacity: 0, y: 12 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.45,
-									delay: 0.34,
-									ease: [0.16, 1, 0.3, 1],
-								}}
-								whileHover={{ y: -2, transition: { duration: 0.2 } }}
-								href="mailto:sales@ruskinchemipharm.in"
-								className="bg-white rounded-2xl p-5 border border-[#12304A]/10 hover:border-[#C79A4B]/40 hover:shadow-sm transition-[border-color,box-shadow] duration-200 flex items-center gap-4 group cursor-pointer"
-							>
-								<HexIcon size={34} bg="#C79A4B" className="text-white shrink-0">
-									<Mail className="w-4 h-4" />
-								</HexIcon>
-								<div className="min-w-0">
-									<div className="text-[10px] font-bold uppercase tracking-wider text-[#C79A4B]">
-										Commercial Email
-									</div>
-									<div className="text-xs sm:text-sm font-bold text-[#12304A] group-hover:text-[#C79A4B] transition-colors truncate">
-										sales@ruskinchemipharm.in
-									</div>
-									<div className="text-[11px] text-[#5A7A8E]">
-										Quotations &amp; Dossiers
-									</div>
-								</div>
-							</motion.a>
-
-							{/* Card 3: WhatsApp Commercial Desk */}
-							<motion.a
-								initial={{ opacity: 0, y: 12 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{
-									duration: 0.45,
-									delay: 0.46,
-									ease: [0.16, 1, 0.3, 1],
-								}}
-								whileHover={{ y: -2, transition: { duration: 0.2 } }}
-								href="https://wa.me/919322226307?text=Hello%20Ruskin%20Chemipharm%20Commercial%20Desk,%20I%20would%20like%20to%20inquire%20about%20API%20sourcing."
-								target="_blank"
-								rel="noopener noreferrer"
-								className="bg-white rounded-2xl p-5 border border-emerald-500/20 hover:border-emerald-500/50 hover:shadow-sm transition-[border-color,box-shadow] duration-200 flex items-center gap-4 group bg-gradient-to-br from-white to-emerald-50/20 cursor-pointer"
-							>
-								<HexIcon size={34} bg="#10B981" className="text-white shrink-0">
-									<WhatsAppIcon className="w-4 h-4" />
-								</HexIcon>
-								<div className="min-w-0">
-									<div className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">
-										WhatsApp Desk
-									</div>
-									<div className="text-xs sm:text-sm font-bold text-[#12304A] group-hover:text-emerald-700 transition-colors truncate">
-										+91 9322226307
-									</div>
-									<div className="text-[11px] text-emerald-600 font-medium">
-										Instant Commercial Chat &rarr;
-									</div>
-								</div>
-							</motion.a>
-						</div>
 					</div>
 				</div>
 			</main>
